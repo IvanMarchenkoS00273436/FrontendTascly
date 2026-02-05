@@ -1,9 +1,10 @@
 import { HttpClient } from '@angular/common/http';
 import { inject, Injectable } from '@angular/core';
 import { environment } from '../../environments/environment.development';
-import { tap } from 'rxjs';
+import { catchError, tap, throwError } from 'rxjs';
 import { TokenResponse } from './auth-interface';
 import { CookieService } from 'ngx-cookie-service';
+import { Router } from '@angular/router';
 
 @Injectable({
     providedIn: 'root',
@@ -13,6 +14,7 @@ export class Auth {
     http = inject(HttpClient);
     url = environment.apiUrl + '/Auth';
     cookieService = inject(CookieService);
+    router = inject(Router);
 
     access_token: string | null = null;
     refresh_token: string | null = null;
@@ -30,13 +32,44 @@ export class Auth {
             `${this.url}/login`, 
             payload
         ).pipe(
-            tap((res: TokenResponse) => { 
-                this.access_token = res.accessToken;
-                this.refresh_token = res.refreshToken;
-
-                this.cookieService.set('access_token', res.accessToken);
-                this.cookieService.set('refresh_token', res.refreshToken);
-            }
+            tap((res: TokenResponse) => this.saveTokens(res)
         ));
+    }
+
+    refreshAuthToken() {
+        return this.http.post<TokenResponse>(
+            `${this.url}/refresh-token`,
+            {
+                userId: this.getUserIdFromToken(this.access_token!),
+                refreshToken: this.cookieService.get('refresh_token')
+            }
+        ).pipe(
+            tap((res: TokenResponse) => this.saveTokens(res)),
+            catchError(err => {
+                this.logout();
+                return throwError(err);
+            })
+        )
+    }
+    
+    logout() { 
+        this.cookieService.delete('access_token');
+        this.cookieService.delete('refresh_token');
+        this.access_token = null;
+        this.refresh_token = null;
+        this.router.navigate(['/login']);
+    }
+
+    getUserIdFromToken(token: string): string { 
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        return payload.UserId;
+    }
+
+    saveTokens(res: TokenResponse) {
+        this.access_token = res.accessToken;
+        this.refresh_token = res.refreshToken;
+
+        this.cookieService.set('access_token', res.accessToken);
+        this.cookieService.set('refresh_token', res.refreshToken);
     }
 }
