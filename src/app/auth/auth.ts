@@ -67,6 +67,10 @@ export class Auth {
         ));
     }
 
+    register(payload: { username: string; password: string; firstName: string, lastName: string, organizationName: string }) {
+        return this.http.post<any>(`${this.url}/register`, payload);
+    }
+
     refreshAuthToken() {
         return this.http.post<TokenResponse>(
             `${this.url}/refresh-token`,

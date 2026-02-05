@@ -62,13 +62,21 @@
                 <p class="text-secondary">Get started with Tascly today</p>
             </div>
 
-            <form (ngSubmit)="onRegister()">
+            <form (ngSubmit)="onRegister()" [formGroup]="form">
                 <div class="mb-3">
-                    <label for="fullName" class="form-label fw-medium text-secondary small">
-                        Full name
+                    <label for="firstName" class="form-label fw-medium text-secondary small">
+                        First name
                     </label>
-                    <input id="fullName" type="text" class="form-control form-control-lg fs-6"
-                        [(ngModel)]="formData.fullName" name="fullName" placeholder="John Doe" required />
+                    <input id="firstName" type="text" class="form-control form-control-lg fs-6"
+                        formControlName="firstName" placeholder="John" required />
+                </div>
+
+                <div class="mb-3">
+                    <label for="lastName" class="form-label fw-medium text-secondary small">
+                        Last name
+                    </label>
+                    <input id="lastName" type="text" class="form-control form-control-lg fs-6"
+                        formControlName="lastName" placeholder="Doe" required />
                 </div>
 
                 <div class="mb-3">
@@ -76,7 +84,7 @@
                         Organization name
                     </label>
                     <input id="organization" type="text" class="form-control form-control-lg fs-6"
-                        [(ngModel)]="formData.organization" name="organization" placeholder="Your company" required />
+                        formControlName="organization" placeholder="Your company" required />
                 </div>
 
                 <div class="mb-3">
@@ -84,7 +92,7 @@
                         Email address
                     </label>
                     <input id="email" type="email" class="form-control form-control-lg fs-6"
-                        [(ngModel)]="formData.email" name="email" placeholder="you@example.com" required />
+                        formControlName="email" placeholder="you@example.com" required />
                 </div>
 
                 <div class="mb-3">
@@ -92,7 +100,7 @@
                         Password
                     </label>
                     <input id="password" type="password" class="form-control form-control-lg fs-6"
-                        [(ngModel)]="formData.password" name="password" placeholder="Create a password" required />
+                        formControlName="password" placeholder="Create a password" required />
                 </div>
 
                 <div class="mb-4">
@@ -100,7 +108,7 @@
                         Confirm password
                     </label>
                     <input id="confirmPassword" type="password" class="form-control form-control-lg fs-6"
-                        [(ngModel)]="formData.confirmPassword" name="confirmPassword" placeholder="Confirm your password" required />
+                        formControlName="confirmPassword" placeholder="Confirm your password" required />
                 </div>
 
                 <button type="submit" class="btn btn-primary w-100 btn-lg fs-6 fw-medium py-2">
@@ -117,3 +125,58 @@
         </div>
     </div>
 </div>
+
+<!-- ERROR MODAL POPUP -->
+@if (errorMessage) {
+    <!-- Backdrop -->
+    <div class="modal-backdrop fade show"></div>
+    
+    <!-- Modal -->
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title text-danger fw-bold d-flex align-items-center gap-2">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                        Registration Failed
+                    </h5>
+                    <button type="button" class="btn-close" (click)="closeError()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-secondary fs-6 py-4">
+                    {{ errorMessage }}
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-secondary px-4" (click)="closeError()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+<!-- SUCCESS MODAL POPUP -->
+@if (successMessage) {
+    <!-- Backdrop -->
+    <div class="modal-backdrop fade show"></div>
+    
+    <!-- Modal -->
+    <div class="modal fade show d-block" tabindex="-1" role="dialog">
+        <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content border-0 shadow-lg">
+                <div class="modal-header border-bottom-0 pb-0">
+                    <h5 class="modal-title text-success fw-bold d-flex align-items-center gap-2">
+                        <!-- Check Icon -->
+                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                        Success
+                    </h5>
+                    <button type="button" class="btn-close" (click)="closeSuccess()" aria-label="Close"></button>
+                </div>
+                <div class="modal-body text-secondary fs-6 py-4">
+                    {{ successMessage }}
+                </div>
+                <div class="modal-footer border-top-0 pt-0">
+                    <button type="button" class="btn btn-primary px-4" (click)="closeSuccess()">Go to Login</button>
+                </div>
+            </div>
+        </div>
+    </div>
+}
