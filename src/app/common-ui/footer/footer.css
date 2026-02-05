@@ -1,0 +1,22 @@
+/* Matching Tascly Theme from login/register */
+.text-primary {
+    color: #2563eb !important;
+}
+
+/* Enhancing link hover states */
+a.text-secondary {
+    transition: color 0.15s ease-in-out;
+}
+
+a.text-secondary:hover {
+    color: #2563eb !important; /* Hover to primary blue */
+}
+
+.border-top {
+    border-top: 1px solid #e5e7eb !important;
+}
+
+/* Ensure footer text is readable */
+.text-secondary {
+    color: #6b7280 !important;
+}
