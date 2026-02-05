@@ -1,0 +1,26 @@
+<nav class="navbar navbar-expand bg-white border-bottom py-3">
+    <div class="container-fluid px-4 d-flex justify-content-between">
+        <!-- Left side: Brand + Dashboard -->
+        <div class="d-flex align-items-center">
+            <a routerLink="/" class="navbar-brand fw-bold text-primary me-5 fs-4">
+                Tascly
+            </a>
+            
+            <div class="d-flex">
+                <a routerLink="/dashboard" routerLinkActive="text-primary" class="nav-link text-dark fw-medium">
+                    Dashboard
+                </a>
+            </div>
+        </div>
+
+        <!-- Right side: Auth Links -->
+        <div class="d-flex align-items-center gap-3">
+            <a routerLink="/login" class="nav-link text-dark fw-medium small">
+                Sign in
+            </a>
+            <a routerLink="/register" class="btn btn-primary px-4 fw-medium">
+                Sign up
+            </a>
+        </div>
+    </div>
+</nav>

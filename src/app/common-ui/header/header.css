@@ -1,0 +1,28 @@
+/* Matching the Tailwind blue-600 from your login pages */
+.text-primary {
+    color: #2563eb !important;
+}
+
+.btn-primary {
+    background-color: #2563eb;
+    border-color: #2563eb;
+    color: white;
+}
+
+.btn-primary:hover {
+    background-color: #1d4ed8; /* blue-700 */
+    border-color: #1d4ed8;
+}
+
+.nav-link {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: #2563eb !important;
+}
+
+.border-bottom {
+    border-bottom: 1px solid #e5e7eb !important;
+}
