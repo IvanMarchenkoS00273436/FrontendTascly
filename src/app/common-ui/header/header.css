@@ -1,22 +1,40 @@
-/* Matching the Tailwind blue-600 from your login pages */
+/* Matching the Tailwind blue-600 */
 .text-primary {
     color: #2563eb !important;
 }
 
+/* --- Main Action Button (Sign Up) --- */
 .btn-primary {
     background-color: #2563eb;
     border-color: #2563eb;
     color: white;
+    /* Bigger & Better */
+    padding: 0.6rem 1.75rem; /* Wider padding */
+    font-size: 1rem;          /* Standard readable size */
+    font-weight: 500;
+    border-radius: 8px;       /* Softer corners */
+    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15), 0 2px 4px -1px rgba(37, 99, 235, 0.08);
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .btn-primary:hover {
     background-color: #1d4ed8; /* blue-700 */
     border-color: #1d4ed8;
+    transform: translateY(-2px); /* Slight lift effect */
+    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25), 0 4px 6px -2px rgba(37, 99, 235, 0.15);
 }
 
+.btn-primary:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px -1px rgba(37, 99, 235, 0.1);
+}
+
+/* --- Nav Links --- */
 .nav-link {
     cursor: pointer;
     transition: color 0.2s;
+    font-size: 0.95rem; 
+    font-weight: 500;
 }
 
 .nav-link:hover {
@@ -25,4 +43,62 @@
 
 .border-bottom {
     border-bottom: 1px solid #e5e7eb !important;
+}
+
+/* --- Authenticated User Area --- */
+.avatar-circle {
+    width: 38px;  /* Bigger avatar */
+    height: 38px; /* Bigger avatar */
+    border-radius: 50%;
+    font-size: 15px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+}
+
+.btn-link {
+    text-decoration: none;
+    padding: 0.4rem 0.75rem;
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-link:hover {
+    background-color: #f3f4f6; /* Light gray hover background */
+}
+
+/* --- Dropdown Styling --- */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    right: 0;
+    min-width: 220px; /* Wider dropdown */
+    z-index: 1000;
+    border-radius: 12px;
+    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+    padding: 0.5rem;
+    border: 1px solid #e5e7eb;
+}
+
+.dropdown-item {
+    border-radius: 6px;
+    padding: 0.6rem 1rem; /* More spacing in menu */
+    font-size: 0.95rem;
+}
+
+.dropdown-item:hover {
+    background-color: #f3f4f6;
+}
+
+.dropdown-item:active {
+    background-color: #e5e7eb;
+    color: inherit;
+}
+
+.dropdown-menu.show {
+    display: block;
+    animation: fadeIn 0.15s ease-out;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(-8px); }
+    to { opacity: 1; transform: translateY(0); }
 }

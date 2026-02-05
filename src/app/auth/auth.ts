@@ -27,6 +27,37 @@ export class Auth {
         return !!this.access_token;
     }
 
+    get username(): string | null {
+        let token = this.access_token;
+        if (!token) {
+            token = this.cookieService.get('access_token');
+        }
+        
+        if (!token) return null;
+
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.Username;
+        } catch (e) {
+            return null;
+        }
+    }
+
+    get userId(): string | null { 
+        let token = this.access_token;
+        if (!token) {
+            token = this.cookieService.get('access_token');
+        }
+
+        if (!token) return null;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.UserId;
+        } catch (e) {
+            return null;
+        }
+    }
+
     login(payload: { email: string; password: string }) {
         return this.http.post<TokenResponse>(
             `${this.url}/login`, 
