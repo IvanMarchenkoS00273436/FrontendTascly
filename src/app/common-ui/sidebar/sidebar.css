@@ -1,0 +1,100 @@
+/* --- Bento Sidebar Container --- */
+.bento-sidebar {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    height: 100%;
+    /* Ensure it looks like a card */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+}
+
+.modern-label {
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.75rem;
+    display: block;
+}
+
+/* --- Dropdown Toggle Button --- */
+.btn-sidebar-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa; /* Very light gray to contrast with white card */
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 12px 16px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-sidebar-toggle:hover, .btn-sidebar-toggle.active {
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    border-color: #efefef;
+    transform: translateY(-1px);
+}
+
+/* Lime Accent Box for Icon */
+.icon-box {
+    width: 32px;
+    height: 32px;
+    background-color: #d8f066; /* Primary Lime Accent */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+}
+
+/* --- Animations --- */
+.chevron {
+    transition: transform 0.2s ease;
+    color: #666;
+}
+
+.rotate-chevron {
+    transform: rotate(180deg);
+}
+
+/* Smooth Height Animation using Grid */
+.workspace-list-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.workspace-list-wrapper.expanded {
+    grid-template-rows: 1fr;
+}
+
+.workspace-list-wrapper > ul {
+    overflow: hidden;
+}
+
+/* --- List Items --- */
+.workspace-item {
+    display: block;
+    padding: 10px 16px;
+    margin-top: 4px;
+    border-radius: 12px;
+    color: #444;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+}
+
+.workspace-item:hover {
+    background-color: #efefef;
+    color: #000;
+    border-left-color: #d8f066; /* Lime highlight on hover */
+}

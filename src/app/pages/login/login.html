@@ -1,0 +1,96 @@
+<div class="login-container">
+    <div class="bento-grid">
+
+        <!-- Tile 1: Main Login Form (White Card) -->
+        <div class="bento-card form-tile d-flex flex-column justify-content-center">
+            <div class="mb-5">
+                <h1 class="display-6 mb-2">Sign In</h1>
+                <p class="text-dark-gray fw-medium">Access your workspace and manage your tasks.</p>
+            </div>
+
+            <form (ngSubmit)="onSubmit()" [formGroup]="form">
+
+                @let username = form.get('username');
+                @let password = form.get('password');
+
+                <!-- Username Input -->
+                <div class="mb-4">
+                    <label for="username" class="modern-label">Email Address</label>
+                    <input id="username" type="email" class="form-control modern-input"
+                        [class.is-invalid]="username?.invalid && username?.touched" formControlName="username"
+                        placeholder="name@company.com">
+
+                    @if (username?.invalid && username?.touched) {
+                    <div class="validation-message">Please enter a valid email</div>
+                    }
+                </div>
+
+                <!-- Password Input -->
+                <div class="mb-2">
+                    <label for="password" class="modern-label">Password</label>
+                    <input id="password" type="password" class="form-control modern-input"
+                        [class.is-invalid]="(password?.invalid && password?.touched) || errorMessage"
+                        formControlName="password" placeholder="••••••••">
+
+                    @if (password?.invalid && password?.touched) {
+                    <div class="validation-message">Password is required</div>
+                    }
+                </div>
+
+                <!-- API Auth Error (Inline Alert) -->
+                @if (errorMessage) {
+                <div class="alert alert-danger border-0 rounded-4 mb-4 mt-3 d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
+                    {{ errorMessage }}
+                </div>
+                }
+
+                <!-- Forgot Password -->
+                <div class="d-flex justify-content-end mb-4 pt-2">
+                    <a routerLink="#" class="small text-dark-gray fw-bold text-decoration-none"
+                        style="font-size: 0.85rem;">Forgot password?</a>
+                </div>
+
+                <button type="submit" class="btn btn-modern">
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE TILES -->
+
+        <!-- Tile 2: Welcome (Sky Blue) -->
+        <!-- Expands to fill available height (row 1) -->
+        <div class="bento-card card-sky d-flex flex-column justify-content-center p-5">
+            <h2 class="display-5 mb-4">Welcome<br>back</h2>
+            <p class="mb-0 fw-medium fs-5" style="opacity: 0.85;">
+                Resume your work and collaborate with your team instantly.
+            </p>
+
+            <!-- Decoration Icon -->
+            <div class="mt-auto pt-5 opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" x2="3" y1="12" y2="12" />
+                </svg>
+            </div>
+        </div>
+
+        <!-- Tile 3: Register Link (White) -->
+        <!-- Compact at bottom (row 2) -->
+        <div class="bento-card d-flex align-items-center justify-content-center p-4">
+            <p class="mb-0 text-dark-gray fw-bold">
+                Don't have an account?
+                <a routerLink="/register" class="link-modern ms-2 fs-6">Create free account &rarr;</a>
+            </p>
+        </div>
+
+    </div>
+</div>

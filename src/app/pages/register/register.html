@@ -1,0 +1,152 @@
+<div class="register-container">
+    <div class="bento-grid">
+
+        <!-- Tile 1: Main Form (White Card) -->
+        <div class="bento-card form-tile d-flex flex-column justify-content-center">
+            <div class="mb-5">
+                <h1 class="display-6 mb-2">Create Account</h1>
+                <p class="text-dark-gray fw-medium">Enter your details to join Tascly today.</p>
+            </div>
+
+            <form (ngSubmit)="onRegister()" [formGroup]="form">
+                @let f = form.controls;
+
+                <!-- Row 1: Names -->
+                <div class="row g-3 mb-3">
+                    <div class="col-md-6">
+                        <label for="firstName" class="modern-label">First Name</label>
+                        <input id="firstName" type="text" class="form-control modern-input"
+                            [class.is-invalid]="f['firstName'].invalid && f['firstName'].touched"
+                            formControlName="firstName" placeholder="John">
+                        @if (f['firstName'].invalid && f['firstName'].touched) {
+                            <div class="validation-message">First name required</div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <label for="lastName" class="modern-label">Last Name</label>
+                        <input id="lastName" type="text" class="form-control modern-input"
+                            [class.is-invalid]="f['lastName'].invalid && f['lastName'].touched"
+                            formControlName="lastName" placeholder="Doe">
+                        @if (f['lastName'].invalid && f['lastName'].touched) {
+                        <div class="validation-message">Last name required</div>
+                        }
+                    </div>
+                </div>
+
+                <!-- Organization -->
+                <div class="mb-3">
+                    <label for="organization" class="modern-label">Organization</label>
+                    <input id="organization" type="text" class="form-control modern-input"
+                        [class.is-invalid]="f['organization'].invalid && f['organization'].touched"
+                        formControlName="organization" placeholder="Acme Corp">
+                    @if (f['organization'].invalid && f['organization'].touched) {
+                    <div class="validation-message">Organization name required</div>
+                    }
+                </div>
+
+                <!-- Email -->
+                <div class="mb-3">
+                    <label for="email" class="modern-label">Work Email</label>
+                    <input id="email" type="email" class="form-control modern-input"
+                        [class.is-invalid]="f['email'].invalid && f['email'].touched" formControlName="email"
+                        placeholder="name@company.com">
+                    @if (f['email'].invalid && f['email'].touched) {
+                    <div class="validation-message">Valid email required</div>
+                    }
+                </div>
+
+                <!-- Row 2: Passwords -->
+                <div class="row g-3 mb-4">
+                    <div class="col-md-6">
+                        <label for="password" class="modern-label">Password</label>
+                        <input id="password" type="password" class="form-control modern-input"
+                            [class.is-invalid]="f['password'].invalid && f['password'].touched"
+                            formControlName="password" placeholder="••••••••">
+                        @if (f['password'].invalid && f['password'].touched) {
+                        <div class="validation-message">Required</div>
+                        }
+                    </div>
+                    <div class="col-md-6">
+                        <label for="confirmPassword" class="modern-label">Confirm</label>
+                        <input id="confirmPassword" type="password" class="form-control modern-input"
+                            [class.is-invalid]="f['confirmPassword'].invalid && f['confirmPassword'].touched"
+                            formControlName="confirmPassword" placeholder="••••••••">
+                        @if (f['confirmPassword'].invalid && f['confirmPassword'].touched) {
+                        <div class="validation-message">Mismatch</div>
+                        }
+                    </div>
+                </div>
+
+                <!-- API Error -->
+                @if (errorMessage) {
+                <div class="alert alert-danger border-0 rounded-4 mb-4 d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" x2="12" y1="8" y2="12" />
+                        <line x1="12" x2="12.01" y1="16" y2="16" />
+                    </svg>
+                    {{ errorMessage }}
+                </div>
+                }
+
+                <button type="submit" class="btn btn-modern">
+                    Create Account
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE TILES -->
+
+        <!-- Tile 2: Welcome (Sky Blue) -->
+        <!-- This will expand to fill the available height -->
+        <div class="bento-card card-sky d-flex flex-column justify-content-center p-5">
+            <h2 class="display-5 mb-4">Start your<br>journey</h2>
+            <p class="mb-0 fw-medium fs-5" style="opacity: 0.85;">
+                Join thousands of teams streamlining their workflow with Tascly's intuitive platform.
+            </p>
+            
+            <!-- Optional decoration -->
+            <div class="mt-auto pt-5 opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+            </div>
+        </div>
+
+        <!-- Tile 3: Login Link (White) -->
+        <!-- This will stay compact at the bottom -->
+        <div class="bento-card d-flex align-items-center justify-content-center p-4">
+            <p class="mb-0 text-dark-gray fw-bold">
+                Already have an account?
+                <a routerLink="/login" class="link-modern ms-2 fs-6">Sign in &rarr;</a>
+            </p>
+        </div>
+
+    </div>
+</div>
+
+<!-- SUCCESS MODAL POPUP (Lime Styled) -->
+@if (successMessage) {
+<div class="modal-backdrop fade show"></div>
+<div class="modal fade show d-block" tabindex="-1" role="dialog">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content border-0 shadow-lg" style="border-radius: 24px;">
+            <div class="modal-header border-bottom-0 pb-0 justify-content-center pt-4">
+                <div class="p-3 rounded-circle text-black" style="background-color: #d8f066;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14" />
+                        <polyline points="22 4 12 14.01 9 11.01" />
+                    </svg>
+                </div>
+            </div>
+            <div class="modal-body text-center py-4">
+                <h4 class="fw-bold mb-2">Success!</h4>
+                <p class="text-secondary mb-0">{{ successMessage }}</p>
+            </div>
+            <div class="modal-footer border-top-0 pt-0 justify-content-center pb-4">
+                <button type="button" class="btn btn-modern px-5" (click)="closeSuccess()">Go to Login</button>
+            </div>
+        </div>
+    </div>
+</div>
+}
