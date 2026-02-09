@@ -1,104 +1,143 @@
-/* Matching the Tailwind blue-600 */
-.text-primary {
-    color: #2563eb !important;
+/* --- Bento Navbar Container --- */
+.navbar-bento {
+    background-color: #ffffff; /* Card Background */
+    border-radius: 24px;       /* Bento Rounded styling */
+    margin: 1rem 1.5rem;       /* Floating effect */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+    z-index: 1030;
+    /* Ensure sticky works with margins */
+    position: sticky;
+    top: 1rem;
 }
 
-/* --- Main Action Button (Sign Up) --- */
-.btn-primary {
-    background-color: #2563eb;
-    border-color: #2563eb;
-    color: white;
-    /* Bigger & Better */
-    padding: 0.6rem 1.75rem; /* Wider padding */
-    font-size: 1rem;          /* Standard readable size */
-    font-weight: 500;
-    border-radius: 8px;       /* Softer corners */
-    box-shadow: 0 4px 6px -1px rgba(37, 99, 235, 0.15), 0 2px 4px -1px rgba(37, 99, 235, 0.08);
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+/* --- Brand / Logo --- */
+.brand-bento {
+    color: #000000 !important; /* Text Color (Black) */
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    transition: transform 0.2s;
 }
 
-.btn-primary:hover {
-    background-color: #1d4ed8; /* blue-700 */
-    border-color: #1d4ed8;
-    transform: translateY(-2px); /* Slight lift effect */
-    box-shadow: 0 10px 15px -3px rgba(37, 99, 235, 0.25), 0 4px 6px -2px rgba(37, 99, 235, 0.15);
+.brand-bento:hover {
+    transform: scale(1.02);
 }
 
-.btn-primary:active {
-    transform: translateY(0);
-    box-shadow: 0 2px 4px -1px rgba(37, 99, 235, 0.1);
-}
-
-/* --- Nav Links --- */
+/* --- Navigation Links --- */
 .nav-link {
-    cursor: pointer;
-    transition: color 0.2s;
-    font-size: 0.95rem; 
-    font-weight: 500;
+    color: #000000 !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.25rem !important;
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
 }
 
 .nav-link:hover {
-    color: #2563eb !important;
+    background-color: #efefef; /* Light Gray Hover */
 }
 
-.border-bottom {
-    border-bottom: 1px solid #e5e7eb !important;
+.nav-link.active {
+    background-color: #88d8f9; /* Secondary Accent (Sky Blue) for active state */
+    color: #000000 !important;
 }
 
-/* --- Authenticated User Area --- */
-.avatar-circle {
-    width: 38px;  /* Bigger avatar */
-    height: 38px; /* Bigger avatar */
-    border-radius: 50%;
-    font-size: 15px;
-    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-}
-
-.btn-link {
-    text-decoration: none;
-    padding: 0.4rem 0.75rem;
-    border-radius: 8px;
-    transition: background-color 0.2s;
-}
-
-.btn-link:hover {
-    background-color: #f3f4f6; /* Light gray hover background */
-}
-
-/* --- Dropdown Styling --- */
-.dropdown-menu {
-    display: none;
-    position: absolute;
-    right: 0;
-    min-width: 220px; /* Wider dropdown */
-    z-index: 1000;
+/* --- Buttons --- */
+.btn-lime {
+    background-color: #d8f066; /* Primary Accent (Lime Green) */
+    color: #000000;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
     border-radius: 12px;
-    box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-    padding: 0.5rem;
-    border: 1px solid #e5e7eb;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.btn-lime:hover {
+    background-color: #cce64d; /* Slightly darker lime */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-ghost {
+    color: #000000;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.6rem 1.25rem;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+    background-color: #efefef;
+}
+
+/* --- User Profile Button --- */
+.user-dropdown-btn {
+    background-color: #efefef; /* Light Gray */
+    border-radius: 50px;       /* Pill Shape */
+    padding: 4px 16px 4px 4px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.user-dropdown-btn:hover, .dropdown-menu.show ~ .user-dropdown-btn {
+    background-color: #ffffff;
+    border-color: #d8f066; /* Lime border on hover */
+    box-shadow: 0 0 0 4px rgba(216, 240, 102, 0.2);
+}
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Dropdown Menu --- */
+.dropdown-menu {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    margin-top: 12px !important;
+    background-color: #ffffff;
 }
 
 .dropdown-item {
-    border-radius: 6px;
-    padding: 0.6rem 1rem; /* More spacing in menu */
-    font-size: 0.95rem;
+    border-radius: 12px;
+    font-weight: 500;
+    padding: 0.7rem 1rem;
+    color: #000000;
+    margin-bottom: 2px;
 }
 
 .dropdown-item:hover {
-    background-color: #f3f4f6;
+    background-color: #efefef;
 }
 
-.dropdown-item:active {
-    background-color: #e5e7eb;
-    color: inherit;
+.dropdown-item.text-danger:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
 }
 
+/* Animation */
 .dropdown-menu.show {
-    display: block;
-    animation: fadeIn 0.15s ease-out;
+    animation: scaleIn 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
 
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(-8px); }
-    to { opacity: 1; transform: translateY(0); }
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }

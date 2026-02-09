@@ -1,136 +1,96 @@
-<div class="d-flex min-vh-100 w-100">
-    <!-- Left side - Login Form -->
-    <div class="col-12 col-lg-6 d-flex align-items-center justify-content-center bg-white">
-        <div class="w-100 p-4 p-md-5" style="max-width: 480px;">
+<div class="login-container">
+    <div class="bento-grid">
+
+        <!-- Tile 1: Main Login Form (White Card) -->
+        <div class="bento-card form-tile d-flex flex-column justify-content-center">
             <div class="mb-5">
-                <h1 class="fw-bold text-primary mb-2 display-6">Tascly</h1>
-                <h2 class="h3 fw-semibold text-dark mb-2">Welcome back</h2>
-                <p class="text-secondary">Sign in to your account to continue</p>
+                <h1 class="display-6 mb-2">Sign In</h1>
+                <p class="text-dark-gray fw-medium">Access your workspace and manage your tasks.</p>
             </div>
 
             <form (ngSubmit)="onSubmit()" [formGroup]="form">
+
+                @let username = form.get('username');
+                @let password = form.get('password');
+
+                <!-- Username Input -->
                 <div class="mb-4">
-                    <label for="email" class="form-label fw-medium text-secondary small">
-                        Email address
-                    </label>
-                    <input id="email" type="email" class="form-control form-control-lg fs-6" formControlName="username"
-                        name="email" placeholder="you@example.com" required />
+                    <label for="username" class="modern-label">Email Address</label>
+                    <input id="username" type="email" class="form-control modern-input"
+                        [class.is-invalid]="username?.invalid && username?.touched" formControlName="username"
+                        placeholder="name@company.com">
+
+                    @if (username?.invalid && username?.touched) {
+                    <div class="validation-message">Please enter a valid email</div>
+                    }
                 </div>
 
-                <div class="mb-4">
-                    <label for="password" class="form-label fw-medium text-secondary small">
-                        Password
-                    </label>
-                    <input id="password" type="password" class="form-control form-control-lg fs-6" formControlName="password"
-                        name="password" placeholder="Enter your password" required />
+                <!-- Password Input -->
+                <div class="mb-2">
+                    <label for="password" class="modern-label">Password</label>
+                    <input id="password" type="password" class="form-control modern-input"
+                        [class.is-invalid]="(password?.invalid && password?.touched) || errorMessage"
+                        formControlName="password" placeholder="••••••••">
+
+                    @if (password?.invalid && password?.touched) {
+                    <div class="validation-message">Password is required</div>
+                    }
                 </div>
 
-                <div class="d-flex align-items-center justify-content-between mb-4">
-                    <div class="form-check">
-                        <input type="checkbox" class="form-check-input" id="rememberMe" />
-                        <label class="form-check-label text-secondary small" for="rememberMe">Remember me</label>
-                    </div>
-                    <a href="#" class="text-primary text-decoration-none small fw-medium">
-                        Forgot password?
-                    </a>
-                </div>
-
-                <button type="submit" class="btn btn-primary w-100 btn-lg fs-6 fw-medium py-2">
-                    Sign in
-                </button>
-            </form>
-
-            <p class="mt-4 text-center text-secondary small">
-                Don't have an account?
-                <a routerLink="/register" class="text-primary text-decoration-none fw-medium">
-                    Sign up
-                </a>
-            </p>
-        </div>
-    </div>
-
-    <!-- Right side - Feature Highlight -->
-    <div class="col-lg-6 d-none d-lg-flex align-items-center justify-content-center feature-panel text-white p-5">
-        <div style="max-width: 480px;">
-            <h2 class="display-6 fw-bold mb-4">Manage Projects with Ease</h2>
-            <p class="text-blue-100 mb-5 fs-5">
-                Organize your team's work, track progress, and achieve your goals with Tascly's powerful project
-                management tools.
-            </p>
-
-            <div class="d-flex flex-column gap-4">
-                <div class="d-flex align-items-start">
-                    <div class="me-3 mt-1 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="m9 12 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="h6 fw-bold mb-1">Collaborative Workspaces</h3>
-                        <p class="text-blue-100 mb-0 small">Create unlimited workspaces for different teams and
-                            departments</p>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-start">
-                    <div class="me-3 mt-1 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="m9 12 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="h6 fw-bold mb-1">Task Management</h3>
-                        <p class="text-blue-100 mb-0 small">Assign tasks, set deadlines, and track progress in real-time
-                        </p>
-                    </div>
-                </div>
-
-                <div class="d-flex align-items-start">
-                    <div class="me-3 mt-1 text-white">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-                            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                            <circle cx="12" cy="12" r="10" />
-                            <path d="m9 12 2 2 4-4" />
-                        </svg>
-                    </div>
-                    <div>
-                        <h3 class="h6 fw-bold mb-1">Team Collaboration</h3>
-                        <p class="text-blue-100 mb-0 small">Keep everyone aligned with shared projects and clear
-                            communication</p>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-
-<!-- ERROR MODAL POPUP -->
-@if (errorMessage) {
-    <!-- Backdrop -->
-    <div class="modal-backdrop fade show"></div>
-    
-    <!-- Modal -->
-    <div class="modal fade show d-block" tabindex="-1" role="dialog">
-        <div class="modal-dialog modal-dialog-centered" role="document">
-            <div class="modal-content border-0 shadow-lg">
-                <div class="modal-header border-bottom-0 pb-0">
-                    <h5 class="modal-title text-danger fw-bold d-flex align-items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
-                        Login Failed
-                    </h5>
-                    <button type="button" class="btn-close" (click)="closeError()" aria-label="Close"></button>
-                </div>
-                <div class="modal-body text-secondary fs-6 py-4">
+                <!-- API Auth Error (Inline Alert) -->
+                @if (errorMessage) {
+                <div class="alert alert-danger border-0 rounded-4 mb-4 mt-3 d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z" />
+                        <line x1="12" y1="9" x2="12" y2="13" />
+                        <line x1="12" y1="17" x2="12.01" y2="17" />
+                    </svg>
                     {{ errorMessage }}
                 </div>
-                <div class="modal-footer border-top-0 pt-0">
-                    <button type="button" class="btn btn-secondary px-4" (click)="closeError()">Close</button>
+                }
+
+                <!-- Forgot Password -->
+                <div class="d-flex justify-content-end mb-4 pt-2">
+                    <a routerLink="#" class="small text-dark-gray fw-bold text-decoration-none"
+                        style="font-size: 0.85rem;">Forgot password?</a>
                 </div>
+
+                <button type="submit" class="btn btn-modern">
+                    Sign In
+                </button>
+            </form>
+        </div>
+
+        <!-- RIGHT SIDE TILES -->
+
+        <!-- Tile 2: Welcome (Sky Blue) -->
+        <!-- Expands to fill available height (row 1) -->
+        <div class="bento-card card-sky d-flex flex-column justify-content-center p-5">
+            <h2 class="display-5 mb-4">Welcome<br>back</h2>
+            <p class="mb-0 fw-medium fs-5" style="opacity: 0.85;">
+                Resume your work and collaborate with your team instantly.
+            </p>
+
+            <!-- Decoration Icon -->
+            <div class="mt-auto pt-5 opacity-50">
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4" />
+                    <polyline points="10 17 15 12 10 7" />
+                    <line x1="15" x2="3" y1="12" y2="12" />
+                </svg>
             </div>
         </div>
+
+        <!-- Tile 3: Register Link (White) -->
+        <!-- Compact at bottom (row 2) -->
+        <div class="bento-card d-flex align-items-center justify-content-center p-4">
+            <p class="mb-0 text-dark-gray fw-bold">
+                Don't have an account?
+                <a routerLink="/register" class="link-modern ms-2 fs-6">Create free account &rarr;</a>
+            </p>
+        </div>
+
     </div>
-}
+</div>
