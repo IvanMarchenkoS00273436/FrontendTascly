@@ -1,10 +1,11 @@
 import { AsyncPipe, UpperCasePipe } from '@angular/common'; 
 import { Component, inject } from '@angular/core';
 import { WorkspacesService } from '../../data/services/workspaces-service';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 
 @Component({
     selector: 'app-sidebar',
-    imports: [AsyncPipe, UpperCasePipe],
+    imports: [AsyncPipe, UpperCasePipe, RouterLink, RouterLinkActive],
     templateUrl: './sidebar.html',
     styleUrl: './sidebar.css',
 })

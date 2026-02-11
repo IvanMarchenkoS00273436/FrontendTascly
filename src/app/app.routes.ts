@@ -3,9 +3,18 @@ import { Login } from './pages/login/login';
 import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { canActivateAuth } from './auth/access-guard';
+import { WorkspaceMembers } from './common-ui/workspace-members/workspace-members';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
     { path: 'register', component: Register },
-    { path: 'dashboard', component: Dashboard, canActivate: [canActivateAuth] } 
+    { 
+        path: 'dashboard', 
+        component: Dashboard, 
+        canActivate: [canActivateAuth],
+        children: [
+            { path: ':id/members', component: WorkspaceMembers }
+        ]
+    },
+    { path: '', redirectTo: 'login', pathMatch: 'full' }
 ];

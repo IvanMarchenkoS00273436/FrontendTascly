@@ -24,8 +24,8 @@
         grid-template-columns: 1.4fr 1fr;
         
         /* 
-           Row 1: 1fr  -> Expands to fill space (Welcome Card gets big)
-           Row 2: auto -> Shrinks to fit content (Register Link gets small)
+        Row 1: 1fr  -> Expands to fill space (Welcome Card gets big)
+        Row 2: auto -> Shrinks to fit content (Register Link gets small)
         */
         grid-template-rows: 1fr auto;
     }
