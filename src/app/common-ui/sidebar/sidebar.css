@@ -7,16 +7,49 @@
     /* Ensure it looks like a card */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
 }
 
-.modern-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-    display: block;
+/* --- User Profile Block --- */
+.user-profile-card {
+    background-color: #f8f9fa; /* Light gray to contrast with white sidebar */
+    border-radius: 16px;
+    padding: 12px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.user-profile-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066; /* Lime border */
+    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    transform: translateY(-1px);
+}
+
+.avatar-box-small {
+    width: 40px;
+    height: 40px;
+    background-color: #000000; /* Dark for contrast or use #d8f066 for lime */
+    background-color: #d8f066;
+    color: #000;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px; /* Bento Radius */
+    font-size: 0.9rem;
+}
+
+.settings-icon {
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.user-profile-card:hover .settings-icon {
+    opacity: 1;
+    color: #000;
 }
 
 /* --- Dropdown Toggle Button --- */

@@ -2,6 +2,7 @@ import { AsyncPipe, UpperCasePipe } from '@angular/common';
 import { Component, inject } from '@angular/core';
 import { WorkspacesService } from '../../data/services/workspaces-service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
+import { UsersService } from '../../data/services/users-service';
 
 @Component({
     selector: 'app-sidebar',
@@ -12,7 +13,10 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 
 export class Sidebar {
     workspacesService = inject(WorkspacesService);
+    userService = inject(UsersService);
+
     $workspaces = this.workspacesService.getWorkspaces();
+    $userProfile = this.userService.getUserProfile();
 
     expandedWorkspaceIds = new Set<string>();
 
