@@ -62,6 +62,12 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
+/* Edit Form Specific Shadow */
+.edit-form-card {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(0,0,0,0.05);
+}
+
 /* --- Avatar --- */
 .avatar-large {
     width: 90px;
@@ -134,16 +140,52 @@
     transform: translateY(-2px);
 }
 
+/* --- Modern Input (From Login Theme) --- */
+.modern-input {
+    background-color: #f4f4f5;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: #000000;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modern-input:focus {
+    background-color: #ffffff;
+    border-color: #000000;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input::placeholder {
+    color: #999;
+}
+
+.bg-success-subtle {
+    background-color: #d1e7dd;
+}
+
+.text-success {
+    color: #0f5132 !important;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
 /* --- Utility --- */
 .font-monospace {
     font-family: 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', monospace;
     letter-spacing: -0.5px;
-}
-
-/* Animation */
-@keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
 }
 
 /* Mobile Responsive */

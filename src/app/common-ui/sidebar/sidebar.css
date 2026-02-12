@@ -131,3 +131,48 @@
     color: #000;
     border-left-color: #d8f066; /* Lime highlight on hover */
 }
+
+/* --- Mini Create Button --- */
+.btn-create-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-create-mini:hover {
+    background-color: #efefef;
+    color: #000;
+}
+
+/* --- Create Workspace Box --- */
+.create-workspace-box {
+    background-color: #ffffff;
+    border: 1px solid #eee !important;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.03);
+}
+
+.btn-lime {
+    background-color: #d8f066;
+    color: #000;
+    border: none;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+}
+
+.slide-down {
+    animation: slideDown 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes slideDown {
+    from { opacity: 0; transform: translateY(-5px); }
+    to { opacity: 1; transform: translateY(0); }
+}
