@@ -163,7 +163,6 @@
     }
     
     .profile-header-card .border-start {
-        border-start: 0 !important;
         border-left: 0 !important;
         padding-left: 0 !important;
         margin-left: 0 !important;
