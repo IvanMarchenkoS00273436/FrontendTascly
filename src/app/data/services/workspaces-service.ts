@@ -27,6 +27,6 @@ export class WorkspacesService {
     }
 
     postWorkspace(postWorkspace: PostWorkspace): Observable<PostWorkspace> { 
-        return this.http.post<PostWorkspace>(this.baseUrl, postWorkspace);
+        return this.http.post<PostWorkspace>(this.baseUrl, postWorkspace, { responseType: 'text' as 'json' });
     }
 }

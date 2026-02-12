@@ -72,78 +72,56 @@
         }
 
         <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-            @if ($workspaces | async; as workspaces) {
-            @for (ws of workspaces; track ws.id) {
-            <li>
-                <!-- Workspace Toggle Button -->
-                <button class="btn-sidebar-toggle" (click)="toggleWorkspace(ws.id)" [class.active]="isExpanded(ws.id)">
+            <!-- Updated to use Resource API .value() -->
+            @if (workspaces.value(); as workspacesList) {
+                @for (ws of workspacesList; track ws.id) {
+                    <li>
+                        <!-- Workspace Toggle Button -->
+                        <button class="btn-sidebar-toggle" (click)="toggleWorkspace(ws.id)" [class.active]="isExpanded(ws.id)">
+                            
+                            <div class="d-flex align-items-center gap-3" style="min-width: 0;">
+                                <!-- Initials Box -->
+                                <div class="icon-box flex-shrink-0">
+                                    <span class="fw-bold">{{ ws.name.charAt(0) | uppercase }}</span>
+                                </div>
+                                <!-- Name -->
+                                <span class="fw-bold text-truncate">{{ ws.name }}</span>
+                            </div>
 
-                    <div class="d-flex align-items-center gap-3" style="min-width: 0;">
-                        <!-- Initials Box -->
-                        <div class="icon-box flex-shrink-0">
-                            <span class="fw-bold">{{ ws.name.charAt(0) | uppercase }}</span>
+                            <!-- Chevron -->
+                            <svg [class.rotate-chevron]="isExpanded(ws.id)" class="chevron flex-shrink-0" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m6 9 6 6 6-6"/></svg>
+                        </button>
+
+                        <!-- Inner Content: Projects/Tasks -->
+                        <div class="workspace-list-wrapper" [class.expanded]="isExpanded(ws.id)">
+                            <ul class="list-unstyled mb-0 pt-2 pb-1 ps-3 ms-3 border-start border-2">
+                                <li>
+                                    <a class="workspace-item d-flex align-items-center gap-2 small">
+                                        <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                                        Overview
+                                    </a>
+                                </li>
+                                <li>
+                                    <a [routerLink]="['/dashboard', ws.id, 'members']" 
+                                       routerLinkActive="text-primary fw-bold"
+                                       class="workspace-item d-flex align-items-center gap-2 small">
+                                        
+                                        <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+                                        Members
+                                    </a>
+                                </li>
+                                <li>
+                                    <a class="workspace-item d-flex align-items-center gap-2 small">
+                                        <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="7" height="7" x="3" y="3" rx="1"/><rect width="7" height="7" x="14" y="3" rx="1"/><rect width="7" height="7" x="14" y="14" rx="1"/><rect width="7" height="7" x="3" y="14" rx="1"/></svg>
+                                        Projects
+                                    </a>
+                                </li>
+                            </ul>
                         </div>
-                        <!-- Name -->
-                        <span class="fw-bold text-truncate">{{ ws.name }}</span>
-                    </div>
-
-                    <!-- Chevron -->
-                    <svg [class.rotate-chevron]="isExpanded(ws.id)" class="chevron flex-shrink-0"
-                        xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="m6 9 6 6 6-6" />
-                    </svg>
-                </button>
-
-                <!-- Inner Content: Projects/Tasks -->
-                <div class="workspace-list-wrapper" [class.expanded]="isExpanded(ws.id)">
-                    <ul class="list-unstyled mb-0 pt-2 pb-1 ps-3 ms-3 border-start border-2">
-                        <li>
-                            <a class="workspace-item d-flex align-items-center gap-2 small">
-                                <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
-                                    <polyline points="9 22 9 12 15 12 15 22" />
-                                </svg>
-                                Overview
-                            </a>
-                        </li>
-                        <li>
-                            <!-- Added routerLink and routerLinkActive -->
-                            <a [routerLink]="['/dashboard', ws.id, 'members']" routerLinkActive="text-primary fw-bold"
-                                class="workspace-item d-flex align-items-center gap-2 small">
-
-                                <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
-                                    <circle cx="9" cy="7" r="4" />
-                                    <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
-                                    <path d="M16 3.13a4 4 0 0 1 0 7.75" />
-                                </svg>
-                                Members
-                            </a>
-                        </li>
-                        <li>
-                            <a class="workspace-item d-flex align-items-center gap-2 small">
-                                <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round">
-                                    <rect width="7" height="7" x="3" y="3" rx="1" />
-                                    <rect width="7" height="7" x="14" y="3" rx="1" />
-                                    <rect width="7" height="7" x="14" y="14" rx="1" />
-                                    <rect width="7" height="7" x="3" y="14" rx="1" />
-                                </svg>
-                                Projects
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </li>
-            } @empty {
-            <li><span class="text-muted small ps-3">No workspaces found</span></li>
-            }
+                    </li>
+                } @empty {
+                    <li><span class="text-muted small ps-3">No workspaces found</span></li>
+                }
             }
         </ul>
     </div>

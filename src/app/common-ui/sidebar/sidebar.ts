@@ -1,10 +1,10 @@
 import { AsyncPipe, UpperCasePipe } from '@angular/common'; 
-import { Component, inject } from '@angular/core';
+import { Component, inject, resource } from '@angular/core'; // Added resource
 import { WorkspacesService } from '../../data/services/workspaces-service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UsersService } from '../../data/services/users-service';
 import { FormsModule } from '@angular/forms'; 
-import { tap } from 'rxjs';
+import { tap, firstValueFrom } from 'rxjs'; // Added firstValueFrom
 
 @Component({
     selector: 'app-sidebar',
@@ -17,7 +17,9 @@ export class Sidebar {
     workspacesService = inject(WorkspacesService);
     userService = inject(UsersService);
 
-    $workspaces = this.workspacesService.getWorkspaces();
+    // Resource API for workspaces
+    workspaces = resource({ loader: () => firstValueFrom(this.workspacesService.getWorkspaces()) });
+
     $userProfile = this.userService.getUserProfile();
 
     expandedWorkspaceIds = new Set<string>();
@@ -46,18 +48,13 @@ export class Sidebar {
     createWorkspace() {
         if (!this.newWorkspaceName.trim()) return;
 
-        // To be fixed maybe
-        location.reload();
-
         this.workspacesService.postWorkspace({ name: this.newWorkspaceName }).pipe(
             tap(() => {
-                this.$workspaces = this.workspacesService.getWorkspaces();
+                this.workspaces.reload();
                 this.toggleCreateInput(); 
             })
         ).subscribe({
             error: (err) => console.error('Failed to create workspace', err)
         });
-
-        
     }
 }
