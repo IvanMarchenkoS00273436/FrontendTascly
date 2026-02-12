@@ -4,12 +4,27 @@
     @if ($userProfile | async; as user) {
         <div class="mb-4">
             <label class="modern-label ps-2 mb-2">Your Organization</label>
-            <div class="organization-card d-flex align-items-center gap-3 p-2 rounded-3 border bg-light">
-                <div class="icon-box-small flex-shrink-0 bg-white border">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-secondary"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+            
+            <a [routerLink]="['/dashboard', 'organization']" 
+               class="organization-card d-flex align-items-center gap-3 text-decoration-none text-dark"
+               style="cursor: pointer;">
+                
+                <!-- Icon Box -->
+                <div class="org-icon-box flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21h18"/><path d="M5 21V7l8-4 8 4v14"/><path d="M8 21v-2a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"/><path d="M10 9a2 2 0 1 1 4 0"/></svg>
                 </div>
-                <span class="fw-bold text-truncate small">{{ user.organizationName }}</span>
-            </div>
+
+                <!-- Text Content -->
+                <div class="flex-grow-1 overflow-hidden">
+                    <p class="mb-0 fw-bold text-truncate small">{{ user.organizationName }}</p>
+                    <p class="mb-0 text-muted small" style="font-size: 0.75rem;">Manage Team</p>
+                </div>
+                
+                <!-- Hover Arrow -->
+                <div class="arrow-icon text-muted">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </div>
+            </a>
         </div>
 
         <!-- User Profile Block -->

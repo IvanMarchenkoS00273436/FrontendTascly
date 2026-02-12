@@ -190,4 +190,73 @@
 .organization-card {
     background-color: #f8f9fa;
     border-color: #eee !important;
+    transition: all 0.2s ease;
+}
+
+/* Hover Effect for Organization Card */
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db !important; /* Slightly darker border */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0,0,0,0.05);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    background-color: #f3f4f6;
+}
+
+/* --- Organization Bento Tile --- */
+.organization-card {
+    background-color: #f8f9fa; /* Light gray base */
+    border: 1px solid transparent;
+    border-radius: 16px; /* Bento radius */
+    padding: 12px 16px;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* Icon Container */
+.org-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+    border: 1px solid rgba(0,0,0,0.04);
+}
+
+.organization-card:hover .org-icon-box {
+    background-color: #d8f066; /* Lime accent on hover */
+    border-color: transparent;
+    color: #000;
+}
+
+/* Arrow Animation */
+.arrow-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+}
+
+.organization-card:hover .arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
 }

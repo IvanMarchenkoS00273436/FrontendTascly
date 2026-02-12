@@ -1,1 +1,221 @@
-<p>organization-overview works!</p>
+<div class="bento-panel h-100 overflow-auto">
+    @if ($organization | async; as org) {
+        
+        <!-- Header Section -->
+        <div class="d-flex align-items-center justify-content-between mb-5">
+            <div class="d-flex align-items-center gap-3 w-100">
+                <div class="p-3 bg-light rounded-4 border flex-shrink-0">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path></svg>
+                </div>
+                
+                <div class="flex-grow-1">
+                    @if (isEditingName) {
+                        <!-- Edit Mode -->
+                        <div class="d-flex align-items-center gap-2 slide-in-left">
+                            <input type="text" [(ngModel)]="editedName" 
+                                   class="form-control form-control-lg fw-black modern-input fs-2 py-1 px-3" 
+                                   placeholder="Organization Name" autoFocus
+                                   (keydown.enter)="saveName()"
+                                   (keydown.escape)="cancelEdit()">
+                            
+                            <button class="btn btn-lime p-2 rounded-3 ms-2" (click)="saveName()" title="Save">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                            </button>
+                            <button class="btn btn-light border p-2 rounded-3" (click)="cancelEdit()" title="Cancel">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+                            </button>
+                        </div>
+                    } @else {
+                        <!-- View Mode -->
+                        <div class="d-flex align-items-center justify-content-between w-100">
+                            <div>
+                                <h2 class="display-6 fw-black mb-0">{{ org.name }}</h2>
+                                <p class="text-secondary fw-medium mb-0">Organization Overview</p>
+                            </div>
+                            
+                            <!-- Edit Button (Right Aligned) -->
+                            <button class="btn btn-light border fw-bold d-flex align-items-center gap-2 px-3 py-2 rounded-3" (click)="startEditing(org.name)">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+                                Edit Name
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+            
+        </div>
+
+        <div class="bento-grid-org">
+
+            <!-- 1. Stats Row -->
+
+            <!-- Total Tasks -->
+            <div class="bento-card stat-card card-total">
+                <div class="icon-circle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 20h9" />
+                        <path d="M16.5 3.5a2.12 2.12 0 0 1 3 3L7 19l-4 1 1-4Z" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="display-4 fw-black mb-0">{{ org.totalTasks }}</h3>
+                    <span class="text-secondary small fw-bold text-uppercase ls-1">Total Tasks</span>
+
+                    <!-- Visual line explicitly just for total -->
+                    <div class="progress-bg">
+                        <div class="progress-fill bg-dark" style="width: 100%"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Completed -->
+            <div class="bento-card stat-card card-completed">
+                <div class="icon-circle bg-success-subtle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        class="text-success" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <polyline points="20 6 9 17 4 12" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="display-4 fw-black mb-0 text-success">{{ org.totalCompletedTasks }}</h3>
+                    <span class="text-secondary small fw-bold text-uppercase ls-1">Completed</span>
+
+                    <!-- Progress Bar -->
+                    <div class="progress-bg">
+                        <div class="progress-fill fill-success"
+                            [style.width.%]="(org.totalCompletedTasks / org.totalTasks) * 100 || 0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- In Progress -->
+            <div class="bento-card stat-card card-progress">
+                <div class="icon-circle bg-warning-subtle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        class="text-warning-dark" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <polyline points="12 6 12 12 16 14" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="display-4 fw-black mb-0 text-warning-dark">{{ org.totalInProgressTasks }}</h3>
+                    <span class="text-secondary small fw-bold text-uppercase ls-1">In Progress</span>
+
+                    <div class="progress-bg">
+                        <div class="progress-fill fill-warning"
+                            [style.width.%]="(org.totalInProgressTasks / org.totalTasks) * 100 || 0"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- To Do -->
+            <div class="bento-card stat-card card-todo">
+                <div class="icon-circle bg-primary-subtle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        class="text-primary" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="display-4 fw-black mb-0 text-primary">{{ org.totalToDoTasks }}</h3>
+                    <span class="text-secondary small fw-bold text-uppercase ls-1">To Do</span>
+
+                    <div class="progress-bg">
+                        <div class="progress-fill fill-primary"
+                            [style.width.%]="(org.totalToDoTasks / org.totalTasks) * 100 || 0"></div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- 2. Members List (Large Card) -->
+            <div class="bento-card list-card">
+                <div class="list-header">
+                    <div>
+                        <h3 class="h5 fw-bold mb-0">Team Members</h3>
+                        <p class="text-muted small mb-0">People with access to this organization</p>
+                    </div>
+                    <span class="badge bg-white text-dark border shadow-sm rounded-pill px-3 py-2">{{ org.members.length }}
+                        Active</span>
+                </div>
+
+                <div class="list-container custom-scrollbar">
+                    @for (member of org.members; track member.id) {
+                    <div class="list-item d-flex align-items-center gap-3 rounded-4 mb-2">
+                        <!-- Alternate avatar colors -->
+                        <div class="avatar-initials" [class.avatar-dark]="!member.isAdmin"
+                            [class.avatar-lime]="member.isAdmin">
+                            {{ member.firstName.charAt(0) | uppercase }}{{ member.lastName.charAt(0) | uppercase }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-bold text-dark">{{ member.firstName }} {{ member.lastName }}</p>
+                            <p class="mb-0 text-muted small" style="font-size: 0.8rem;">{{ member.userName }}</p>
+                        </div>
+                        @if (member.isAdmin) {
+                        <span class="badge bg-light border text-dark fw-bold rounded-pill">Admin</span>
+                        }
+                    </div>
+                    } @empty {
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            class="mb-2" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2" />
+                            <circle cx="9" cy="7" r="4" />
+                            <path d="M22 21v-2a4 4 0 0 0-3-3.87" />
+                            <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                        </svg>
+                        <p class="mb-0 font-monospace small">No Members</p>
+                    </div>
+                    }
+                </div>
+            </div>
+
+
+            <!-- 3. Workspaces List (Large Card) -->
+            <div class="bento-card list-card">
+                <div class="list-header">
+                    <div>
+                        <h3 class="h5 fw-bold mb-0">Workspaces</h3>
+                        <p class="text-muted small mb-0">Active project containers</p>
+                    </div>
+                    <button class="btn btn-sm btn-light border fw-bold rounded-pill">View All</button>
+                </div>
+
+                <div class="list-container custom-scrollbar">
+                    @for (ws of org.workspaces; track ws.id) {
+                    <div class="list-item d-flex align-items-center gap-3 rounded-4 mb-2">
+                        <div class="avatar-initials avatar-sky border">
+                            {{ ws.name.charAt(0) | uppercase }}
+                        </div>
+                        <div class="flex-grow-1">
+                            <p class="mb-0 fw-bold text-dark">{{ ws.name }}</p>
+                            <p class="mb-0 text-muted small font-monospace" style="font-size: 0.75rem;">ID: {{
+                                ws.id.substring(0, 8) }}</p>
+                        </div>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                            stroke="#999" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polyline points="9 18 15 12 9 6" />
+                        </svg>
+                    </div>
+                    } @empty {
+                    <div class="d-flex flex-column align-items-center justify-content-center h-100 opacity-50">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 24 24" fill="none"
+                            class="mb-2" stroke="currentColor" stroke-width="1" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
+                            <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
+                        </svg>
+                        <p class="mb-0 font-monospace small">No Workspaces</p>
+                    </div>
+                    }
+                </div>
+            </div>
+
+        </div>
+    }
+</div>
