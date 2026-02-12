@@ -4,6 +4,7 @@ import { Register } from './pages/register/register';
 import { Dashboard } from './pages/dashboard/dashboard';
 import { canActivateAuth } from './auth/access-guard';
 import { WorkspaceMembers } from './common-ui/workspace-members/workspace-members';
+import { UserProfile } from './common-ui/user-profile/user-profile';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -13,6 +14,7 @@ export const routes: Routes = [
         component: Dashboard, 
         canActivate: [canActivateAuth],
         children: [
+            { path: 'profile', component: UserProfile },
             { path: ':id/members', component: WorkspaceMembers }
         ]
     },
