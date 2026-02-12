@@ -4,7 +4,7 @@ import { WorkspacesService } from '../../data/services/workspaces-service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UsersService } from '../../data/services/users-service';
 import { FormsModule } from '@angular/forms'; 
-import { tap, firstValueFrom } from 'rxjs'; // Added firstValueFrom
+import { tap, firstValueFrom } from 'rxjs';
 
 @Component({
     selector: 'app-sidebar',

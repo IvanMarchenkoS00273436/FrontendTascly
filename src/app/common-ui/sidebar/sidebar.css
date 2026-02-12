@@ -176,3 +176,18 @@
     from { opacity: 0; transform: translateY(-5px); }
     to { opacity: 1; transform: translateY(0); }
 }
+
+/* --- Icon Box Small --- */
+.icon-box-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.organization-card {
+    background-color: #f8f9fa;
+    border-color: #eee !important;
+}
