@@ -18,7 +18,7 @@ export class ProjectsService {
     }
 
     postWorkspaceProject(workspaceId: string, postProject: PostProject): Observable<PostProject> {
-        return this.http.post<PostProject>(`${this.baseUrl}/Workspaces/${workspaceId}`, postProject);
+        return this.http.post<PostProject>(`${this.baseUrl}/Workspaces/${workspaceId}`, postProject, { responseType: 'text' as 'json' });
     }
 
     getProjectById(projectId: string): Observable<GetProject> { 
