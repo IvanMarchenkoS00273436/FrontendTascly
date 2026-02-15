@@ -1,1 +1,11 @@
-/* You can add global styles to this file, and also import other style files */
+html {
+    font-size:100%; 
+}
+
+body {
+    background-color: #efefef;
+    margin: 0;
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    line-height: 1.6;
+    color: #111; 
+}

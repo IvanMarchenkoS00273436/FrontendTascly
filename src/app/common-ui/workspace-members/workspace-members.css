@@ -1,0 +1,167 @@
+/* --- Main Component Container (The Bento Card) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* --- Grid Layout --- */
+.members-grid {
+    display: grid;
+    /* Adaptive grid for inner tiles */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* --- Member Tile (Inner) --- */
+.member-card {
+    /* Changed from White to Light Gray for contrast inside White Panel */
+    background-color: #f8f9fa; 
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    position: relative;
+    border: 1px solid transparent;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 400px;
+    justify-content: space-between;
+}
+
+.member-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066; /* Lime Border */
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* --- Avatar --- */
+.avatar-large {
+    width: 96px;
+    height: 96px;
+    border-radius: 32px;
+    background-color: #d8f066; /* Lime Accent */
+    color: #000000;
+    font-size: 2.5rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1.5px;
+    /* Shadow for pop */
+    box-shadow: 0 8px 16px rgba(216, 240, 102, 0.4); 
+    transition: transform 0.3s ease;
+}
+
+.member-card:hover .avatar-large {
+    transform: scale(1.1) rotate(-3deg);
+}
+
+/* --- Typography --- */
+.name-group {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.first-name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #000000;
+    line-height: 1;
+    display: block;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.2rem;
+}
+
+.last-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #888888;
+    line-height: 1;
+    display: block;
+}
+
+/* --- Info Section --- */
+.info-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    /* White background inside gray tile */
+    background-color: #ffffff; 
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: #000;
+    font-weight: 600;
+}
+
+.info-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f5;
+    border-radius: 10px;
+    color: #000;
+}
+
+/* --- Header & Buttons --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2.5rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.btn-lime {
+    background-color: #d8f066;
+    color: #000000;
+    border: none;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 0.8rem 1.75rem;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(180, 204, 51, 0.5);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}

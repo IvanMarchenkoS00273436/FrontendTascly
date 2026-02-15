@@ -7,16 +7,53 @@
     /* Ensure it looks like a card */
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
 }
 
-.modern-label {
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #888;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 0.75rem;
-    display: block;
+/* --- User Profile Block --- */
+.user-profile-card {
+    background-color: #f8f9fa;
+    /* Light gray to contrast with white sidebar */
+    border-radius: 16px;
+    padding: 12px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.user-profile-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066;
+    /* Lime border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+.avatar-box-small {
+    width: 40px;
+    height: 40px;
+    background-color: #000000;
+    /* Dark for contrast or use #d8f066 for lime */
+    background-color: #d8f066;
+    color: #000;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    /* Bento Radius */
+    font-size: 0.9rem;
+}
+
+.settings-icon {
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.user-profile-card:hover .settings-icon {
+    opacity: 1;
+    color: #000;
 }
 
 /* --- Dropdown Toggle Button --- */
@@ -25,7 +62,8 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background-color: #f8f9fa; /* Very light gray to contrast with white card */
+    background-color: #f8f9fa;
+    /* Very light gray to contrast with white card */
     border: 1px solid transparent;
     border-radius: 16px;
     padding: 12px 16px;
@@ -34,9 +72,10 @@
     transition: all 0.2s ease;
 }
 
-.btn-sidebar-toggle:hover, .btn-sidebar-toggle.active {
+.btn-sidebar-toggle:hover,
+.btn-sidebar-toggle.active {
     background-color: #ffffff;
-    box-shadow: 0 8px 16px rgba(0,0,0,0.06);
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
     border-color: #efefef;
     transform: translateY(-1px);
 }
@@ -45,7 +84,8 @@
 .icon-box {
     width: 32px;
     height: 32px;
-    background-color: #d8f066; /* Primary Lime Accent */
+    background-color: #d8f066;
+    /* Primary Lime Accent */
     border-radius: 10px;
     display: flex;
     align-items: center;
@@ -74,14 +114,15 @@
     grid-template-rows: 1fr;
 }
 
-.workspace-list-wrapper > ul {
+.workspace-list-wrapper>ul {
     overflow: hidden;
 }
 
 /* --- List Items --- */
 .workspace-item {
     display: block;
-    padding: 10px 16px;
+    padding: 0.5rem 0.75rem; /* Ensure padding matches links if they have it */
+    min-height: 32px; /* Enforce height consistency */
     margin-top: 4px;
     border-radius: 12px;
     color: #444;
@@ -96,5 +137,198 @@
 .workspace-item:hover {
     background-color: #efefef;
     color: #000;
-    border-left-color: #d8f066; /* Lime highlight on hover */
+    border-left-color: #d8f066;
+    /* Lime highlight on hover */
+}
+
+/* --- Mini Create Button --- */
+.btn-create-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-create-mini:hover {
+    background-color: #efefef;
+    color: #000;
+}
+
+/* --- Create Workspace Box --- */
+.create-workspace-box {
+    background-color: #ffffff;
+    border: 1px solid #eee !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.btn-lime {
+    background-color: #d8f066;
+    color: #000;
+    border: none;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+}
+
+.slide-down {
+    animation: slideDown 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Icon Box Small --- */
+.icon-box-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.organization-card {
+    background-color: #f8f9fa;
+    border-color: #eee !important;
+    transition: all 0.2s ease;
+}
+
+/* Hover Effect for Organization Card */
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db !important;
+    /* Slightly darker border */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    background-color: #f3f4f6;
+}
+
+/* --- Organization Bento Tile --- */
+.organization-card {
+    background-color: #f8f9fa;
+    /* Light gray base */
+    border: 1px solid transparent;
+    border-radius: 16px;
+    /* Bento radius */
+    padding: 12px 16px;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Icon Container */
+.org-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.organization-card:hover .org-icon-box {
+    background-color: #d8f066;
+    /* Lime accent on hover */
+    border-color: transparent;
+    color: #000;
+}
+
+/* Arrow Animation */
+.arrow-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+}
+
+.organization-card:hover .arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Projects Nested Chevron */
+.chevron-small {
+    transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Reusing .rotate-chevron from existing code */
+
+/* Specific spacing for nested items */
+/* FIX: Ensure both div and a tags with .workspace-item have identical box-sizing */
+.workspace-list-wrapper ul li .workspace-item {
+    border-left: none;
+    padding-left: 8px;
+    height: 36px; /* Increased from 32px to ensure comfort match */
+    display: flex; /* Enforce flex layout for both div and a */
+    align-items: center; /* Vertically center content */
+}
+
+/* Specific fix for the div container to ensure it behaves like the link */
+div.workspace-item {
+    padding: 0.5rem 0.75rem; 
+    box-sizing: border-box; /* Crucial for padding/height calculation */
+    width: 100%;
+}
+
+/* --- Mini Plus Button in Tree --- */
+.btn-icon-mini {
+    opacity: 0.5;
+    transition: all 0.2s;
+}
+
+.workspace-item:hover .btn-icon-mini {
+    opacity: 1; /* Make visible on row hover */
+}
+
+.btn-icon-mini:hover {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+    transform: scale(1.1);
+}
+
+/* --- Create Workspace Box styles exist... */
+
+/* Specific adjustment for nested creation box to look cohesive */
+.workspace-list-wrapper .create-workspace-box {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Slightly stronger shadow for pop over list */
+    border-color: #e5e7eb !important;
+}
+
+.workspace-list-wrapper .create-workspace-box input {
+    background-color: #ffffff; /* Contrast against light gray box */
 }

@@ -1,7 +1,7 @@
 /* --- Dashboard Layout --- */
 .dashboard-container {
     display: grid;
-    grid-template-columns: 280px 1fr; /* Fixed Sidebar Width + Fluid Content */
+    grid-template-columns: 380px 1fr; /* Increased width from 280px to 360px */
     gap: 1.5rem;
     padding: 1.5rem;
     /* Ensure full height minus header/footer approximations if needed */
