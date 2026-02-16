@@ -6,6 +6,7 @@ import { canActivateAuth } from './auth/access-guard';
 import { WorkspaceMembers } from './common-ui/workspace-members/workspace-members';
 import { UserProfile } from './common-ui/user-profile/user-profile';
 import { OrganizationOverview } from './common-ui/organization-overview/organization-overview';
+import { TasksKanbanView } from './common-ui/tasks-kanban-view/tasks-kanban-view';
 
 export const routes: Routes = [
     { path: 'login', component: Login },
@@ -17,7 +18,8 @@ export const routes: Routes = [
         children: [
             { path: 'profile', component: UserProfile },
             { path: 'organization', component: OrganizationOverview },
-            { path: ':id/members', component: WorkspaceMembers }
+            { path: ':id/members', component: WorkspaceMembers },
+            { path: 'projects/:id', component: TasksKanbanView }
         ]
     },
     { path: '', redirectTo: 'login', pathMatch: 'full' }

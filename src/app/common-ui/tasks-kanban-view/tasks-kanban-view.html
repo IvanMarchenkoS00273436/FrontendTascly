@@ -1,0 +1,135 @@
+<div class="bento-panel h-100 d-flex flex-column overflow-hidden">
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-end mb-4 px-1 flex-shrink-0">
+        <div>
+            <h2 class="page-title mb-1">Project Board</h2>
+            <p class="page-subtitle mb-0">Track progress and manage tasks.</p>
+        </div>
+        <!-- Add Task Button (Lime) -->
+        <button class="btn btn-lime d-flex align-items-center gap-2">
+            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            <span class="d-none d-sm-inline">New Task</span>
+        </button>
+    </div>
+
+    <!-- Kanban Board Area -->
+    @if (tasks$ | async; as tasksMap) {
+    <div class="kanban-board flex-grow-1 custom-scrollbar">
+
+        <!-- Loop through columns -->
+        @for (status of columns; track status) {
+        <div class="kanban-column d-flex flex-column h-100">
+
+            <!-- Column Header -->
+            <div class="column-header mb-3 d-flex align-items-center justify-content-between px-2">
+                <div class="d-flex align-items-center gap-2">
+                    <h6 class="fw-bold mb-0 text-uppercase ls-1 text-secondary small">{{ status }}</h6>
+                    <span class="badge bg-white text-dark border shadow-sm rounded-pill fw-bold">{{
+                        tasksMap[status]?.length || 0 }}</span>
+                </div>
+                <button class="btn btn-icon-soft btn-sm p-1" title="Options">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-muted">
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                        <circle cx="5" cy="12" r="1" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tasks List Container -->
+            <div class="tasks-container flex-grow-1 overflow-auto custom-scrollbar px-2 pb-2">
+                <div class="d-flex flex-column gap-3">
+                    @for (task of tasksMap[status]; track task.id) {
+                    <div class="bento-card task-card p-3">
+
+                        <!-- Meta Row -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+
+                            <!-- Importance Badge -->
+                            @if(task.importanceName) {
+                            <span class="badge rounded-pill fw-bold border"
+                                [class.bg-danger-subtle]="task.importanceName === 'High'"
+                                [class.text-danger]="task.importanceName === 'High'"
+                                [class.border-danger-subtle]="task.importanceName === 'High'"
+                                [class.bg-warning-subtle]="task.importanceName === 'Medium'"
+                                [class.text-warning-dark]="task.importanceName === 'Medium'"
+                                [class.border-warning-subtle]="task.importanceName === 'Medium'"
+                                [class.bg-success-subtle]="task.importanceName === 'Low'"
+                                [class.text-success]="task.importanceName === 'Low'"
+                                [class.border-success-subtle]="task.importanceName === 'Low'"
+                                style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                                {{ task.importanceName | uppercase }}
+                            </span>
+                            }
+
+                            <!-- Edit Dots -->
+                            <div class="options-dots opacity-0">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" class="text-muted">
+                                    <circle cx="12" cy="12" r="1" />
+                                    <circle cx="12" cy="5" r="1" />
+                                    <circle cx="12" cy="19" r="1" />
+                                </svg>
+                            </div>
+                        </div>
+
+                        <!-- Content -->
+                        <!-- Increased font weight and size for title -->
+                        <h6 class="task-title mb-2 text-dark">{{ task.name }}</h6>
+                        
+                        <!-- Removed 'small', added specific class for description -->
+                        <p class="task-desc text-muted mb-3 line-clamp-2">{{ task.description }}</p>
+
+                        <!-- Footer -->
+                        <div class="d-flex align-items-center justify-content-between mt-auto border-top pt-3 border-light">
+                            <!-- Date -->
+                            <!-- Slightly bumped up size for date -->
+                            <div class="d-flex align-items-center gap-1 text-muted fw-medium fs-7">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                {{ task.dueDate | date:'MMM d' }}
+                            </div>
+                            
+                            <!-- Avatar Placeholder -->
+                            <div class="avatar-created d-flex align-items-center justify-content-center fw-bold bg-light text-dark rounded-circle border"
+                                style="width: 32px; height: 32px; font-size: 0.85rem;">
+                                U
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <!-- Empty State -->
+                    <div
+                        class="empty-placeholder p-4 text-center rounded-4 border border-dashed d-flex flex-column align-items-center justify-content-center gap-2">
+                        <div class="p-2 bg-white rounded-circle">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="#ccc" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </div>
+                        <span class="text-muted small fw-medium">No tasks</span>
+                    </div>
+                    }
+                </div>
+            </div>
+        </div>
+        }
+    </div>
+    }
+</div>
