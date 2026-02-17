@@ -16,6 +16,7 @@ export const routes: Routes = [
         component: Dashboard, 
         canActivate: [canActivateAuth],
         children: [
+            { path: '', redirectTo: 'organization', pathMatch: 'full' },
             { path: 'profile', component: UserProfile },
             { path: 'organization', component: OrganizationOverview },
             { path: ':id/members', component: WorkspaceMembers },
