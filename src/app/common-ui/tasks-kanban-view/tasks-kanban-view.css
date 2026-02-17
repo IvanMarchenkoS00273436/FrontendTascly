@@ -31,11 +31,13 @@
 
 /* --- Kanban Board Layout --- */
 .kanban-board {
-    display: grid;
-    /* 3 Columns fixed, or auto-fit. Here we prefer fixed 3 for standard Kanban */
-    grid-template-columns: repeat(3, 1fr);
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to next line */
     gap: 1.5rem;
     padding-bottom: 0.5rem;
+    overflow-x: auto; /* Enable horizontal scroll */
+    height: 100%; /* Ensure it fills vertical space */
+    align-items: flex-start; /* columns align correctly */
 }
 
 /* --- Columns --- */
@@ -44,7 +46,9 @@
     border-radius: 20px;       /* Consistent Radius */
     padding: 1rem;
     border: 1px solid rgba(0,0,0,0.01);
-    min-width: 300px;
+    min-width: 320px; /* Fixed minimum width for columns */
+    width: 320px;     /* Ensure consistent width */
+    flex-shrink: 0;   /* Don't shrink below min-width */
 }
 
 /* --- Task Cards (Inner Bento) --- */

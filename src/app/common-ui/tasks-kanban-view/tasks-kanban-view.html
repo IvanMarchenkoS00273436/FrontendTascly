@@ -18,11 +18,11 @@
     </div>
 
     <!-- Kanban Board Area -->
-    @if (tasks$ | async; as tasksMap) {
+    @if (viewData$ | async; as data) {
     <div class="kanban-board flex-grow-1 custom-scrollbar">
 
-        <!-- Loop through columns -->
-        @for (status of columns; track status) {
+        <!-- Loop through dynamic columns -->
+        @for (status of data.columns; track status) {
         <div class="kanban-column d-flex flex-column h-100">
 
             <!-- Column Header -->
@@ -30,7 +30,7 @@
                 <div class="d-flex align-items-center gap-2">
                     <h6 class="fw-bold mb-0 text-uppercase ls-1 text-secondary small">{{ status }}</h6>
                     <span class="badge bg-white text-dark border shadow-sm rounded-pill fw-bold">{{
-                        tasksMap[status]?.length || 0 }}</span>
+                        data.groupedTasks[status]?.length || 0 }}</span>
                 </div>
                 <button class="btn btn-icon-soft btn-sm p-1" title="Options">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -46,7 +46,8 @@
             <!-- Tasks List Container -->
             <div class="tasks-container flex-grow-1 overflow-auto custom-scrollbar px-2 pb-2">
                 <div class="d-flex flex-column gap-3">
-                    @for (task of tasksMap[status]; track task.id) {
+                    <!-- Existing Tasks Loop -->
+                    @for (task of data.groupedTasks[status]; track task.id) {
                     <div class="bento-card task-card p-3">
 
                         <!-- Meta Row -->
@@ -127,7 +128,34 @@
                     </div>
                     }
                 </div>
+
+                <!-- New Task Form -->
+                @if (isCreating() && activeColumnForCreate() === status) {
+                    <div class="bento-card p-3 border shadow-sm bg-white">
+                        <textarea 
+                            class="form-control mb-2 small" 
+                            rows="2" 
+                            placeholder="What needs to be done?"
+                            [(ngModel)]="newTaskName">
+                        </textarea>
+                        <div class="d-flex gap-2 justify-content-end">
+                            <button class="btn btn-sm btn-light" (click)="cancelCreate()">Cancel</button>
+                            <button class="btn btn-sm btn-primary" 
+                                (click)="createTask(data.statusIdMap.get(status), data.defaultImportanceId)">
+                                Add
+                            </button>
+                        </div>
+                    </div>
+                }
             </div>
+
+            <!-- Create Button (at bottom of column) -->
+            @if (!isCreating() || activeColumnForCreate() !== status) {
+            <button class="btn btn-light w-100 mt-2 text-muted fw-bold small py-2 border-0" 
+                (click)="openCreateForm(status)">
+                + Add Task
+            </button>
+            }
         </div>
         }
     </div>
