@@ -20,4 +20,8 @@ export class UsersService {
     putUserProfile(putUserProfile: PutUserProfile): Observable<PutUserProfile> {
         return this.http.put<PutUserProfile>(this.apiUrl + '/UpdateUserProfile', putUserProfile);
     }
+
+    getAllUsers(): Observable<GetUserProfile[]> { 
+        return this.http.get<GetUserProfile[]>(this.apiUrl);
+    }
 }
