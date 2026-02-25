@@ -1,0 +1,202 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem; /* Large internal padding */
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* --- Kanban Board Layout --- */
+.kanban-board {
+    display: flex;
+    flex-wrap: nowrap; /* Prevent wrapping to next line */
+    gap: 1.5rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto; /* Enable horizontal scroll */
+    height: 100%; /* Ensure it fills vertical space */
+    align-items: flex-start; /* columns align correctly */
+}
+
+/* --- Columns --- */
+.kanban-column {
+    background-color: #f8f9fa; /* Light Gray Track */
+    border-radius: 20px;       /* Consistent Radius */
+    padding: 1rem;
+    border: 1px solid rgba(0,0,0,0.01);
+    min-width: 320px; /* Fixed minimum width for columns */
+    width: 320px;     /* Ensure consistent width */
+    flex-shrink: 0;   /* Don't shrink below min-width */
+}
+
+/* --- Task Cards (Inner Bento) --- */
+.task-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(0,0,0,0.04);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+    border-radius: 16px; /* Slightly smaller than main panel */
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    border-left: 3px solid transparent; 
+}
+
+.task-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.06);
+    border-color: rgba(0,0,0,0.08); /* Darker border on hover */
+}
+
+/* Hover effect to show options dots */
+.task-card:hover .options-dots {
+    opacity: 1 !important;
+    transition: opacity 0.2s;
+}
+
+/* --- Typography & Badges --- */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ls-1 {
+    letter-spacing: 0.05em;
+}
+
+/* Importance Badges - leveraging utility classes */
+.bg-danger-subtle { background-color: #fee2e2; }
+.text-danger { color: #ef4444 !important; }
+.border-danger-subtle { border-color: #fca5a5 !important; }
+
+.bg-warning-subtle { background-color: #fef3c7; }
+.text-warning-dark { color: #d97706 !important; }
+.border-warning-subtle { border-color: #fcd34d !important; }
+
+.bg-success-subtle { background-color: #dcfce7; }
+.text-success { color: #16a34a !important; }
+.border-success-subtle { border-color: #86efac !important; }
+
+/* Empty State */
+.empty-placeholder {
+    background-color: transparent;
+    border-color: #e5e7eb !important;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.empty-placeholder:hover {
+    background-color: rgba(0,0,0,0.02);
+    border-color: #d1d5db !important;
+}
+
+/* --- Buttons --- */
+.btn-lime {
+    background-color: #d8f066;
+    color: #000000;
+    border: none;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+/* Soft Icon Button */
+.btn-icon-soft {
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+.btn-icon-soft:hover {
+    background-color: #e5e7eb;
+    color: #000;
+}
+
+/* Custom Scrollbar for columns */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+/* --- Task Typography --- */
+.task-title {
+    font-weight: 700;        /* Bold but not heavy black */
+    font-size: 1.1rem;       /* Larger title (approx 17-18px) */
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+    color: #111;
+}
+
+.task-desc {
+    font-size: 0.95rem;      /* Readable body text (approx 15px) */
+    color: #555;             /* Darker gray for better contrast */
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.fs-7 {
+    font-size: 0.85rem;      /* Meta data size */
+}
+
+/* Badge Tweaks for readability */
+.badge {
+    font-size: 0.75rem !important;
+    padding: 0.35em 0.8em !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .bento-panel {
+        padding: 1.5rem;
+    }
+    .kanban-board {
+        grid-template-columns: 100%; /* Stack columns */
+        overflow-y: auto;
+    }
+    .kanban-column {
+        min-height: auto;
+        max-height: 500px; /* Limit height when stacked */
+        min-width: 100%;
+    }
+}

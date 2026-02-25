@@ -4,6 +4,8 @@ import { environment } from '../../../environments/environment';
 import { Observable } from 'rxjs';
 import { GetProject } from '../interfaces/projects/get-project';
 import { PostProject } from '../interfaces/projects/post-project';
+import { GetStatus } from '../interfaces/projects/get-status';
+import { GetTaskImportance } from '../interfaces/projects/get-task-importance';
 
 @Injectable({
     providedIn: 'root',
@@ -27,5 +29,13 @@ export class ProjectsService {
 
     deleteProject(projectId: string): Observable<void> { 
         return this.http.delete<void>(`${this.baseUrl}/${projectId}`);
+    }
+
+    getProjectStatuses(projectId: string): Observable<GetStatus[]> { 
+        return this.http.get<GetStatus[]>(`${this.baseUrl}/${projectId}/Statuses`);
+    }
+
+    getProjectImportances(projectId: string): Observable<GetTaskImportance[]> {
+        return this.http.get<GetTaskImportance[]>(`${this.baseUrl}/${projectId}/Importances`);
     }
 }
