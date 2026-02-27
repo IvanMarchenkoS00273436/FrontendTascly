@@ -31,7 +31,7 @@ export class WorkspacesService {
         return this.http.post<PostWorkspace>(this.baseUrl, postWorkspace, { responseType: 'text' as 'json' });
     }
 
-    postMemberToWorkspace(postMemberToWorkspace: PostMemberToWorkspace): Observable<PostMemberToWorkspace> {
-        return this.http.post<PostMemberToWorkspace>(`${this.baseUrl}/${postMemberToWorkspace.memberId}/members`, postMemberToWorkspace, { responseType: 'text' as 'json' });
+    postMemberToWorkspace(workspaceId: string, postMemberToWorkspace: PostMemberToWorkspace): Observable<PostMemberToWorkspace> {
+        return this.http.post<PostMemberToWorkspace>(`${this.baseUrl}/${workspaceId}/members`, postMemberToWorkspace, { responseType: 'text' as 'json' });
     }
 }
