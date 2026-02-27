@@ -1,1 +1,113 @@
-<p>ai-prompt works!</p>
+<div class="bento-page-container">
+    <div class="d-flex align-items-center gap-3">
+        <div>
+            <h1 class="h3 fw-bold mb-0">AI Task Generator</h1>
+            <p class="text-muted small mb-0">Generate tasks using AI from a text prompt or voice input</p>
+        </div>
+    </div>
+
+    <!-- Prompt Input Card -->
+    <div class="bento-card">
+        <h5 class="fw-semibold mb-3">Enter your prompt</h5>
+
+        @if (errorMessage()) {
+        <div class="alert alert-danger small py-2">{{ errorMessage() }}</div>
+        }
+
+        <div class="mb-3">
+            <textarea class="form-control" rows="4" [value]="promptText()"
+                (input)="promptText.set($any($event.target).value)" [disabled]="isProcessing()"
+                placeholder="e.g. Create 5 tasks for building a user authentication system. Assign backend tasks to John and frontend tasks to Sarah. Deadline: next Friday.">
+    </textarea>
+        </div>
+
+        <!-- Example prompts -->
+        <div class="mb-3">
+            <p class="text-muted small mb-1">Try an example:</p>
+            <div class="d-flex flex-wrap gap-2">
+                @for (ex of examplePrompts; track ex) {
+                <button class="btn btn-outline-secondary btn-sm" (click)="useExamplePrompt(ex)">{{ ex | slice:0:40
+                    }}...</button>
+                }
+            </div>
+        </div>
+
+        <div class="d-flex align-items-center gap-2 mb-3">
+            @if (!isListening()) {
+            <button class="btn btn-sm btn-outline-secondary" (click)="startVoiceInput()" [disabled]="isProcessing()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
+                    <path d="M19 10v2a7 7 0 0 1-14 0v-2" />
+                    <line x1="12" y1="19" x2="12" y2="23" />
+                    <line x1="8" y1="23" x2="16" y2="23" />
+                </svg>
+                Voice Input
+            </button>
+            } @else {
+            <button class="btn btn-sm btn-danger" (click)="stopVoiceInput()">
+                
+            </button>
+            }
+            <span class="text-muted small">Project ID:</span>
+            <input type="text" class="form-control form-control-sm w-auto" [value]="selectedProjectId()"
+                (input)="selectedProjectId.set($any($event.target).value)" placeholder="Paste project ID">
+        </div>
+
+        <div class="d-flex gap-2">
+            <button class="btn btn-primary" (click)="generateTasks()" [disabled]="isGenerateDisabled()">
+                @if (isProcessing()) {
+                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
+                Generating...
+                } @else {
+                Generate Tasks
+                }
+            </button>
+            @if (draftTasks().length > 0) {
+            <button class="btn btn-outline-secondary" (click)="clearPrompt()">Clear All</button>
+            }
+        </div>
+    </div>
+
+    <!-- Draft Tasks -->
+    @if (draftTasks().length > 0) {
+    <div class="bento-card mt-2">
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h5 class="fw-semibold mb-0">
+                Generated Tasks
+                <span class="badge bg-primary bg-opacity-10 text-primary ms-2">{{ draftTasks().length }}</span>
+            </h5>
+            <button class="btn btn-success btn-sm" (click)="confirmAllTasks()" [disabled]="isProcessing()">
+                @if (isProcessing()) {
+                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
+                Creating...
+                } @else {
+                ✓ Create All Tasks
+                }
+            </button>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+            @for (task of draftTasks(); track task.tempId) {
+            <div class="p-3 rounded-3 border">
+                <div class="d-flex justify-content-between align-items-start mb-2">
+                    <h6 class="fw-semibold mb-0">{{ task.name }}</h6>
+                    <div class="d-flex gap-2">
+                        <span class="badge" [class.bg-danger]="task.importanceId === 3"
+                            [class.bg-warning]="task.importanceId === 2" [class.bg-secondary]="task.importanceId === 1">
+                            {{ getImportanceLabel(task.importanceId) }}
+                        </span>
+                        <button class="btn btn-sm btn-outline-danger py-0 px-1"
+                            (click)="removeDraftTask(task.tempId)">✕</button>
+                    </div>
+                </div>
+                <p class="text-muted small mb-1">{{ task.description }}</p>
+                @if (task.assigneeId) {
+                <small class="text-muted">Assignee ID: {{ task.assigneeId }}</small>
+                }
+            </div>
+            }
+        </div>
+    </div>
+    }
+</div>
