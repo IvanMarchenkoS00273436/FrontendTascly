@@ -11,7 +11,7 @@
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            Assign Member
+            Add member
         </button>
     </div>
 
@@ -101,57 +101,75 @@
 
     <!-- ASSIGN MEMBER MODAL (Overlay) -->
     @if (isAssignModalOpen) {
-    <div class="position-absolute top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-        style="background: rgba(255,255,255,0.8); backdrop-filter: blur(4px); z-index: 10;"
-        (click)="closeAssignModal()"> <!-- Click outside to close -->
-
-        <div class="bento-card p-4 shadow-lg border-2" style="width: 400px; max-width: 90%; background: #fff;"
-            (click)="$event.stopPropagation()">
-            <div class="d-flex justify-content-between align-items-center mb-4">
-                <h4 class="fw-bold m-0">Assign Member</h4>
-                <button class="btn btn-sm btn-light rounded-circle" (click)="closeAssignModal()">
+    <div class="modal-overlay" (click)="closeAssignModal()">
+        <div class="bento-modal slide-up" (click)="$event.stopPropagation()">
+            
+            <!-- Modal Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="fw-black mb-1">Invite Team Member</h3>
+                    <p class="text-muted small fw-medium mb-0">Add a new user to this workspace.</p>
+                </div>
+                <button class="btn btn-icon-soft" (click)="closeAssignModal()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
                         <line x1="6" y1="6" x2="18" y2="18"></line>
                     </svg>
                 </button>
             </div>
 
-            <div class="mb-3">
-                <label class="form-label fw-bold small text-muted">Select User</label>
-                <select class="form-select form-select-lg" [(ngModel)]="selectedUserId">
-                    <option value="" disabled selected>Choose a user...</option>
-                    @for (user of allUsers$ | async; track user.id) {
-                    <option [value]="user.id">
-                        {{ user.firstName }} {{ user.lastName }} ({{ user.userName }})
-                    </option>
-                    }
-                </select>
+            <!-- User Selection -->
+            <div class="mb-4">
+                <label class="modern-label ps-1">Select User</label>
+                <div class="position-relative">
+                    <select class="form-select modern-select" [(ngModel)]="selectedUserId">
+                        <option value="" disabled selected>Choose a team member...</option>
+                        @for (user of allUsers$ | async; track user.userId) {
+                            <option [value]="user.userId">
+                                {{ user.firstName }} {{ user.lastName }} ({{ user.userName }})
+                            </option>
+                        }
+                    </select>
+                    <div class="select-chevron">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+                    </div>
+                </div>
             </div>
 
-            <div class="mb-4">
-                <label class="form-label fw-bold small text-muted">Assign Role</label>
+            <!-- Role Selection -->
+            <div class="mb-5">
+                <label class="modern-label ps-1">Assign Role</label>
                 <div class="d-flex flex-column gap-2">
                     @for (role of availableRoles; track role) {
-                    <div class="form-check p-3 border rounded-3 d-flex align-items-center gap-2"
-                        [class.bg-light]="selectedRole !== role"
-                        [style.border-color]="selectedRole === role ? '#d8f066' : '#dee2e6'"
-                        [style.background-color]="selectedRole === role ? '#f9fce0' : ''">
-                        <input class="form-check-input mt-0" type="radio" name="roleOptions" [id]="'role-' + role"
-                            [value]="role" [(ngModel)]="selectedRole">
-                        <label class="form-check-label w-100 fw-bold" [for]="'role-' + role" style="cursor: pointer;">
-                            {{ role }}
-                        </label>
-                    </div>
+                    <label class="role-option" [class.selected]="selectedRole === role">
+                        <input type="radio" name="roleOptions" [value]="role" [(ngModel)]="selectedRole" class="d-none">
+                        
+                        <div class="d-flex align-items-center gap-3 w-100">
+                            <!-- Custom Radio Circle -->
+                            <div class="custom-radio">
+                                <div class="dot"></div>
+                            </div>
+                            
+                            <div class="flex-grow-1">
+                                <span class="d-block fw-bold text-dark">{{ role }}</span>
+                                <span class="d-block small text-muted">
+                                    @if(role === 'Admin') { Full workspace control and member management. }
+                                    @else if(role === 'Full-access') { Can view, create, and edit all projects. }
+                                    @else { Can view and comment on assigned tasks only. }
+                                </span>
+                            </div>
+                        </div>
+                    </label>
                     }
                 </div>
             </div>
 
-            <div class="d-flex justify-content-end gap-2">
-                <button class="btn btn-light fw-bold" (click)="closeAssignModal()">Cancel</button>
-                <button class="btn btn-lime text-nowrap px-4" [disabled]="!selectedUserId" (click)="assignMember()">
-                    Confirm Assignment
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 pt-2">
+                <button class="btn btn-light border fw-bold flex-grow-1 py-3" (click)="closeAssignModal()"><span class="d-block text-center">Cancel</span></button>
+                <button class="btn btn-lime flex-grow-1 py-3 text-center align-items-center justify-content-center" [disabled]="!selectedUserId" (click)="assignMember()">
+                    <span class="d-block text-center">Confirm Access</span>
                 </button>
             </div>
         </div>
