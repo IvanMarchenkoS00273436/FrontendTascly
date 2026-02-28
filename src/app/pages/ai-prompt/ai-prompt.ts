@@ -4,9 +4,12 @@ import { FormsModule } from '@angular/forms';
 import { AiTaskGeneratorService } from '../../data/services/ai-task-generator.service';
 import { VoiceInputService } from '../../data/services/voice-input.service';
 import { Auth } from '../../auth/auth';
-import { DraftTask } from '../../data/interfaces/tasks/task.interface';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute } from '@angular/router';
+import { WorkspacesService } from '../../data/services/workspaces-service';
+import { ProjectsService } from '../../data/services/projects-service';
+import { Getworkcpaces } from '../../data/interfaces/Workspaces/getworkcpaces';
+import { GetProject } from '../../data/interfaces/projects/get-project';
 
 @Component({
     selector: 'app-ai-prompt',
@@ -20,13 +23,18 @@ export class AIPromptComponent implements OnInit, OnDestroy {
     voiceService = inject(VoiceInputService);
     private authService = inject(Auth);
     private route = inject(ActivatedRoute);
+    private workspacesService = inject(WorkspacesService);
+    private projectsService = inject(ProjectsService);
 
     promptText = signal<string>('');
     isListening = signal<boolean>(false);
     private voiceSub?: Subscription;
 
-    // Active project selection - in real usage this comes from workspace context
     selectedProjectId = signal<string>('');
+    selectedWorkspaceId = signal<string>('');
+
+    workspaces = signal<Getworkcpaces[]>([]);
+    projects = signal<GetProject[]>([]);
 
     isProcessing = this.aiService.isProcessing;
     errorMessage = this.aiService.errorSignal;
@@ -44,6 +52,11 @@ export class AIPromptComponent implements OnInit, OnDestroy {
             console.warn('Voice input is not supported in this browser');
         }
 
+        // Load workspaces for the dropdown
+        this.workspacesService.getWorkspaces().subscribe(ws => {
+            this.workspaces.set(ws);
+        });
+
         // Read projectId from URL if provided
         this.route.queryParams.subscribe(params => {
             const pid = params['projectId'];
@@ -55,6 +68,17 @@ export class AIPromptComponent implements OnInit, OnDestroy {
 
     ngOnDestroy() {
         this.voiceSub?.unsubscribe();
+    }
+
+    onWorkspaceChange(workspaceId: string) {
+        this.selectedWorkspaceId.set(workspaceId);
+        this.selectedProjectId.set('');
+        this.projects.set([]);
+        if (workspaceId) {
+            this.projectsService.getWorkspaceProjects(workspaceId).subscribe(p => {
+                this.projects.set(p);
+            });
+        }
     }
 
     async generateTasks() {

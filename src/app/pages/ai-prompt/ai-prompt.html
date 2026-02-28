@@ -32,7 +32,7 @@
             </div>
         </div>
 
-        <div class="d-flex align-items-center gap-2 mb-3">
+        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
             @if (!isListening()) {
             <button class="btn btn-sm btn-outline-secondary" (click)="startVoiceInput()" [disabled]="isProcessing()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
@@ -45,13 +45,24 @@
                 Voice Input
             </button>
             } @else {
-            <button class="btn btn-sm btn-danger" (click)="stopVoiceInput()">
-                
-            </button>
+            <button class="btn btn-sm btn-danger" (click)="stopVoiceInput()">Stop</button>
             }
-            <span class="text-muted small">Project ID:</span>
-            <input type="text" class="form-control form-control-sm w-auto" [value]="selectedProjectId()"
-                (input)="selectedProjectId.set($any($event.target).value)" placeholder="Paste project ID">
+
+            <select class="form-select form-select-sm w-auto" [value]="selectedWorkspaceId()"
+                (change)="onWorkspaceChange($any($event.target).value)">
+                <option value="">Select Workspace...</option>
+                @for (ws of workspaces(); track ws.id) {
+                <option [value]="ws.id">{{ ws.name }}</option>
+                }
+            </select>
+
+            <select class="form-select form-select-sm w-auto" [value]="selectedProjectId()"
+                (change)="selectedProjectId.set($any($event.target).value)" [disabled]="!selectedWorkspaceId()">
+                <option value="">Select Project...</option>
+                @for (p of projects(); track p.id) {
+                <option [value]="p.id">{{ p.name }}</option>
+                }
+            </select>
         </div>
 
         <div class="d-flex gap-2">
