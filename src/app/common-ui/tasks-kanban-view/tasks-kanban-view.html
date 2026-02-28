@@ -6,7 +6,6 @@
             <h2 class="page-title mb-1">Project Board</h2>
             <p class="page-subtitle mb-0">Track progress and manage tasks.</p>
         </div>
-        <!-- Add Task Button (Lime) -->
         <button class="btn btn-lime d-flex align-items-center gap-2" (click)="openCreateFormFirstColumn(columns())">
             <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
                 stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
@@ -21,16 +20,16 @@
     @if (viewData$ | async; as data) {
     <div class="kanban-board flex-grow-1 custom-scrollbar">
 
-        <!-- Loop through dynamic columns -->
         @for (status of data.columns; track status) {
-        <div class="kanban-column d-flex flex-column h-100">
+        <div class="kanban-column d-flex flex-column h-100" (dragover)="onDragOver($event, status)"
+            (dragleave)="onDragLeave()" (drop)="onDrop($event, status)" [class.drag-over]="isDragOver(status)">
 
             <!-- Column Header -->
             <div class="column-header mb-3 d-flex align-items-center justify-content-between px-2">
                 <div class="d-flex align-items-center gap-2">
                     <h6 class="fw-bold mb-0 text-uppercase ls-1 text-secondary small">{{ status }}</h6>
                     <span class="badge bg-white text-dark border shadow-sm rounded-pill fw-bold">{{
-                        data.groupedTasks[status]?.length || 0 }}</span>
+                        getGroupedTasks(status).length }}</span>
                 </div>
                 <button class="btn btn-icon-soft btn-sm p-1" title="Options">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
@@ -46,14 +45,13 @@
             <!-- Tasks List Container -->
             <div class="tasks-container flex-grow-1 overflow-auto custom-scrollbar px-2 pb-2">
                 <div class="d-flex flex-column gap-3">
-                    <!-- Existing Tasks Loop -->
-                    @for (task of data.groupedTasks[status]; track task.id) {
-                    <div class="bento-card task-card p-3">
+
+                    @for (task of getGroupedTasks(status); track task.id) {
+                    <div class="bento-card task-card p-3" draggable="true" (dragstart)="onDragStart(task, status)"
+                        (dragend)="onDragEnd()" style="cursor: grab;">
 
                         <!-- Meta Row -->
                         <div class="d-flex justify-content-between align-items-center mb-2">
-
-                            <!-- Importance Badge -->
                             @if(task.importanceName) {
                             <span class="badge rounded-pill fw-bold border"
                                 [class.bg-danger-subtle]="task.importanceName === 'High'"
@@ -70,30 +68,25 @@
                             </span>
                             }
 
-                            <!-- Edit Dots -->
-                            <div class="options-dots opacity-0">
-                                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
-                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
-                                    stroke-linejoin="round" class="text-muted">
-                                    <circle cx="12" cy="12" r="1" />
-                                    <circle cx="12" cy="5" r="1" />
-                                    <circle cx="12" cy="19" r="1" />
+                            <!-- Delete Button (visible on hover) -->
+                            <button class="btn-delete-task ms-auto" (click)="deleteTask(task)" title="Delete task"
+                                draggable="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
                                 </svg>
-                            </div>
+                            </button>
                         </div>
 
                         <!-- Content -->
-                        <!-- Increased font weight and size for title -->
                         <h6 class="task-title mb-2 text-dark">{{ task.name }}</h6>
-
-                        <!-- Removed 'small', added specific class for description -->
                         <p class="task-desc text-muted mb-3 line-clamp-2">{{ task.description }}</p>
 
                         <!-- Footer -->
                         <div
                             class="d-flex align-items-center justify-content-between mt-auto border-top pt-3 border-light">
-                            <!-- Date -->
-                            <!-- Slightly bumped up size for date -->
                             <div class="d-flex align-items-center gap-1 text-muted fw-medium fs-7">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
@@ -105,8 +98,6 @@
                                 </svg>
                                 {{ task.dueDate | date:'MMM d' }}
                             </div>
-
-                            <!-- Avatar Placeholder -->
                             <div class="avatar-created d-flex align-items-center justify-content-center fw-bold bg-light text-dark rounded-circle border"
                                 style="width: 32px; height: 32px; font-size: 0.85rem;">
                                 U
@@ -114,7 +105,6 @@
                         </div>
                     </div>
                     } @empty {
-                    <!-- Empty State -->
                     <div
                         class="empty-placeholder p-4 text-center rounded-4 border border-dashed d-flex flex-column align-items-center justify-content-center gap-2">
                         <div class="p-2 bg-white rounded-circle">
@@ -156,7 +146,7 @@
                 }
             </div>
 
-            <!-- Create Button (at bottom of column) -->
+            <!-- Add Task button -->
             @if (!isCreating() || activeColumnForCreate() !== status) {
             <button class="btn btn-light w-100 mt-2 text-muted fw-bold small py-2 border-0"
                 (click)="openCreateForm(status)">

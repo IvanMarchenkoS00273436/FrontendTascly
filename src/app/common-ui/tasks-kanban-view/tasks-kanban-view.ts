@@ -24,11 +24,22 @@ export class TasksKanbanView {
     activeColumnForCreate = signal<string | null>(null);
     columns = signal<string[]>([]);
 
+    // Local mutable state for the board (avoids full page reloads)
+    groupedTasks = signal<Record<string, GetTask[]>>({});
+    statusIdMap = signal<Map<string, any>>(new Map());
+    importances = signal<any[]>([]);
+    defaultImportanceId = signal<any>(1);
+
     newTaskName = '';
     newTaskDescription = '';
     newTaskImportanceId: number = 1;
     newTaskDueDate: string = '';
     projectId: string = '';
+
+    // Drag state
+    private draggedTask = signal<GetTask | null>(null);
+    private draggedFromColumn = signal<string | null>(null);
+    dragOverColumn = signal<string | null>(null);
 
     viewData$ = this.route.paramMap.pipe(
         tap(params => this.projectId = params.get('id')!),
@@ -43,23 +54,27 @@ export class TasksKanbanView {
         map(({ tasks, statuses, importances }) => {
             const cols = statuses.map(s => s.name);
             this.columns.set(cols);
+
             const grouped: Record<string, GetTask[]> = {};
             cols.forEach(col => grouped[col] = []);
-
             if (Array.isArray(tasks)) {
                 tasks.forEach(task => {
-                    const status = task.statusName;
-                    if (grouped[status]) {
-                        grouped[status].push(task);
-                    }
+                    if (grouped[task.statusName]) grouped[task.statusName].push(task);
                 });
             }
+            this.groupedTasks.set(grouped);
 
-            const statusIdMap = new Map(statuses.map(s => [s.name, s.id]));
-            const defaultImportanceId = importances.length > 0 ? importances[0].id : 1;
-            return { columns: cols, groupedTasks: grouped, statusIdMap, defaultImportanceId, importances };
+            const sMap = new Map(statuses.map(s => [s.name, s.id]));
+            this.statusIdMap.set(sMap);
+            this.importances.set(importances);
+            const defImp = importances.length > 0 ? importances[0].id : 1;
+            this.defaultImportanceId.set(defImp);
+
+            return { columns: cols, groupedTasks: grouped, statusIdMap: sMap, defaultImportanceId: defImp, importances };
         })
     );
+
+    // ── Create ──────────────────────────────────────────────────────────────
 
     openCreateForm(columnName: string) {
         this.activeColumnForCreate.set(columnName);
@@ -67,7 +82,6 @@ export class TasksKanbanView {
         this.newTaskName = '';
         this.newTaskDescription = '';
         this.newTaskImportanceId = 1;
-        // Default due date to 1 week from now
         const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         this.newTaskDueDate = d.toISOString().substring(0, 10);
     }
@@ -83,27 +97,94 @@ export class TasksKanbanView {
 
     createTask(statusIdRaw: string | number | undefined, importanceIdRaw: string | number) {
         if (!this.newTaskName.trim() || statusIdRaw === undefined) return;
-
-        // Ensure IDs are numbers (HTML selects always return strings from ngModel)
         const statusId = Number(statusIdRaw);
         const importanceId = Number(this.newTaskImportanceId) || Number(importanceIdRaw);
 
         const payload: PostTask = {
             name: this.newTaskName,
             description: this.newTaskDescription || '',
-            statusId: statusId,
-            importanceId: importanceId,
+            statusId,
+            importanceId,
             assigneeId: null,
             startDate: new Date(),
             dueDate: this.newTaskDueDate ? new Date(this.newTaskDueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         };
 
         this.tasksService.postTaskToProject(this.projectId, payload).subscribe({
-            next: () => {
-                this.cancelCreate();
-                window.location.reload();
-            },
+            next: () => { this.cancelCreate(); window.location.reload(); },
             error: (err) => console.error(err)
         });
+    }
+
+    // ── Delete ───────────────────────────────────────────────────────────────
+
+    deleteTask(task: GetTask) {
+        this.tasksService.deleteTask(task.id).subscribe({
+            next: () => {
+                const grouped = { ...this.groupedTasks() };
+                const col = task.statusName;
+                if (grouped[col]) {
+                    grouped[col] = grouped[col].filter(t => t.id !== task.id);
+                    this.groupedTasks.set(grouped);
+                }
+            },
+            error: (err) => console.error('Delete failed:', err)
+        });
+    }
+
+    // ── Drag and Drop ────────────────────────────────────────────────────────
+
+    onDragStart(task: GetTask, fromColumn: string) {
+        this.draggedTask.set(task);
+        this.draggedFromColumn.set(fromColumn);
+    }
+
+    onDragOver(event: DragEvent, column: string) {
+        event.preventDefault();
+        this.dragOverColumn.set(column);
+    }
+
+    onDragLeave() {
+        this.dragOverColumn.set(null);
+    }
+
+    onDrop(event: DragEvent, toColumn: string) {
+        event.preventDefault();
+        this.dragOverColumn.set(null);
+        const task = this.draggedTask();
+        const fromColumn = this.draggedFromColumn();
+        if (!task || fromColumn === toColumn) return;
+
+        const newStatusId = Number(this.statusIdMap().get(toColumn));
+        if (!newStatusId) return;
+
+        this.tasksService.updateTaskStatus(task.id, newStatusId).subscribe({
+            next: () => {
+                const grouped = { ...this.groupedTasks() };
+                const from = fromColumn as string;
+                grouped[from] = (grouped[from] || []).filter((t: GetTask) => t.id !== task!.id);
+                const moved = { ...task, statusName: toColumn };
+                grouped[toColumn] = [...(grouped[toColumn] || []), moved];
+                this.groupedTasks.set(grouped);
+            },
+            error: (err) => console.error('Move failed:', err)
+        });
+
+        this.draggedTask.set(null);
+        this.draggedFromColumn.set(null);
+    }
+
+    onDragEnd() {
+        this.draggedTask.set(null);
+        this.draggedFromColumn.set(null);
+        this.dragOverColumn.set(null);
+    }
+
+    getGroupedTasks(column: string): GetTask[] {
+        return this.groupedTasks()[column] || [];
+    }
+
+    isDragOver(column: string): boolean {
+        return this.dragOverColumn() === column;
     }
 }

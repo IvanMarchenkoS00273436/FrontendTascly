@@ -25,4 +25,13 @@ export class TasksService {
     postTaskToProject(projectId: string, task: PostTask): Observable<any> {
         return this.http.post(`${this.baseUrl}/Projects/${projectId}`, task, { responseType: 'text' });
     }
+
+    deleteTask(taskId: string): Observable<any> {
+        return this.http.delete(`${this.baseUrl}/${taskId}`, { responseType: 'text' });
+    }
+
+    updateTaskStatus(taskId: string, newStatusId: number): Observable<any> {
+        const patch = [{ op: 'replace', path: '/statusId', value: newStatusId }];
+        return this.http.patch(`${this.baseUrl}/${taskId}`, patch, { responseType: 'text' });
+    }
 }
