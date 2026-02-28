@@ -4,8 +4,8 @@ export interface DraftTask {
     description: string;
     dueDate?: Date;
     startDate?: Date;
-    importancId: Number;
-    statusId: Number;
+    importanceId: number;
+    statusId: number;
     assigneeId?: string;
 }
 
