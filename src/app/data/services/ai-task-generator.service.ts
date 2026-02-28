@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { DraftTask, AiGenerateRequest, AiGenerateResponse, BulkCreateRequest } from '../interfaces/tasks/task.interface';
+import { DraftTask, AiGenerateRequest, AiGenerateResponse, BulkCreateRequest } from '../interfaces/tasks/task.interface'
 import { ModeService } from './mode.service';
 import { environment } from '../../../environments/environment';
 
