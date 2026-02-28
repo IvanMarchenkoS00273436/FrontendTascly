@@ -184,20 +184,20 @@
                                         class="btn-icon-mini text-muted p-0 border-0 bg-transparent d-flex align-items-center justify-content-center"
                                         (click)="toggleCreateProject(ws.id, $event)" title="New Project"
                                         style="width: 16px; height: 16px; border-radius: 4px;">
-                                        
+
                                         @if (createProjectWorkspaceId() === ws.id) {
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
                                         } @else {
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
                                         }
                                     </button>
 
@@ -237,14 +237,14 @@
                                     }
 
                                     @for (project of getProjects(ws.id); track project.id) {
-                                        <li>
-                                            <a [routerLink]="['/dashboard', 'projects', project.id]"
-                                                routerLinkActive="text-primary fw-bold"
-                                                class="workspace-item d-flex align-items-center gap-2 small py-1"
-                                                style="font-size: 0.85rem;">
-                                                <span class="text-truncate">{{ project.name }}</span>
-                                            </a>
-                                        </li>
+                                    <li>
+                                        <a [routerLink]="['/dashboard', 'projects', project.id]"
+                                            routerLinkActive="text-primary fw-bold"
+                                            class="workspace-item d-flex align-items-center gap-2 small py-1"
+                                            style="font-size: 0.85rem;">
+                                            <span class="text-truncate">{{ project.name }}</span>
+                                        </a>
+                                    </li>
                                     } @empty {
                                     <li><span class="text-muted small ps-2 py-1 d-block" style="font-size: 0.75rem;">No
                                             projects</span></li>
@@ -253,16 +253,17 @@
                             </div>
                         </li>
                         <li>
-                <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="sidebar-nav-active"
-                    class="sidebar-nav-item d-flex align-items-center gap-2 small">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
-                        <path d="M12 8v4l3 3" />
-                    </svg>
-                    AI Task Generator
-                </a>
-            </li>
+                            <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="sidebar-nav-active"
+                                class="sidebar-nav-item d-flex align-items-center gap-2 small">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="15" height="15" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
+                                    <path d="M12 8v4l3 3" />
+                                </svg>
+                                AI Task Generator
+                            </a>
+                        </li>
 
                     </ul>
                 </div>
@@ -272,5 +273,23 @@
             }
             }
         </ul>
+
+
+        <!-- AI Task Generator - always visible -->
+        <ul class="list-unstyled d-flex flex-column gap-2 mt-2">
+            <li>
+                <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="text-primary fw-bold"
+                    class="workspace-item d-flex align-items-center gap-2">
+                    <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                        viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path
+                            d="M9.937 15.5A2 2 0 0 0 8.5 14.063l-6.135-1.582a.5.5 0 0 1 0-.962L8.5 9.936A2 2 0 0 0 9.937 8.5l1.582-6.135a.5.5 0 0 1 .963 0L14.063 8.5A2 2 0 0 0 15.5 9.937l6.135 1.581a.5.5 0 0 1 0 .964L15.5 14.063a2 2 0 0 0-1.437 1.437l-1.582 6.135a.5.5 0 0 1-.963 0z" />
+                    </svg>
+                    AI Task Generator
+                </a>
+            </li>
+        </ul>
     </div>
+
 </div>
