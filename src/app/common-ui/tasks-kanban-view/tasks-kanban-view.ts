@@ -22,9 +22,12 @@ export class TasksKanbanView {
 
     isCreating = signal(false);
     activeColumnForCreate = signal<string | null>(null);
+    columns = signal<string[]>([]);
 
     newTaskName = '';
     newTaskDescription = '';
+    newTaskImportanceId: number = 1;
+    newTaskDueDate: string = '';
     projectId: string = '';
 
     viewData$ = this.route.paramMap.pipe(
@@ -38,9 +41,10 @@ export class TasksKanbanView {
             });
         }),
         map(({ tasks, statuses, importances }) => {
-            const columns = statuses.map(s => s.name);
+            const cols = statuses.map(s => s.name);
+            this.columns.set(cols);
             const grouped: Record<string, GetTask[]> = {};
-            columns.forEach(col => grouped[col] = []);
+            cols.forEach(col => grouped[col] = []);
 
             if (Array.isArray(tasks)) {
                 tasks.forEach(task => {
@@ -51,13 +55,9 @@ export class TasksKanbanView {
                 });
             }
 
-            // Map Status Name -> Status ID (number)
             const statusIdMap = new Map(statuses.map(s => [s.name, s.id]));
-
-            // Default Importance ID (number)
             const defaultImportanceId = importances.length > 0 ? importances[0].id : 1;
-
-            return { columns, groupedTasks: grouped, statusIdMap, defaultImportanceId };
+            return { columns: cols, groupedTasks: grouped, statusIdMap, defaultImportanceId, importances };
         })
     );
 
@@ -65,6 +65,15 @@ export class TasksKanbanView {
         this.activeColumnForCreate.set(columnName);
         this.isCreating.set(true);
         this.newTaskName = '';
+        this.newTaskDescription = '';
+        this.newTaskImportanceId = 1;
+        // Default due date to 1 week from now
+        const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        this.newTaskDueDate = d.toISOString().substring(0, 10);
+    }
+
+    openCreateFormFirstColumn(columns: string[]) {
+        if (columns.length > 0) this.openCreateForm(columns[0]);
     }
 
     cancelCreate() {
@@ -75,19 +84,18 @@ export class TasksKanbanView {
     createTask(statusIdRaw: string | number | undefined, importanceIdRaw: string | number) {
         if (!this.newTaskName.trim() || statusIdRaw === undefined) return;
 
-        // Ensure IDs are numbers
+        // Ensure IDs are numbers (HTML selects always return strings from ngModel)
         const statusId = Number(statusIdRaw);
-        const importanceId = Number(importanceIdRaw);
+        const importanceId = Number(this.newTaskImportanceId) || Number(importanceIdRaw);
 
         const payload: PostTask = {
             name: this.newTaskName,
-            description: this.newTaskDescription,
+            description: this.newTaskDescription || '',
             statusId: statusId,
             importanceId: importanceId,
             assigneeId: null,
             startDate: new Date(),
-            dueDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // Default to 1 week later
-
+            dueDate: this.newTaskDueDate ? new Date(this.newTaskDueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         };
 
         this.tasksService.postTaskToProject(this.projectId, payload).subscribe({

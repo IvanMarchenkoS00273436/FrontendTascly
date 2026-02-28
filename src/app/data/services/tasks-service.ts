@@ -14,15 +14,15 @@ export class TasksService {
     baseUrl: string = environment.apiUrl + '/tasks';
 
 
-    getTasksByProjectId(projectId: string) : Observable<GetTask[]> {
+    getTasksByProjectId(projectId: string): Observable<GetTask[]> {
         return this.http.get<GetTask[]>(`${this.baseUrl}/Projects/${projectId}`);
     }
 
-    getTaskById(taskId: string) : Observable<GetTask> { 
+    getTaskById(taskId: string): Observable<GetTask> {
         return this.http.get<GetTask>(`${this.baseUrl}/${taskId}`);
     }
 
-    postTaskToProject(projectId: string,task: PostTask) : Observable<PostTask> {
-        return this.http.post<PostTask>(`${this.baseUrl}/Projects/${projectId}`, task);
+    postTaskToProject(projectId: string, task: PostTask): Observable<any> {
+        return this.http.post(`${this.baseUrl}/Projects/${projectId}`, task, { responseType: 'text' });
     }
 }
