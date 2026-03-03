@@ -19,11 +19,48 @@
     <div class="flex-grow-1 overflow-auto">
         <div class="members-grid">
 
-            @for (member of members; track member.id) {
+            @for (member of members; track member.memberId) {
             @let fName = member.firstName || member.firstName.split(' ')[0] || 'User';
             @let lName = member.lastName || member.lastName.split(' ')[1] || '';
 
-            <div class="member-card">
+            <div class="member-card" [class.menu-open]="openMenuMemberId() === member.memberId">
+
+                <!-- Three Dots Menu Button -->
+                <div class="member-menu-wrapper">
+                    <button class="btn-dots" (click)="toggleMemberMenu(member.memberId, $event)" title="Options">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                            fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                            stroke-linejoin="round">
+                            <circle cx="12" cy="5" r="1" />
+                            <circle cx="12" cy="12" r="1" />
+                            <circle cx="12" cy="19" r="1" />
+                        </svg>
+                    </button>
+
+                    <!-- Dropdown Menu -->
+                    @if (openMenuMemberId() === member.memberId) {
+                    <div class="member-dropdown">
+                        <button class="member-dropdown-item" (click)="editMemberRole(member)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path>
+                            </svg>
+                            Edit Role
+                        </button>
+                        <button class="member-dropdown-item text-danger" (click)="deleteMember(member.memberId)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <polyline points="3 6 5 6 21 6"></polyline>
+                                <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                            </svg>
+                            Delete
+                        </button>
+                    </div>
+                    }
+                </div>
+
                 <!-- 1. Lime Avatar -->
                 <div class="avatar-large">
                     {{ (fName.charAt(0) || '') | uppercase }}{{ (lName.charAt(0) || fName.charAt(1) || '') | uppercase
@@ -71,9 +108,9 @@
                                 <polyline points="22,6 12,13 2,6" />
                             </svg>
                         </div>
-                        <span class="flex-grow-1 text-start text-truncate" [title]="member.username"
+                        <span class="flex-grow-1 text-start text-truncate" [title]="member.userName"
                             style="font-size: 0.85rem;">
-                            {{ member.username }}
+                            {{ member.userName }}
                         </span>
                     </div>
 
@@ -99,11 +136,72 @@
     </div>
     }
 
+    <!-- EDIT ROLE MODAL (Overlay) -->
+    @if (isEditRoleModalOpen) {
+    <div class="modal-overlay" (click)="closeEditRoleModal()">
+        <div class="bento-modal slide-up" (click)="$event.stopPropagation()">
+
+            <!-- Modal Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="fw-black mb-1">Edit Member Role</h3>
+                    <p class="text-muted small fw-medium mb-0">Change the role for this workspace member.</p>
+                </div>
+                <button class="btn btn-icon-soft" (click)="closeEditRoleModal()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Role Selection -->
+            <div class="mb-5">
+                <label class="modern-label ps-1">Assign Role</label>
+                <div class="d-flex flex-column gap-2">
+                    @for (role of availableRoles; track role) {
+                    <label class="role-option" [class.selected]="selectedRole === role">
+                        <input type="radio" name="editRoleOptions" [value]="role" [(ngModel)]="selectedRole" class="d-none">
+
+                        <div class="d-flex align-items-center gap-3 w-100">
+                            <div class="custom-radio">
+                                <div class="dot"></div>
+                            </div>
+
+                            <div class="flex-grow-1">
+                                <span class="d-block fw-bold text-dark">{{ role }}</span>
+                                <span class="d-block small text-muted">
+                                    @if(role === 'Admin') { Full workspace control and member management. }
+                                    @else if(role === 'Full-access') { Can view, create, and edit all projects. }
+                                    @else { Can view and comment on assigned tasks only. }
+                                </span>
+                            </div>
+                        </div>
+                    </label>
+                    }
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="d-flex gap-3 pt-2">
+                <button class="btn btn-light border fw-bold flex-grow-1 py-3" (click)="closeEditRoleModal()">
+                    <span class="d-block text-center">Cancel</span>
+                </button>
+                <button class="btn btn-lime flex-grow-1 py-3 text-center align-items-center justify-content-center"
+                    (click)="confirmEditRole()">
+                    <span class="d-block text-center">Update Role</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
     <!-- ASSIGN MEMBER MODAL (Overlay) -->
     @if (isAssignModalOpen) {
     <div class="modal-overlay" (click)="closeAssignModal()">
         <div class="bento-modal slide-up" (click)="$event.stopPropagation()">
-            
+
             <!-- Modal Header -->
             <div class="d-flex justify-content-between align-items-start mb-4">
                 <div>
@@ -144,13 +242,12 @@
                     @for (role of availableRoles; track role) {
                     <label class="role-option" [class.selected]="selectedRole === role">
                         <input type="radio" name="roleOptions" [value]="role" [(ngModel)]="selectedRole" class="d-none">
-                        
+
                         <div class="d-flex align-items-center gap-3 w-100">
-                            <!-- Custom Radio Circle -->
                             <div class="custom-radio">
                                 <div class="dot"></div>
                             </div>
-                            
+
                             <div class="flex-grow-1">
                                 <span class="d-block fw-bold text-dark">{{ role }}</span>
                                 <span class="d-block small text-muted">
@@ -167,8 +264,11 @@
 
             <!-- Action Buttons -->
             <div class="d-flex gap-3 pt-2">
-                <button class="btn btn-light border fw-bold flex-grow-1 py-3" (click)="closeAssignModal()"><span class="d-block text-center">Cancel</span></button>
-                <button class="btn btn-lime flex-grow-1 py-3 text-center align-items-center justify-content-center" [disabled]="!selectedUserId" (click)="assignMember()">
+                <button class="btn btn-light border fw-bold flex-grow-1 py-3" (click)="closeAssignModal()">
+                    <span class="d-block text-center">Cancel</span>
+                </button>
+                <button class="btn btn-lime flex-grow-1 py-3 text-center align-items-center justify-content-center"
+                    [disabled]="!selectedUserId" (click)="assignMember()">
                     <span class="d-block text-center">Confirm Access</span>
                 </button>
             </div>

@@ -46,6 +46,12 @@
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
 }
 
+/* Ensure card with open menu stays on top */
+.member-card.menu-open {
+    z-index: 20;
+    border-color: rgba(0,0,0,0.1);
+}
+
 /* --- Avatar --- */
 .avatar-large {
     width: 96px;
@@ -323,4 +329,87 @@
 @keyframes fadeIn {
     from { opacity: 0; transform: translateY(20px); }
     to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Member Card Three-Dots Menu --- */
+.member-menu-wrapper {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.btn-dots {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+    opacity: 0;
+}
+
+.member-card:hover .btn-dots,
+.member-card.menu-open .btn-dots {
+    opacity: 1;
+}
+
+.btn-dots:hover {
+    background-color: #efefef;
+    color: #000;
+    transform: scale(1.1);
+}
+
+/* --- Dropdown Menu --- */
+.member-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 0.5rem;
+    min-width: 180px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    animation: scaleInMenu 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 30;
+}
+
+.member-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.member-dropdown-item:hover {
+    background-color: #f4f4f5;
+}
+
+.member-dropdown-item.text-danger {
+    color: #ef4444;
+}
+
+.member-dropdown-item.text-danger:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+@keyframes scaleInMenu {
+    from { opacity: 0; transform: scale(0.95) translateY(-6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
 }

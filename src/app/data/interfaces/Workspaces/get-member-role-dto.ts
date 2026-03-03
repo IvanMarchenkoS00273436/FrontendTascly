@@ -1,8 +1,8 @@
 import { Role } from "../role";
 
 export interface GetMemberRoleDto {
-    id: string;
-    username: string;
+    memberId: string;
+    userName: string;
     firstName: string;
     lastName: string;
     role: Role;

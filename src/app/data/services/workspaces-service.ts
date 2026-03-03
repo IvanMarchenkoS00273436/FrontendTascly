@@ -6,6 +6,7 @@ import { Getworkcpaces } from '../interfaces/Workspaces/getworkcpaces';
 import { GetMemberRoleDto } from '../interfaces/Workspaces/get-member-role-dto';
 import { PostWorkspace } from '../interfaces/Workspaces/post-workspace';
 import { PostMemberToWorkspace } from '../interfaces/Workspaces/post-member-to-workspace';
+import { PutMemberWithNewRoleDto } from '../interfaces/Workspaces/put-member-with-new-role-dto';
 
 @Injectable({
     providedIn: 'root',
@@ -33,5 +34,13 @@ export class WorkspacesService {
 
     postMemberToWorkspace(workspaceId: string, postMemberToWorkspace: PostMemberToWorkspace): Observable<PostMemberToWorkspace> {
         return this.http.post<PostMemberToWorkspace>(`${this.baseUrl}/${workspaceId}/members`, postMemberToWorkspace, { responseType: 'text' as 'json' });
+    }
+
+    deleteMemberFromWorkspace(workspaceId: string, memberId: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${workspaceId}/members/${memberId}`);
+    }
+
+    putMemberWithNewRole(putMemberWithNewRoleDto: PutMemberWithNewRoleDto): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/${putMemberWithNewRoleDto.userId}/Members/Role`, putMemberWithNewRoleDto);
     }
 }
