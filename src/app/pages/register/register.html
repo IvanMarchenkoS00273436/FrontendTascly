@@ -5,7 +5,19 @@
         <div class="bento-card form-tile d-flex flex-column justify-content-center">
             <div class="mb-5">
                 <h1 class="display-6 mb-2">Create Account</h1>
+                @if (isInviteMode) {
+                <div class="alert d-flex align-items-center gap-2 mb-0"
+                    style="background:#d8f066;border:none;border-radius:14px;color:#000;font-weight:600;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07" />
+                        <path d="M14.05 9a9 9 0 0 1 4.95 4.95" />
+                    </svg>
+                    You've been invited! Complete your details to join.
+                </div>
+                } @else {
                 <p class="text-dark-gray fw-medium">Enter your details to join Tascly today.</p>
+                }
             </div>
 
             <form (ngSubmit)="onRegister()" [formGroup]="form">
@@ -19,7 +31,7 @@
                             [class.is-invalid]="f['firstName'].invalid && f['firstName'].touched"
                             formControlName="firstName" placeholder="John">
                         @if (f['firstName'].invalid && f['firstName'].touched) {
-                            <div class="validation-message">First name required</div>
+                        <div class="validation-message">First name required</div>
                         }
                     </div>
                     <div class="col-md-6">
@@ -33,7 +45,8 @@
                     </div>
                 </div>
 
-                <!-- Organization -->
+                <!-- Organization (hidden in invite mode) -->
+                @if (!isInviteMode) {
                 <div class="mb-3">
                     <label for="organization" class="modern-label">Organization</label>
                     <input id="organization" type="text" class="form-control modern-input"
@@ -43,6 +56,7 @@
                     <div class="validation-message">Organization name required</div>
                     }
                 </div>
+                }
 
                 <!-- Email -->
                 <div class="mb-3">
@@ -105,10 +119,14 @@
             <p class="mb-0 fw-medium fs-5" style="opacity: 0.85;">
                 Join thousands of teams streamlining their workflow with Tascly's intuitive platform.
             </p>
-            
+
             <!-- Optional decoration -->
             <div class="mt-auto pt-5 opacity-50">
-                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m9 12 2 2 4-4"/></svg>
+                <svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <path d="m9 12 2 2 4-4" />
+                </svg>
             </div>
         </div>
 

@@ -19,8 +19,8 @@ export class Auth {
     access_token: string | null = null;
     refresh_token: string | null = null;
 
-    get isAuth() { 
-        if(!this.access_token) {
+    get isAuth() {
+        if (!this.access_token) {
             this.access_token = this.cookieService.get('access_token');
             this.refresh_token = this.cookieService.get('refresh_token');
         }
@@ -32,7 +32,7 @@ export class Auth {
         if (!token) {
             token = this.cookieService.get('access_token');
         }
-        
+
         if (!token) return null;
 
         try {
@@ -43,7 +43,7 @@ export class Auth {
         }
     }
 
-    get userId(): string | null { 
+    get userId(): string | null {
         let token = this.access_token;
         if (!token) {
             token = this.cookieService.get('access_token');
@@ -58,17 +58,33 @@ export class Auth {
         }
     }
 
+    get isAdmin(): boolean {
+        let token = this.access_token;
+        if (!token) token = this.cookieService.get('access_token');
+        if (!token) return false;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.IsSuperAdmin === 'True' || payload.IsOrgAdmin === 'True';
+        } catch (e) {
+            return false;
+        }
+    }
+
     login(payload: { email: string; password: string }) {
         return this.http.post<TokenResponse>(
-            `${this.url}/login`, 
+            `${this.url}/login`,
             payload
         ).pipe(
             tap((res: TokenResponse) => this.saveTokens(res)
-        ));
+            ));
     }
 
     register(payload: { username: string; password: string; firstName: string, lastName: string, organizationName: string }) {
         return this.http.post<any>(`${this.url}/register`, payload);
+    }
+
+    registerWithInvite(payload: { inviteToken: string; username: string; password: string; firstName: string; lastName: string }) {
+        return this.http.post<any>(`${this.url}/register-with-invite`, payload, { responseType: 'text' as 'json' });
     }
 
     refreshAuthToken() {
@@ -86,8 +102,8 @@ export class Auth {
             })
         )
     }
-    
-    logout() { 
+
+    logout() {
         this.cookieService.delete('access_token');
         this.cookieService.delete('refresh_token');
         this.access_token = null;
@@ -95,7 +111,7 @@ export class Auth {
         this.router.navigate(['/login']);
     }
 
-    getUserIdFromToken(token: string): string { 
+    getUserIdFromToken(token: string): string {
         const payload = JSON.parse(atob(token.split('.')[1]));
         return payload.UserId;
     }
