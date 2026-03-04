@@ -10,6 +10,8 @@ import { WorkspacesService } from '../../data/services/workspaces-service';
 import { ProjectsService } from '../../data/services/projects-service';
 import { Getworkcpaces } from '../../data/interfaces/Workspaces/getworkcpaces';
 import { GetProject } from '../../data/interfaces/projects/get-project';
+import { GetMemberRoleDto } from '../../data/interfaces/Workspaces/get-member-role-dto';
+import { AiMemberDto } from '../../data/interfaces/tasks/task.interface';
 
 @Component({
     selector: 'app-ai-prompt',
@@ -35,6 +37,7 @@ export class AIPromptComponent implements OnInit, OnDestroy {
 
     workspaces = signal<Getworkcpaces[]>([]);
     projects = signal<GetProject[]>([]);
+    members = signal<GetMemberRoleDto[]>([]);
 
     isProcessing = this.aiService.isProcessing;
     errorMessage = this.aiService.errorSignal;
@@ -74,9 +77,13 @@ export class AIPromptComponent implements OnInit, OnDestroy {
         this.selectedWorkspaceId.set(workspaceId);
         this.selectedProjectId.set('');
         this.projects.set([]);
+        this.members.set([]);
         if (workspaceId) {
             this.projectsService.getWorkspaceProjects(workspaceId).subscribe(p => {
                 this.projects.set(p);
+            });
+            this.workspacesService.getMembersRoles(workspaceId).subscribe(m => {
+                this.members.set(m);
             });
         }
     }
@@ -92,7 +99,12 @@ export class AIPromptComponent implements OnInit, OnDestroy {
             this.errorMessage.set('Please select a project first');
             return;
         }
-        await this.aiService.generateTasks(prompt, projectId);
+        // Build member list for AI context
+        const members: AiMemberDto[] = this.members().map(m => ({
+            id: m.id,
+            fullName: `${m.firstName} ${m.lastName}`
+        }));
+        await this.aiService.generateTasks(prompt, projectId, members);
         if (this.aiService.getDraftTaskCount() > 0) {
             this.promptText.set('');
         }
@@ -155,5 +167,15 @@ export class AIPromptComponent implements OnInit, OnDestroy {
 
     getImportanceClass(id: number): string {
         return id === 3 ? 'high' : id === 2 ? 'medium' : 'low';
+    }
+
+    getAssigneeName(assigneeId: string | undefined): string {
+        if (!assigneeId) return 'Unassigned';
+        const member = this.members().find(m => m.id === assigneeId);
+        return member ? `${member.firstName} ${member.lastName}` : 'Unassigned';
+    }
+
+    onAssigneeChange(tempId: number, assigneeId: string) {
+        this.aiService.updateDraftTask(tempId, 'assigneeId', assigneeId || undefined);
     }
 }

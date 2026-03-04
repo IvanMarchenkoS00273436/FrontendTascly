@@ -65,6 +65,19 @@
             </select>
         </div>
 
+        <!-- Members loaded for this workspace -->
+        @if (members().length > 0) {
+        <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
+            <span class="text-muted small">Team:</span>
+            @for (m of members(); track m.id || $index) {
+            <span class="badge bg-light border text-dark fw-semibold" style="border-radius:10px;">
+                {{ m.firstName }} {{ m.lastName }}
+            </span>
+            }
+            <span class="text-muted small fst-italic">— mention names in your prompt to auto-assign tasks</span>
+        </div>
+        }
+
         <div class="d-flex gap-2">
             <button class="btn btn-primary" (click)="generateTasks()" [disabled]="isGenerateDisabled()">
                 @if (isProcessing()) {
@@ -112,10 +125,34 @@
                             (click)="removeDraftTask(task.tempId)">✕</button>
                     </div>
                 </div>
-                <p class="text-muted small mb-1">{{ task.description }}</p>
-                @if (task.assigneeId) {
-                <small class="text-muted">Assignee ID: {{ task.assigneeId }}</small>
-                }
+                <p class="text-muted small mb-2">{{ task.description }}</p>
+
+                <!-- Assignee picker -->
+                <div class="d-flex align-items-center gap-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-muted">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
+                        <circle cx="12" cy="7" r="4" />
+                    </svg>
+                    @if (members().length > 0) {
+                    <select class="form-select form-select-sm w-auto"
+                        (change)="onAssigneeChange(task.tempId, $any($event.target).value)">
+                        <option value="" [selected]="!task.assigneeId">Unassigned</option>
+                        @for (m of members(); track m.id || $index) {
+                        <option [value]="m.id" [selected]="m.id === task.assigneeId">{{ m.firstName }} {{ m.lastName }}
+                        </option>
+                        }
+                    </select>
+                    } @else {
+                    <span class="text-muted small fst-italic">Select a workspace to enable assignment</span>
+                    }
+                    @if (task.assigneeId) {
+                    <span class="badge bg-light border text-dark fw-semibold" style="border-radius:8px;">
+                        {{ getAssigneeName(task.assigneeId) }}
+                    </span>
+                    }
+                </div>
             </div>
             }
         </div>

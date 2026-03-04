@@ -70,6 +70,18 @@ export class Auth {
         }
     }
 
+    get canUseAI(): boolean {
+        let token = this.access_token;
+        if (!token) token = this.cookieService.get('access_token');
+        if (!token) return false;
+        try {
+            const payload = JSON.parse(atob(token.split('.')[1]));
+            return payload.CanUseAI === 'True';
+        } catch (e) {
+            return false;
+        }
+    }
+
     login(payload: { email: string; password: string }) {
         return this.http.post<TokenResponse>(
             `${this.url}/login`,

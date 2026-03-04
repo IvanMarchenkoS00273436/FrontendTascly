@@ -9,11 +9,17 @@ export interface DraftTask {
     assigneeId?: string;
 }
 
+export interface AiMemberDto {
+    id: string;
+    fullName: string;
+}
+
 export interface AiGenerateRequest {
     prompt: string;
     projectId: string;
     mode: string;
-}   
+    members: AiMemberDto[];
+}
 
 export interface AiGenerateResponse {
     tasks: DraftTask[];

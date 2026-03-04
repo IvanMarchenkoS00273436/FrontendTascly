@@ -1,7 +1,7 @@
 import { Injectable, inject, signal } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
-import { DraftTask, AiGenerateRequest, AiGenerateResponse, BulkCreateRequest } from '../interfaces/tasks/task.interface'
+import { DraftTask, AiGenerateRequest, AiGenerateResponse, BulkCreateRequest, AiMemberDto } from '../interfaces/tasks/task.interface'
 import { ModeService } from './mode.service';
 import { environment } from '../../../environments/environment';
 
@@ -15,21 +15,24 @@ export class AiTaskGeneratorService {
     isProcessing = signal<boolean>(false);
     errorSignal = signal<string | null>(null);
 
-    async generateTasks(prompt: string, projectId: string): Promise<void> {
+    async generateTasks(prompt: string, projectId: string, members: AiMemberDto[] = []): Promise<void> {
         this.isProcessing.set(true);
         this.errorSignal.set(null);
 
         try {
             const mode = this.modeService.isBusinessMode() ? 'Business' : 'Project';
-            const request: AiGenerateRequest = { prompt, projectId, mode };
+            const request: AiGenerateRequest = { prompt, projectId, mode, members };
+            console.log('[AI] Sending request - members count:', members.length, members);
 
             const response = await firstValueFrom(
                 this.http.post<AiGenerateResponse>(`${this.apiUrl}/Ai/generate-tasks`, request)
             );
+            console.log('[AI] Response tasks:', JSON.stringify(response.tasks));
 
             const tasksWithTempIds = response.tasks.map((task, index) => ({
                 ...task,
-                tempId: Date.now() + index
+                tempId: Date.now() + index,
+                assigneeId: task.assigneeId || undefined   // normalize "" to undefined
             }));
 
             this.draftTasks.set(tasksWithTempIds);
