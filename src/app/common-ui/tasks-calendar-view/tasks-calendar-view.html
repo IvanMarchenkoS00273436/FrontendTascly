@@ -1,0 +1,91 @@
+<div class="bento-panel h-100 d-flex flex-column overflow-hidden">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-end mb-4 px-1 flex-shrink-0">
+        <div>
+            <h2 class="page-title mb-1">Calendar</h2>
+            <p class="page-subtitle mb-0">Tasks by due date.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="view-toggle">
+                <button class="view-btn" (click)="switchToBoard()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    Board
+                </button>
+                <button class="view-btn active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    Calendar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    @if (viewData$ | async; as project) {
+
+    <!-- Month nav -->
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1 flex-shrink-0">
+        <h5 class="month-label mb-0">{{ monthLabel() }}</h5>
+        <div class="d-flex align-items-center gap-2">
+            <button class="nav-btn" (click)="goToToday()">Today</button>
+            <button class="nav-arrow" (click)="prevMonth()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+            </button>
+            <button class="nav-arrow" (click)="nextMonth()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="cal-grid flex-grow-1 overflow-auto">
+        <div class="cal-day-header">Mon</div>
+        <div class="cal-day-header">Tue</div>
+        <div class="cal-day-header">Wed</div>
+        <div class="cal-day-header">Thu</div>
+        <div class="cal-day-header">Fri</div>
+        <div class="cal-day-header">Sat</div>
+        <div class="cal-day-header">Sun</div>
+
+        @for (day of calendarDays(); track day.date.toISOString()) {
+        <div class="cal-cell" [class.other-month]="!day.isCurrentMonth" [class.today]="isToday(day.date)">
+            <span class="cal-date-num" [class.today-num]="isToday(day.date)">{{ day.date.getDate() }}</span>
+
+            <!-- Task bars stacked by lane -->
+            <div class="cal-tasks">
+                @for (item of day.tasks; track item.task.id + item.rangeType) {
+                <div class="cal-task-bar {{ getImportanceClass(item.task) }} {{ item.rangeType }}"
+                    [title]="item.task.name">
+                    @if (item.rangeType === 'single' || item.rangeType === 'start') {
+                    <span class="bar-label">{{ item.task.name }}</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    } @else {
+    <div class="d-flex align-items-center justify-content-center flex-grow-1">
+        <div class="spinner-border text-secondary" role="status"></div>
+    </div>
+    }
+</div>

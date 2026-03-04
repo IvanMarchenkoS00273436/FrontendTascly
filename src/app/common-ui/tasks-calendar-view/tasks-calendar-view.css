@@ -1,0 +1,240 @@
+/* ── View Toggle ──────────────────────────────────────────── */
+.view-toggle {
+    display: flex;
+    align-items: center;
+    background: #f1f3f5;
+    border-radius: 10px;
+    padding: 3px;
+    gap: 2px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.view-btn:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.05);
+}
+
+.view-btn.active {
+    background: #fff;
+    color: #111;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+}
+
+/* ── Month nav ────────────────────────────────────────────── */
+.month-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #111;
+}
+
+.nav-btn {
+    background: #f1f3f5;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nav-btn:hover {
+    background: #e5e7eb;
+}
+
+.nav-arrow {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f3f5;
+    border: none;
+    border-radius: 8px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nav-arrow:hover {
+    background: #e5e7eb;
+}
+
+/* ── Calendar Grid ────────────────────────────────────────── */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(100px, auto);
+    gap: 1px;
+    background: #e9ecef;
+    border-radius: 14px;
+    overflow: hidden;
+    border: 1px solid #e9ecef;
+}
+
+.cal-day-header {
+    background: #f8f9fa;
+    text-align: center;
+    padding: 8px 0;
+    font-size: 0.72rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    color: #9ca3af;
+}
+
+/* Day cells — overflow visible so bars can bleed out */
+.cal-cell {
+    background: #fff;
+    padding: 6px 0;
+    /* horizontal padding removed — bars handle it */
+    min-height: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    overflow: visible;
+    position: relative;
+}
+
+.cal-cell:hover {
+    background: #fafafa;
+}
+
+.cal-cell.other-month {
+    background: #f9fafb;
+}
+
+.cal-cell.other-month .cal-date-num {
+    color: #d1d5db;
+}
+
+.cal-cell.today {
+    background: #f7fff0;
+}
+
+.cal-date-num {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #6b7280;
+    line-height: 1;
+    align-self: flex-start;
+    padding-left: 8px;
+    /* Fixed height so bars always start at the same vertical position */
+    height: 26px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+.today-num {
+    background: #d8f066;
+    color: #1a3300;
+    border-radius: 50%;
+    width: 22px;
+    height: 22px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.75rem;
+    /* No extra margin — parent .cal-date-num provides fixed 26px height */
+}
+
+/* ── Task bars container ──────────────────────────────────── */
+.cal-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+
+/* ── Base bar ─────────────────────────────────────────────── */
+.cal-task-bar {
+    position: relative;
+    /* contain absolute label */
+    display: block;
+    height: 20px;
+    /* constant across ALL types */
+    flex-shrink: 0;
+    border-radius: 0;
+    cursor: default;
+    overflow: visible;
+    /* default = middle */
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+/* Start: left-rounded, small left indent */
+.cal-task-bar.start {
+    border-radius: 6px 0 0 6px;
+    margin-left: 4px;
+    margin-right: -1px;
+}
+
+/* Middle: bleed both sides */
+.cal-task-bar.middle {
+    border-radius: 0;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+/* End: right-rounded, small right indent */
+.cal-task-bar.end {
+    border-radius: 0 6px 6px 0;
+    margin-left: -1px;
+    margin-right: 4px;
+}
+
+/* Single: fully rounded, indent both sides */
+.cal-task-bar.single {
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-right: 4px;
+}
+
+/* Label sits inside bar, absolutely — never influences bar height */
+.bar-label {
+    position: absolute;
+    top: 0;
+    left: 8px;
+    right: 4px;
+    height: 20px;
+    line-height: 20px;
+    font-size: 0.68rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+}
+
+/* ── Importance colours ───────────────────────────────────── */
+.imp-high {
+    background: #fecaca;
+    color: #991b1b;
+}
+
+.imp-medium {
+    background: #fde68a;
+    color: #92400e;
+}
+
+.imp-low {
+    background: #a7f3d0;
+    color: #065f46;
+}

@@ -1,12 +1,13 @@
-import { AsyncPipe, UpperCasePipe } from '@angular/common'; 
-import { Component, inject, resource, signal } from '@angular/core'; 
+import { AsyncPipe, UpperCasePipe } from '@angular/common';
+import { Component, inject, resource, signal } from '@angular/core';
 import { WorkspacesService } from '../../data/services/workspaces-service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UsersService } from '../../data/services/users-service';
-import { ProjectsService } from '../../data/services/projects-service'; 
-import { FormsModule } from '@angular/forms'; 
-import { tap, firstValueFrom } from 'rxjs'; // Removed switchMap to simplify
-import { GetProject } from '../../data/interfaces/projects/get-project'; 
+import { ProjectsService } from '../../data/services/projects-service';
+import { FormsModule } from '@angular/forms';
+import { tap, firstValueFrom } from 'rxjs';
+import { GetProject } from '../../data/interfaces/projects/get-project';
+import { Auth } from '../../auth/auth';
 
 @Component({
     selector: 'app-sidebar',
@@ -18,6 +19,11 @@ export class Sidebar {
     workspacesService = inject(WorkspacesService);
     userService = inject(UsersService);
     projectsService = inject(ProjectsService);
+    private authService = inject(Auth);
+
+    get canUseAI(): boolean {
+        return this.authService.canUseAI;
+    }
 
     // Resource API for workspaces
     workspaces = resource({ loader: () => firstValueFrom(this.workspacesService.getWorkspaces()) });
@@ -84,8 +90,8 @@ export class Sidebar {
     }
 
     toggleCreateProject(wsId: string, event: Event) {
-        event.stopPropagation(); 
-        event.preventDefault(); 
+        event.stopPropagation();
+        event.preventDefault();
 
         if (this.createProjectWorkspaceId() === wsId) {
             this.createProjectWorkspaceId.set(null);
@@ -101,9 +107,9 @@ export class Sidebar {
     createProject(wsId: string) {
         if (!this.newProjectName.trim()) return;
 
-        this.projectsService.postWorkspaceProject(wsId, { 
+        this.projectsService.postWorkspaceProject(wsId, {
             name: this.newProjectName,
-            description: "" 
+            description: ""
         }).subscribe({
             next: () => {
                 // 1. Reload the data explicitly (same as opening the dropdown)
@@ -127,7 +133,7 @@ export class Sidebar {
         this.workspacesService.postWorkspace({ name: this.newWorkspaceNameWS }).pipe(
             tap(() => {
                 this.workspaces.reload();
-                this.toggleCreateInput(); 
+                this.toggleCreateInput();
             })
         ).subscribe({
             error: (err) => console.error('Failed to create workspace', err)

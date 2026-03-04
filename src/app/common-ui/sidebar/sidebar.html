@@ -71,6 +71,23 @@
     </a>
     }
 
+    <!-- AI Task Generator shortcut - right below profile -->
+    @if (canUseAI) {
+    <div class="mb-3">
+        <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="active" style="display:flex;align-items:center;gap:10px;text-decoration:none;
+                   background:linear-gradient(135deg,#eaffc0,#d8f066);
+                   color:#1a3300;border-radius:14px;padding:10px 14px;
+                   font-size:0.85rem;font-weight:700;
+                   border:1px solid rgba(0,0,0,0.04);
+                   box-shadow:0 2px 8px rgba(168,224,99,0.2);
+                   transition:all 0.2s ease;"
+            onmouseover="this.style.boxShadow='0 6px 16px rgba(168,224,99,0.35)';this.style.transform='translateY(-1px)'"
+            onmouseout="this.style.boxShadow='0 2px 8px rgba(168,224,99,0.2)';this.style.transform=''">
+            <span>AI Task Generator</span>
+        </a>
+    </div>
+    }
+
     <div class="sidebar-section flex-grow-1 overflow-auto">
 
         <!-- Header Row with Create Button -->
@@ -184,20 +201,20 @@
                                         class="btn-icon-mini text-muted p-0 border-0 bg-transparent d-flex align-items-center justify-content-center"
                                         (click)="toggleCreateProject(ws.id, $event)" title="New Project"
                                         style="width: 16px; height: 16px; border-radius: 4px;">
-                                        
+
                                         @if (createProjectWorkspaceId() === ws.id) {
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
                                         } @else {
-                                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
-                                                viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
-                                                stroke-linecap="round" stroke-linejoin="round">
-                                                <line x1="12" y1="5" x2="12" y2="19"></line>
-                                                <line x1="5" y1="12" x2="19" y2="12"></line>
-                                            </svg>
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14"
+                                            viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"
+                                            stroke-linecap="round" stroke-linejoin="round">
+                                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                                        </svg>
                                         }
                                     </button>
 
@@ -237,14 +254,14 @@
                                     }
 
                                     @for (project of getProjects(ws.id); track project.id) {
-                                        <li>
-                                            <a [routerLink]="['/dashboard', 'projects', project.id]"
-                                                routerLinkActive="text-primary fw-bold"
-                                                class="workspace-item d-flex align-items-center gap-2 small py-1"
-                                                style="font-size: 0.85rem;">
-                                                <span class="text-truncate">{{ project.name }}</span>
-                                            </a>
-                                        </li>
+                                    <li>
+                                        <a [routerLink]="['/dashboard', 'projects', project.id]"
+                                            routerLinkActive="text-primary fw-bold"
+                                            class="workspace-item d-flex align-items-center gap-2 small py-1"
+                                            style="font-size: 0.85rem;">
+                                            <span class="text-truncate">{{ project.name }}</span>
+                                        </a>
+                                    </li>
                                     } @empty {
                                     <li><span class="text-muted small ps-2 py-1 d-block" style="font-size: 0.75rem;">No
                                             projects</span></li>
@@ -252,6 +269,7 @@
                                 </ul>
                             </div>
                         </li>
+
                     </ul>
                 </div>
             </li>
@@ -260,5 +278,8 @@
             }
             }
         </ul>
+
+
     </div>
+
 </div>

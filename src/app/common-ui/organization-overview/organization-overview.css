@@ -214,3 +214,66 @@
     .bento-grid-org { grid-template-columns: 1fr; }
     .list-card { grid-column: span 1; }
 }
+
+/* --- Invite Card --- */
+.invite-card {
+    background: linear-gradient(135deg, #f8f9fa 0%, #fcfcfc 100%);
+}
+
+.modern-invite-input {
+    border-radius: 12px;
+    border: 1.5px solid rgba(0,0,0,0.08);
+    padding: 0.65rem 1rem;
+    font-size: 0.95rem;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.modern-invite-input:focus {
+    border-color: #d8f066;
+    box-shadow: 0 0 0 3px rgba(216,240,102,0.25);
+    outline: none;
+}
+
+.btn-invite {
+    background-color: #d8f066;
+    color: #000;
+    border: none;
+    border-radius: 12px;
+    padding: 0.65rem 1.4rem;
+    font-weight: 700;
+    font-size: 0.95rem;
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    white-space: nowrap;
+}
+
+.btn-invite:hover:not(:disabled) {
+    background-color: #c8e050;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(216,240,102,0.4);
+}
+
+.btn-invite:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.invite-feedback {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 1rem;
+    border-radius: 10px;
+    font-size: 0.875rem;
+    font-weight: 600;
+    animation: fadeIn 0.3s ease;
+}
+
+.invite-feedback-success {
+    background-color: #d1e7dd;
+    color: #155724;
+}
+
+.invite-feedback-error {
+    background-color: #f8d7da;
+    color: #842029;
+}

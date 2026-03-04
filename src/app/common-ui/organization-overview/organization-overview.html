@@ -216,6 +216,67 @@
                 </div>
             </div>
 
+            <!-- 4. Invite Member Card (Admins only) -->
+            @if (isAdmin) {
+            <div class="bento-card invite-card" style="grid-column: span 4;">
+                <div class="list-header">
+                    <div>
+                        <h3 class="h5 fw-bold mb-0">Invite Member</h3>
+                        <p class="text-muted small mb-0">Send an invitation email to add someone to your organization</p>
+                    </div>
+                    <div class="p-2 bg-light rounded-3 border">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 14a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.62 3h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L8.09 10.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 17z"/><path d="M14.05 9a9 9 0 0 1 4.95 4.95"/></svg>
+                    </div>
+                </div>
+
+                <div class="d-flex align-items-end gap-3 flex-wrap">
+                    <!-- Email -->
+                    <div class="flex-grow-1" style="min-width: 240px;">
+                        <label class="fw-bold small text-secondary mb-1 text-uppercase" style="letter-spacing:.05em;">Email Address</label>
+                        <input type="email" 
+                               [(ngModel)]="inviteEmail"
+                               class="form-control modern-invite-input"
+                               placeholder="colleague@company.com"
+                               (keydown.enter)="sendInvite()">
+                    </div>
+
+                    <!-- Role toggle -->
+                    <div class="d-flex align-items-center gap-2 pb-1">
+                        <div class="form-check form-switch mb-0">
+                            <input class="form-check-input" type="checkbox" id="inviteAdminToggle" [(ngModel)]="inviteIsOrgAdmin" style="width:2.5rem; height:1.25rem;">
+                            <label class="form-check-label fw-bold small ms-1" for="inviteAdminToggle">Invite as Admin</label>
+                        </div>
+                    </div>
+
+                    <!-- Send button -->
+                    <button class="btn btn-invite d-flex align-items-center gap-2 pb-1"
+                            [disabled]="inviteStatus === 'loading' || !inviteEmail.trim()"
+                            (click)="sendInvite()">
+                        @if (inviteStatus === 'loading') {
+                            <span class="spinner-border spinner-border-sm"></span> Sending...
+                        } @else {
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
+                            Send Invite
+                        }
+                    </button>
+                </div>
+
+                <!-- Feedback -->
+                @if (inviteStatus === 'success') {
+                <div class="invite-feedback invite-feedback-success mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                    {{ inviteMessage }}
+                </div>
+                }
+                @if (inviteStatus === 'error') {
+                <div class="invite-feedback invite-feedback-error mt-3">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" x2="12" y1="8" y2="12"/><line x1="12" x2="12.01" y1="16" y2="16"/></svg>
+                    {{ inviteMessage }}
+                </div>
+                }
+            </div>
+            }
+
         </div>
     }
 </div>

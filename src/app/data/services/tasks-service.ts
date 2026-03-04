@@ -14,15 +14,24 @@ export class TasksService {
     baseUrl: string = environment.apiUrl + '/tasks';
 
 
-    getTasksByProjectId(projectId: string) : Observable<GetTask[]> {
+    getTasksByProjectId(projectId: string): Observable<GetTask[]> {
         return this.http.get<GetTask[]>(`${this.baseUrl}/Projects/${projectId}`);
     }
 
-    getTaskById(taskId: string) : Observable<GetTask> { 
+    getTaskById(taskId: string): Observable<GetTask> {
         return this.http.get<GetTask>(`${this.baseUrl}/${taskId}`);
     }
 
-    postTaskToProject(projectId: string,task: PostTask) : Observable<PostTask> {
-        return this.http.post<PostTask>(`${this.baseUrl}/Projects/${projectId}`, task);
+    postTaskToProject(projectId: string, task: PostTask): Observable<any> {
+        return this.http.post(`${this.baseUrl}/Projects/${projectId}`, task, { responseType: 'text' });
+    }
+
+    deleteTask(taskId: string): Observable<any> {
+        return this.http.delete(`${this.baseUrl}/${taskId}`, { responseType: 'text' });
+    }
+
+    updateTaskStatus(taskId: string, newStatusId: number): Observable<any> {
+        const patch = [{ op: 'replace', path: '/statusId', value: newStatusId }];
+        return this.http.patch(`${this.baseUrl}/${taskId}`, patch, { responseType: 'text' });
     }
 }
