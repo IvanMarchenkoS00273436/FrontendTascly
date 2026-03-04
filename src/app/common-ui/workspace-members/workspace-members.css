@@ -351,12 +351,11 @@
     justify-content: center;
     cursor: pointer;
     transition: all 0.2s;
-    opacity: 0;
 }
 
 .member-card:hover .btn-dots,
 .member-card.menu-open .btn-dots {
-    opacity: 1;
+    color: #000;
 }
 
 .btn-dots:hover {
