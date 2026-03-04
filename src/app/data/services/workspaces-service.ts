@@ -40,7 +40,7 @@ export class WorkspacesService {
         return this.http.delete<void>(`${this.baseUrl}/${workspaceId}/members/${memberId}`);
     }
 
-    putMemberWithNewRole(putMemberWithNewRoleDto: PutMemberWithNewRoleDto): Observable<void> {
-        return this.http.put<void>(`${this.baseUrl}/${putMemberWithNewRoleDto.userId}/Members/Role`, putMemberWithNewRoleDto);
+    putMemberWithNewRole(workspaceId: string, putMemberWithNewRoleDto: PutMemberWithNewRoleDto): Observable<void> {
+        return this.http.put<void>(`${this.baseUrl}/${workspaceId}/Members/Role`, putMemberWithNewRoleDto);
     }
 }

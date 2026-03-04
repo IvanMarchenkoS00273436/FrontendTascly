@@ -104,7 +104,7 @@ export class AIPromptComponent {
         }
         // Build member list for AI context
         const members: AiMemberDto[] = this.members().map(m => ({
-            id: m.id,
+            id: m.memberId,
             fullName: `${m.firstName} ${m.lastName}`
         }));
         await this.aiService.generateTasks(prompt, projectId, members);
@@ -174,7 +174,7 @@ export class AIPromptComponent {
 
     getAssigneeName(assigneeId: string | undefined): string {
         if (!assigneeId) return 'Unassigned';
-        const member = this.members().find(m => m.id === assigneeId);
+        const member = this.members().find(m => m.memberId === assigneeId);
         return member ? `${member.firstName} ${member.lastName}` : 'Unassigned';
     }
 

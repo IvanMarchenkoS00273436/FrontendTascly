@@ -121,12 +121,17 @@ export class WorkspaceMembers {
             newRoleId: roleId
         };
 
-        this.workspaceService.putMemberWithNewRole(payload).subscribe({
+        const wsId = this.workspaceId;
+        this.closeEditRoleModal();
+
+        this.workspaceService.putMemberWithNewRole(wsId, payload).subscribe({
             next: () => {
-                this.closeEditRoleModal();
                 this.loadMembers();
             },
-            error: (err) => console.error("Failed to update role", err)
+            error: (err) => {
+                console.error("Failed to update role", err);
+                this.loadMembers();
+            }
         });
     }
 

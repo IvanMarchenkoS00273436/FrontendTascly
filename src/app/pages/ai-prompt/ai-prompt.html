@@ -85,7 +85,7 @@
         @if (members().length > 0) {
         <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
             <span class="text-muted small fw-medium">Team:</span>
-            @for (m of members(); track m.id || $index) {
+            @for (m of members(); track m.memberId || $index) {
             <span class="member-chip">
                 <span class="member-avatar">{{ (m.firstName[0] || '') + (m.lastName[0] || '') }}</span>
                 {{ m.firstName }} {{ m.lastName }}
@@ -165,8 +165,8 @@
                     @if (members().length > 0) {
                     <select class="assignee-select" (change)="onAssigneeChange(task.tempId, $any($event.target).value)">
                         <option value="" [selected]="!task.assigneeId">Unassigned</option>
-                        @for (m of members(); track m.id || $index) {
-                        <option [value]="m.id" [selected]="m.id === task.assigneeId">{{ m.firstName }} {{ m.lastName }}
+                        @for (m of members(); track m.memberId || $index) {
+                        <option [value]="m.memberId" [selected]="m.memberId === task.assigneeId">{{ m.firstName }} {{ m.lastName }}
                         </option>
                         }
                     </select>
