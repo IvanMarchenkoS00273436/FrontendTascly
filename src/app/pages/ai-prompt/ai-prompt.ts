@@ -1,4 +1,4 @@
-import { Component, OnInit, OnDestroy, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { AiTaskGeneratorService } from '../../data/services/ai-task-generator.service';
@@ -20,7 +20,7 @@ import { AiMemberDto } from '../../data/interfaces/tasks/task.interface';
     templateUrl: './ai-prompt.html',
     styleUrl: './ai-prompt.css'
 })
-export class AIPromptComponent implements OnInit, OnDestroy {
+export class AIPromptComponent {
     aiService = inject(AiTaskGeneratorService);
     voiceService = inject(VoiceInputService);
     private authService = inject(Auth);
@@ -34,6 +34,7 @@ export class AIPromptComponent implements OnInit, OnDestroy {
 
     selectedProjectId = signal<string>('');
     selectedWorkspaceId = signal<string>('');
+    lockedFromProject = signal<boolean>(false);  // true when navigated from a project board
 
     workspaces = signal<Getworkcpaces[]>([]);
     projects = signal<GetProject[]>([]);
@@ -50,27 +51,29 @@ export class AIPromptComponent implements OnInit, OnDestroy {
         'Add a notification system with real-time updates and email alerts'
     ];
 
-    ngOnInit() {
-        if (!this.voiceService.isSupported()) {
-            console.warn('Voice input is not supported in this browser');
-        }
-
-        // Load workspaces for the dropdown
-        this.workspacesService.getWorkspaces().subscribe(ws => {
-            this.workspaces.set(ws);
-        });
-
-        // Read projectId from URL if provided
+    constructor() {
         this.route.queryParams.subscribe(params => {
             const pid = params['projectId'];
-            if (pid) {
+            const wid = params['workspaceId'];
+
+            if (pid && wid) {
+                // Came from a project board — lock directly to this workspace + project
+                this.lockedFromProject.set(true);
+                this.selectedWorkspaceId.set(wid);
                 this.selectedProjectId.set(pid);
+
+                // Load projects for the workspace and members
+                this.projectsService.getWorkspaceProjects(wid).subscribe(p => this.projects.set(p));
+                this.workspacesService.getMembersRoles(wid).subscribe(m => this.members.set(m));
+            } else {
+                // Normal navigation — load all workspaces for manual selection
+                this.workspacesService.getWorkspaces().subscribe(ws => this.workspaces.set(ws));
             }
         });
     }
 
-    ngOnDestroy() {
-        this.voiceSub?.unsubscribe();
+    get lockedProjectName(): string {
+        return this.projects().find(p => p.id === this.selectedProjectId())?.name || 'Project';
     }
 
     onWorkspaceChange(workspaceId: string) {

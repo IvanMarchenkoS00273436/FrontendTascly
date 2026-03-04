@@ -6,14 +6,24 @@
             <h2 class="page-title mb-1">Project Board</h2>
             <p class="page-subtitle mb-0">Track progress and manage tasks.</p>
         </div>
-        <button class="btn btn-lime d-flex align-items-center gap-2" (click)="openCreateFormFirstColumn(columns())">
-            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
-                stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                <line x1="12" y1="5" x2="12" y2="19"></line>
-                <line x1="5" y1="12" x2="19" y2="12"></line>
-            </svg>
-            <span class="d-none d-sm-inline">New Task</span>
-        </button>
+        <div class="d-flex align-items-center gap-2">
+            @if (canUseAI) {
+            <button (click)="navigateToAI()" title="Generate tasks with AI"
+                style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#eaffc0,#d8f066);color:#1a3300;border:1px solid rgba(0,0,0,0.04);border-radius:12px;padding:8px 16px;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(168,224,99,0.2);"
+                onmouseover="this.style.transform='translateY(-1px)';this.style.boxShadow='0 6px 16px rgba(168,224,99,0.35)'"
+                onmouseout="this.style.transform='';this.style.boxShadow='0 2px 8px rgba(168,224,99,0.2)'">
+                <span class="d-none d-sm-inline">AI Generate</span>
+            </button>
+            }
+            <button class="btn btn-lime d-flex align-items-center gap-2" (click)="openCreateFormFirstColumn(columns())">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+                <span class="d-none d-sm-inline">New Task</span>
+            </button>
+        </div>
     </div>
 
     <!-- Kanban Board Area -->

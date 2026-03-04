@@ -1,12 +1,13 @@
 import { Component, inject, signal } from '@angular/core';
 import { AsyncPipe, DatePipe, UpperCasePipe } from '@angular/common';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
 import { map, switchMap, forkJoin, tap } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { PostTask } from '../../data/interfaces/tasks/post-task';
 import { FormsModule } from '@angular/forms';
+import { Auth } from '../../auth/auth';
 
 @Component({
     selector: 'app-tasks-kanban-view',
@@ -17,8 +18,12 @@ import { FormsModule } from '@angular/forms';
 })
 export class TasksKanbanView {
     private route = inject(ActivatedRoute);
+    private router = inject(Router);
     private tasksService = inject(TasksService);
     private projectsService = inject(ProjectsService);
+    private authService = inject(Auth);
+
+    get canUseAI() { return this.authService.canUseAI; }
 
     isCreating = signal(false);
     activeColumnForCreate = signal<string | null>(null);
@@ -88,6 +93,17 @@ export class TasksKanbanView {
 
     openCreateFormFirstColumn(columns: string[]) {
         if (columns.length > 0) this.openCreateForm(columns[0]);
+    }
+
+    navigateToAI() {
+        this.projectsService.getProjectById(this.projectId).subscribe(project => {
+            this.router.navigate(['/dashboard/ai-task-generator'], {
+                queryParams: {
+                    projectId: this.projectId,
+                    workspaceId: project.workspaceId
+                }
+            });
+        });
     }
 
     cancelCreate() {

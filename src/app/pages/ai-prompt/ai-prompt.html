@@ -1,40 +1,40 @@
 <div class="bento-page-container">
-    <div class="d-flex align-items-center gap-3">
-        <div>
-            <h1 class="h3 fw-bold mb-0">AI Task Generator</h1>
-            <p class="text-muted small mb-0">Generate tasks using AI from a text prompt or voice input</p>
-        </div>
+
+    <!-- Hero Header -->
+    <div class="ai-page-header">
+        <h1 class="ai-page-title mb-1">AI Task Generator</h1>
+        <p class="ai-page-subtitle mb-0">Describe what needs to be done — AI creates and assigns tasks instantly</p>
     </div>
 
-    <!-- Prompt Input Card -->
+    <!-- Prompt Card -->
     <div class="bento-card">
-        <h5 class="fw-semibold mb-3">Enter your prompt</h5>
 
         @if (errorMessage()) {
-        <div class="alert alert-danger small py-2">{{ errorMessage() }}</div>
+        <div class="alert alert-danger small py-2 rounded-3 mb-3">{{ errorMessage() }}</div>
         }
 
+        <!-- Textarea -->
         <div class="mb-3">
-            <textarea class="form-control" rows="4" [value]="promptText()"
+            <textarea class="ai-prompt-textarea w-100" rows="4" [value]="promptText()"
                 (input)="promptText.set($any($event.target).value)" [disabled]="isProcessing()"
-                placeholder="e.g. Create 5 tasks for building a user authentication system. Assign backend tasks to John and frontend tasks to Sarah. Deadline: next Friday.">
-    </textarea>
+                placeholder="e.g. Create 5 tasks for building a login system. Tell Ivan to handle the backend and Ryan to do the frontend. Deadline: next Friday."></textarea>
         </div>
 
         <!-- Example prompts -->
         <div class="mb-3">
-            <p class="text-muted small mb-1">Try an example:</p>
+            <p class="text-muted small mb-2" style="font-weight:500;">Try an example</p>
             <div class="d-flex flex-wrap gap-2">
                 @for (ex of examplePrompts; track ex) {
-                <button class="btn btn-outline-secondary btn-sm" (click)="useExamplePrompt(ex)">{{ ex | slice:0:40
-                    }}...</button>
+                <button class="example-chip" (click)="useExamplePrompt(ex)">{{ ex | slice:0:42 }}…</button>
                 }
             </div>
         </div>
 
-        <div class="d-flex align-items-center gap-2 mb-3 flex-wrap">
+        <!-- Controls bar -->
+        <div class="ai-controls-bar mb-3">
+
             @if (!isListening()) {
-            <button class="btn btn-sm btn-outline-secondary" (click)="startVoiceInput()" [disabled]="isProcessing()">
+            <button class="btn-voice" (click)="startVoiceInput()" [disabled]="isProcessing()">
                 <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z" />
@@ -45,50 +45,72 @@
                 Voice Input
             </button>
             } @else {
-            <button class="btn btn-sm btn-danger" (click)="stopVoiceInput()">Stop</button>
+            <button class="btn-voice listening" (click)="stopVoiceInput()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                    <rect x="4" y="4" width="16" height="16" rx="2" />
+                </svg>
+                Listening… Stop
+            </button>
             }
 
-            <select class="form-select form-select-sm w-auto" [value]="selectedWorkspaceId()"
+            @if (lockedFromProject()) {
+            <div class="project-lock-badge">
+                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                    <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                {{ lockedProjectName }}
+                <span class="text-muted fw-normal" style="font-size:0.78rem;">· tasks locked to this project</span>
+            </div>
+            } @else {
+            <select class="assignee-select" style="min-width:160px;" [value]="selectedWorkspaceId()"
                 (change)="onWorkspaceChange($any($event.target).value)">
-                <option value="">Select Workspace...</option>
+                <option value="">Workspace…</option>
                 @for (ws of workspaces(); track ws.id) {
                 <option [value]="ws.id">{{ ws.name }}</option>
                 }
             </select>
-
-            <select class="form-select form-select-sm w-auto" [value]="selectedProjectId()"
+            <select class="assignee-select" style="min-width:150px;" [value]="selectedProjectId()"
                 (change)="selectedProjectId.set($any($event.target).value)" [disabled]="!selectedWorkspaceId()">
-                <option value="">Select Project...</option>
+                <option value="">Project…</option>
                 @for (p of projects(); track p.id) {
                 <option [value]="p.id">{{ p.name }}</option>
                 }
             </select>
+            }
         </div>
 
-        <!-- Members loaded for this workspace -->
+        <!-- Team Members -->
         @if (members().length > 0) {
         <div class="d-flex align-items-center gap-2 flex-wrap mb-3">
-            <span class="text-muted small">Team:</span>
+            <span class="text-muted small fw-medium">Team:</span>
             @for (m of members(); track m.id || $index) {
-            <span class="badge bg-light border text-dark fw-semibold" style="border-radius:10px;">
+            <span class="member-chip">
+                <span class="member-avatar">{{ (m.firstName[0] || '') + (m.lastName[0] || '') }}</span>
                 {{ m.firstName }} {{ m.lastName }}
             </span>
             }
-            <span class="text-muted small fst-italic">— mention names in your prompt to auto-assign tasks</span>
+            <span class="text-muted" style="font-size:0.75rem; font-style:italic;">— mention names to auto-assign</span>
         </div>
         }
 
-        <div class="d-flex gap-2">
-            <button class="btn btn-primary" (click)="generateTasks()" [disabled]="isGenerateDisabled()">
+        <!-- Generate button -->
+        <div class="d-flex gap-2 align-items-center">
+            <button class="btn-ai-generate" (click)="generateTasks()" [disabled]="isGenerateDisabled()">
                 @if (isProcessing()) {
-                <span class="spinner-border spinner-border-sm me-2" role="status"></span>
-                Generating...
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                Generating…
                 } @else {
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L9.5 9H2l6 4.5L5.5 21 12 16.5 18.5 21 16 13.5l6-4.5H14.5z" />
+                </svg>
                 Generate Tasks
                 }
             </button>
             @if (draftTasks().length > 0) {
-            <button class="btn btn-outline-secondary" (click)="clearPrompt()">Clear All</button>
+            <button class="btn btn-sm btn-light border" (click)="clearPrompt()" style="border-radius:10px;">Clear
+                All</button>
             }
         </div>
     </div>
@@ -96,61 +118,67 @@
     <!-- Draft Tasks -->
     @if (draftTasks().length > 0) {
     <div class="bento-card mt-2">
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h5 class="fw-semibold mb-0">
-                Generated Tasks
-                <span class="badge bg-primary bg-opacity-10 text-primary ms-2">{{ draftTasks().length }}</span>
-            </h5>
-            <button class="btn btn-success btn-sm" (click)="confirmAllTasks()" [disabled]="isProcessing()">
+        <div class="tasks-header-bar">
+            <div class="d-flex align-items-center gap-2">
+                <h5 class="fw-bold mb-0" style="font-size:1rem;">Generated Tasks</h5>
+                <span class="tasks-count-badge">{{ draftTasks().length }}</span>
+            </div>
+            <button class="btn-create-all" (click)="confirmAllTasks()" [disabled]="isProcessing()">
                 @if (isProcessing()) {
-                <span class="spinner-border spinner-border-sm me-1" role="status"></span>
-                Creating...
+                <span class="spinner-border spinner-border-sm" role="status"></span>
+                Creating…
                 } @else {
-                ✓ Create All Tasks
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <polyline points="20 6 9 17 4 12" />
+                </svg>
+                Create All Tasks
                 }
             </button>
         </div>
 
         <div class="d-flex flex-column gap-3">
             @for (task of draftTasks(); track task.tempId) {
-            <div class="p-3 rounded-3 border">
-                <div class="d-flex justify-content-between align-items-start mb-2">
-                    <h6 class="fw-semibold mb-0">{{ task.name }}</h6>
-                    <div class="d-flex gap-2">
-                        <span class="badge" [class.bg-danger]="task.importanceId === 3"
-                            [class.bg-warning]="task.importanceId === 2" [class.bg-secondary]="task.importanceId === 1">
+            <div class="draft-task-card">
+                <div class="d-flex justify-content-between align-items-start mb-1">
+                    <h6 class="draft-task-title">{{ task.name }}</h6>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="importance-badge" [class.importance-high]="task.importanceId === 3"
+                            [class.importance-medium]="task.importanceId === 2"
+                            [class.importance-low]="task.importanceId === 1">
                             {{ getImportanceLabel(task.importanceId) }}
                         </span>
-                        <button class="btn btn-sm btn-outline-danger py-0 px-1"
-                            (click)="removeDraftTask(task.tempId)">✕</button>
+                        <button class="btn btn-sm btn-light border-0 py-0 px-1 text-muted"
+                            style="border-radius:6px; font-size:0.85rem;" (click)="removeDraftTask(task.tempId)"
+                            title="Remove">✕</button>
                     </div>
                 </div>
-                <p class="text-muted small mb-2">{{ task.description }}</p>
+                <p class="draft-task-desc">{{ task.description }}</p>
 
                 <!-- Assignee picker -->
                 <div class="d-flex align-items-center gap-2">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
-                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-                        class="text-muted">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24" fill="none"
+                        stroke="#9ca3af" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2" />
                         <circle cx="12" cy="7" r="4" />
                     </svg>
                     @if (members().length > 0) {
-                    <select class="form-select form-select-sm w-auto"
-                        (change)="onAssigneeChange(task.tempId, $any($event.target).value)">
+                    <select class="assignee-select" (change)="onAssigneeChange(task.tempId, $any($event.target).value)">
                         <option value="" [selected]="!task.assigneeId">Unassigned</option>
                         @for (m of members(); track m.id || $index) {
                         <option [value]="m.id" [selected]="m.id === task.assigneeId">{{ m.firstName }} {{ m.lastName }}
                         </option>
                         }
                     </select>
-                    } @else {
-                    <span class="text-muted small fst-italic">Select a workspace to enable assignment</span>
-                    }
                     @if (task.assigneeId) {
-                    <span class="badge bg-light border text-dark fw-semibold" style="border-radius:8px;">
+                    <span class="member-chip">
+                        <span class="member-avatar">{{ getAssigneeName(task.assigneeId).charAt(0) }}</span>
                         {{ getAssigneeName(task.assigneeId) }}
                     </span>
+                    }
+                    } @else {
+                    <span class="text-muted" style="font-size:0.78rem; font-style:italic;">Select a workspace to enable
+                        assignment</span>
                     }
                 </div>
             </div>
@@ -158,4 +186,5 @@
         </div>
     </div>
     }
+
 </div>
