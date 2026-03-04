@@ -4,7 +4,7 @@ import { Observable, Subject } from 'rxjs';
 @Injectable({ providedIn: 'root' })
 export class VoiceInputService {
     private recognition: any;
-    private transcriptSubject = new Subject<string>();
+    private transcriptSubject: Subject<string> | null = null;
     private isListening = false;
 
     constructor() {
@@ -20,17 +20,23 @@ export class VoiceInputService {
 
             this.recognition.onresult = (event: any) => {
                 const transcript = event.results[0][0].transcript;
-                this.transcriptSubject.next(transcript);
+                this.transcriptSubject?.next(transcript);
+                this.transcriptSubject?.complete();
+                this.transcriptSubject = null;
                 this.isListening = false;
             };
 
             this.recognition.onerror = (event: any) => {
                 console.error('Speech recognition error:', event.error);
-                this.transcriptSubject.error(event.error);
+                this.transcriptSubject?.error(event.error);
+                this.transcriptSubject = null;
                 this.isListening = false;
             };
 
             this.recognition.onend = () => {
+                // Complete the subject if it wasn't already completed (e.g. no result)
+                this.transcriptSubject?.complete();
+                this.transcriptSubject = null;
                 this.isListening = false;
             };
         }
@@ -40,15 +46,22 @@ export class VoiceInputService {
         if (!this.recognition) {
             throw new Error('Speech recognition is not supported in this browser');
         }
+
+        // Stop any in-progress session and complete old subject cleanly
         if (this.isListening) {
             this.recognition.stop();
         }
+
+        // Always create a fresh Subject so previous subscribers don't get duplicate results
+        this.transcriptSubject = new Subject<string>();
+
         try {
             this.recognition.start();
             this.isListening = true;
         } catch (error) {
             console.error('Failed to start speech recognition:', error);
         }
+
         return this.transcriptSubject.asObservable();
     }
 
