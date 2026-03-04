@@ -106,6 +106,10 @@ export class TasksKanbanView {
         });
     }
 
+    navigateToCalendar() {
+        this.router.navigate(['/dashboard/projects', this.projectId, 'calendar']);
+    }
+
     cancelCreate() {
         this.isCreating.set(false);
         this.activeColumnForCreate.set(null);

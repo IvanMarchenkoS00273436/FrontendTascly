@@ -7,6 +7,7 @@ import { WorkspaceMembers } from './common-ui/workspace-members/workspace-member
 import { UserProfile } from './common-ui/user-profile/user-profile';
 import { OrganizationOverview } from './common-ui/organization-overview/organization-overview';
 import { TasksKanbanView } from './common-ui/tasks-kanban-view/tasks-kanban-view';
+import { TasksCalendarView } from './common-ui/tasks-calendar-view/tasks-calendar-view';
 import { AIPromptComponent } from './pages/ai-prompt/ai-prompt';
 
 export const routes: Routes = [
@@ -22,6 +23,7 @@ export const routes: Routes = [
             { path: 'organization', component: OrganizationOverview },
             { path: ':id/members', component: WorkspaceMembers },
             { path: 'projects/:id', component: TasksKanbanView },
+            { path: 'projects/:id/calendar', component: TasksCalendarView },
             { path: 'ai-task-generator', component: AIPromptComponent }
         ]
     },
