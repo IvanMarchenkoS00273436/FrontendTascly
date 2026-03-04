@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject, signal, computed } from '@angular/core';
 import { AsyncPipe, DatePipe, UpperCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
@@ -24,16 +24,32 @@ export class TasksKanbanView {
     private authService = inject(Auth);
 
     get canUseAI() { return this.authService.canUseAI; }
+    get currentUserId() { return this.authService.userId; }
+
+    // 'mine' = only tasks assigned to me, 'all' = full board
+    viewMode = signal<'all' | 'mine'>('all');
 
     isCreating = signal(false);
     activeColumnForCreate = signal<string | null>(null);
     columns = signal<string[]>([]);
 
-    // Local mutable state for the board (avoids full page reloads)
+    // Local mutable state for the board
     groupedTasks = signal<Record<string, GetTask[]>>({});
     statusIdMap = signal<Map<string, any>>(new Map());
     importances = signal<any[]>([]);
     defaultImportanceId = signal<any>(1);
+
+    // Filtered view of tasks based on viewMode
+    filteredGroupedTasks = computed(() => {
+        const all = this.groupedTasks();
+        if (this.viewMode() === 'all') return all;
+        const uid = this.currentUserId;
+        const result: Record<string, GetTask[]> = {};
+        for (const col of Object.keys(all)) {
+            result[col] = all[col].filter(t => t.assigneeId === uid);
+        }
+        return result;
+    });
 
     newTaskName = '';
     newTaskDescription = '';
@@ -201,7 +217,7 @@ export class TasksKanbanView {
     }
 
     getGroupedTasks(column: string): GetTask[] {
-        return this.groupedTasks()[column] || [];
+        return this.filteredGroupedTasks()[column] || [];
     }
 
     isDragOver(column: string): boolean {

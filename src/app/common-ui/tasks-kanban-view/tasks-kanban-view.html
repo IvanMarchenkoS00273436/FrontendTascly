@@ -30,6 +30,15 @@
                     Calendar
                 </button>
             </div>
+            <!-- My / All Tasks filter -->
+            <div class="view-toggle">
+                <button class="view-btn" [class.active]="viewMode() === 'mine'" (click)="viewMode.set('mine')">
+                    My Tasks
+                </button>
+                <button class="view-btn" [class.active]="viewMode() === 'all'" (click)="viewMode.set('all')">
+                    All Tasks
+                </button>
+            </div>
             @if (canUseAI) {
             <button (click)="navigateToAI()" title="Generate tasks with AI"
                 style="display:flex;align-items:center;gap:6px;background:linear-gradient(135deg,#eaffc0,#d8f066);color:#1a3300;border:1px solid rgba(0,0,0,0.04);border-radius:12px;padding:8px 16px;font-weight:700;font-size:0.82rem;cursor:pointer;transition:all 0.2s;box-shadow:0 2px 8px rgba(168,224,99,0.2);"
