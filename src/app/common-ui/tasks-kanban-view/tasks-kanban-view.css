@@ -292,36 +292,86 @@
 
 /* ── View Toggle ──────────────────────────────────────────── */
 .view-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    background: #f1f3f5;
-    border-radius: 10px;
-    padding: 3px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
     gap: 2px;
 }
 
 .view-btn {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     background: transparent;
     border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #6b7280;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .view-btn:hover {
     color: #111;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .view-btn.active {
-    background: #fff;
+    background: #ffffff;
     color: #111;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Bento Split Button --- */
+.bento-split-btn {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #d8f066;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+.bento-split-btn:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-lime-main {
+    background: transparent;
+    color: #000000;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-main:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.btn-lime-icon {
+    background: transparent;
+    color: #000000;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-icon:hover {
+    background-color: rgba(0, 0, 0, 0.04);
 }

@@ -1,37 +1,75 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
 /* ── View Toggle ──────────────────────────────────────────── */
 .view-toggle {
-    display: flex;
+    display: inline-flex;
     align-items: center;
-    background: #f1f3f5;
-    border-radius: 10px;
-    padding: 3px;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
     gap: 2px;
 }
 
 .view-btn {
     display: flex;
     align-items: center;
-    gap: 5px;
+    gap: 6px;
     background: transparent;
     border: none;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 0.8rem;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
     font-weight: 600;
     color: #6b7280;
     cursor: pointer;
-    transition: all 0.15s;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
 .view-btn:hover {
     color: #111;
-    background: rgba(0, 0, 0, 0.05);
+    background: rgba(0, 0, 0, 0.03);
 }
 
 .view-btn.active {
-    background: #fff;
+    background: #ffffff;
     color: #111;
-    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
 }
 
 /* ── Month nav ────────────────────────────────────────────── */
