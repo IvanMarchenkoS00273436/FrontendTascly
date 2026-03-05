@@ -332,3 +332,61 @@ div.workspace-item {
 .workspace-list-wrapper .create-workspace-box input {
     background-color: #ffffff; /* Contrast against light gray box */
 }
+
+/* --- AI Generator Card (Bento Tile) --- */
+.ai-generator-card {
+    background-color: #f8f9fa;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ai-generator-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: #000;
+}
+
+.ai-generator-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.ai-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #d8f066;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.ai-generator-card:hover .ai-icon-box {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(216, 240, 102, 0.4);
+}
+
+.ai-arrow-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+    color: #888;
+}
+
+.ai-generator-card:hover .ai-arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
