@@ -54,6 +54,7 @@ export class TasksKanbanView {
     newTaskName = '';
     newTaskDescription = '';
     newTaskImportanceId: number = 1;
+    newTaskStartDate: string = '';
     newTaskDueDate: string = '';
     projectId: string = '';
 
@@ -103,6 +104,8 @@ export class TasksKanbanView {
         this.newTaskName = '';
         this.newTaskDescription = '';
         this.newTaskImportanceId = 1;
+        const now = new Date();
+        this.newTaskStartDate = now.toISOString().substring(0, 10);
         const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
         this.newTaskDueDate = d.toISOString().substring(0, 10);
     }
@@ -142,7 +145,7 @@ export class TasksKanbanView {
             statusId,
             importanceId,
             assigneeId: null,
-            startDate: new Date(),
+            startDate: this.newTaskStartDate ? new Date(this.newTaskStartDate) : new Date(),
             dueDate: this.newTaskDueDate ? new Date(this.newTaskDueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         };
 
