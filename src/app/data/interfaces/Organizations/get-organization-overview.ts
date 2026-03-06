@@ -10,4 +10,5 @@ export interface GetOrganizationOverview {
     totalCompletedTasks: number;
     totalToDoTasks: number;
     totalInProgressTasks: number;
+    totalBacklogTasks: number;
 }

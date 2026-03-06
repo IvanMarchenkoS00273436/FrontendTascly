@@ -13,7 +13,7 @@
 /* --- Grid Layout --- */
 .bento-grid-org {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(10, 1fr);
     grid-auto-rows: minmax(180px, auto); 
     gap: 1.5rem;
 }
@@ -57,7 +57,7 @@
 
 /* --- Stat Cards --- */
 .stat-card {
-    grid-column: span 1;
+    grid-column: span 2;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
@@ -68,6 +68,7 @@
 .card-completed:hover { border-color: #198754; }
 .card-progress:hover { border-color: #d39e00; }
 .card-todo:hover { border-color: #0d6efd; }
+.card-backlog:hover { border-color: #6c757d; }
 
 /* Progress Bar Background */
 .progress-bg {
@@ -88,7 +89,7 @@
 
 /* --- List Cards --- */
 .list-card {
-    grid-column: span 2;
+    grid-column: span 5;
     min-height: 440px;
     background: linear-gradient(180deg, #f8f9fa 0%, #fcfcfc 100%);
 }

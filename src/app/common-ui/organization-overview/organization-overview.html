@@ -131,6 +131,26 @@
                 </div>
             </div>
 
+            <!-- Backlog -->
+            <div class="bento-card stat-card card-backlog">
+                <div class="icon-circle bg-secondary-subtle">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        class="text-secondary" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                        stroke-linejoin="round">
+                        <path d="M4 6h16M4 12h16M4 18h7"/>
+                    </svg>
+                </div>
+                <div>
+                    <h3 class="display-4 fw-black mb-0 text-secondary">{{ org.totalBacklogTasks || 0 }}</h3>
+                    <span class="text-secondary small fw-bold text-uppercase ls-1">Backlog</span>
+
+                    <div class="progress-bg">
+                        <div class="progress-fill bg-secondary"
+                            [style.width.%]="((org.totalBacklogTasks || 0) / (org.totalTasks || 1)) * 100"></div>
+                    </div>
+                </div>
+            </div>
+
 
             <!-- 2. Members List (Large Card) -->
             <div class="bento-card list-card">
