@@ -1,11 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-careers',
   standalone: true,
-  imports: [RouterLink, CommonModule],
+  imports: [CommonModule],
   templateUrl: './careers.html',
   styleUrl: './careers.css',
 })
