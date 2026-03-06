@@ -9,8 +9,12 @@ import { OrganizationOverview } from './common-ui/organization-overview/organiza
 import { TasksKanbanView } from './common-ui/tasks-kanban-view/tasks-kanban-view';
 import { TasksCalendarView } from './common-ui/tasks-calendar-view/tasks-calendar-view';
 import { AIPromptComponent } from './pages/ai-prompt/ai-prompt';
+import { Main } from './pages/main/main';
+import { Careers } from './pages/careers/careers';
 
 export const routes: Routes = [
+    { path: 'main', component: Main },
+    { path: 'careers', component: Careers },
     { path: 'login', component: Login },
     { path: 'register', component: Register },
     {
@@ -27,5 +31,5 @@ export const routes: Routes = [
             { path: 'ai-task-generator', component: AIPromptComponent }
         ]
     },
-    { path: '', redirectTo: 'login', pathMatch: 'full' }
+    { path: '', redirectTo: 'main', pathMatch: 'full' }
 ];

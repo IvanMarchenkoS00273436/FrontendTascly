@@ -89,7 +89,7 @@
 
                     @for (task of getGroupedTasks(status); track task.id) {
                     <div class="bento-card task-card p-3" draggable="true" (dragstart)="onDragStart(task, status)"
-                        (dragend)="onDragEnd()" style="cursor: grab;">
+                        (dragend)="onDragEnd()" (click)="openEditForm(task)" style="cursor: grab;">
 
                         <!-- Meta Row -->
                         <div class="d-flex justify-content-between align-items-center mb-2">
@@ -110,7 +110,7 @@
                             }
 
                             <!-- Delete Button (visible on hover) -->
-                            <button class="btn-delete-task ms-auto" (click)="deleteTask(task)" title="Delete task"
+                            <button class="btn-delete-task ms-auto" (click)="deleteTask(task); $event.stopPropagation()" title="Delete task"
                                 draggable="false">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
                                     fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
@@ -226,6 +226,63 @@
                 <button class="bento-btn-primary" [disabled]="!newTaskName.trim()"
                     (click)="createTask(data.statusIdMap.get(activeColumnForCreate() || ''), data.defaultImportanceId)">
                     Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ── Bento Modal Form for Editing Tasks ── -->
+    @if (isEditing()) {
+    <div class="bento-modal-overlay" (click)="cancelEdit()">
+        <div class="bento-modal-content bento-panel" (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1" style="font-size: 1.5rem; font-weight: 800;">Edit Task</h3>
+                    <p class="text-muted small mb-0" style="font-size: 0.95rem;">
+                        Modifying info for <span class="badge bg-light text-dark border ms-1">{{ activeColumnForCreate() || editingTask()?.statusName }}</span>
+                    </p>
+                </div>
+                <button class="btn-close-mini" (click)="cancelEdit()" title="Close">&times;</button>
+            </div>
+            
+            <!-- Body: Inputs -->
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Task Name <span class="text-danger">*</span></label>
+                <input type="text" class="bento-input w-100" placeholder="e.g. Update user profile page..." [(ngModel)]="editTaskName" autofocus>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Description</label>
+                <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="editTaskDescription"></textarea>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-4">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
+                    <select class="bento-select w-100" [(ngModel)]="editTaskImportanceId">
+                        @for (imp of data.importances; track imp.id) {
+                        <option [value]="imp.id">{{ imp.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-4">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="editTaskStartDate">
+                </div>
+                <div class="col-4">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="editTaskDueDate">
+                </div>
+            </div>
+            
+            <!-- Footer: Buttons -->
+            <div class="d-flex justify-content-end gap-3 mt-auto pt-2 border-top border-light">
+                <button class="bento-btn-secondary" (click)="cancelEdit()">Cancel</button>
+                <button class="bento-btn-primary" [disabled]="!editTaskName.trim()"
+                    (click)="saveTaskEdit()">
+                    Save Changes
                 </button>
             </div>
         </div>

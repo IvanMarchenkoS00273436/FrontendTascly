@@ -58,6 +58,16 @@ export class TasksKanbanView {
     newTaskDueDate: string = '';
     projectId: string = '';
 
+    // Edit state
+    isEditing = signal(false);
+    editingTask = signal<GetTask | null>(null);
+    editTaskName = '';
+    editTaskDescription = '';
+    editTaskImportanceId: number = 1;
+    editTaskStartDate: string = '';
+    editTaskDueDate: string = '';
+    editTaskStatusId: number | null = null;
+
     // Drag state
     private draggedTask = signal<GetTask | null>(null);
     private draggedFromColumn = signal<string | null>(null);
@@ -132,6 +142,50 @@ export class TasksKanbanView {
     cancelCreate() {
         this.isCreating.set(false);
         this.activeColumnForCreate.set(null);
+    }
+
+    openEditForm(task: GetTask) {
+        this.editingTask.set(task);
+        this.editTaskName = task.name;
+        this.editTaskDescription = task.description || '';
+        this.editTaskImportanceId = Array.isArray(this.importances()) && this.importances().find(i => i.name === task.importanceName)?.id || 1;
+        this.editTaskStartDate = task.startDate ? new Date(task.startDate.toString()).toISOString().substring(0, 10) : '';
+        this.editTaskDueDate = task.dueDate ? new Date(task.dueDate.toString()).toISOString().substring(0, 10) : '';
+        this.editTaskStatusId = this.statusIdMap().get(task.statusName) || null;
+        this.isEditing.set(true);
+    }
+
+    cancelEdit() {
+        this.isEditing.set(false);
+        this.editingTask.set(null);
+    }
+
+    saveTaskEdit() {
+        const task = this.editingTask();
+        if (!task || !this.editTaskName.trim()) return;
+        
+        // Optimistic UI update since we might not have full PUT in backend
+        const grouped = { ...this.groupedTasks() };
+        const colTasks = grouped[task.statusName];
+        if (colTasks) {
+            const index = colTasks.findIndex(t => t.id === task.id);
+            if (index !== -1) {
+                // Determine new importance name based on ID
+                const newImp = this.importances().find(i => i.id === Number(this.editTaskImportanceId));
+                colTasks[index] = {
+                    ...colTasks[index],
+                    name: this.editTaskName,
+                    description: this.editTaskDescription,
+                    startDate: this.editTaskStartDate ? new Date(this.editTaskStartDate) : colTasks[index].startDate,
+                    dueDate: this.editTaskDueDate ? new Date(this.editTaskDueDate) : colTasks[index].dueDate,
+                    importanceName: newImp ? newImp.name : colTasks[index].importanceName
+                };
+                this.groupedTasks.set(grouped);
+            }
+        }
+        
+        this.cancelEdit();
+        // Here you would normally call this.tasksService.putTask(task.id, updatedData)
     }
 
     createTask(statusIdRaw: string | number | undefined, importanceIdRaw: string | number) {
