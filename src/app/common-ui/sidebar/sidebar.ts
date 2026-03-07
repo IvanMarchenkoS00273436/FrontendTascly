@@ -19,7 +19,7 @@ export class Sidebar {
     workspacesService = inject(WorkspacesService);
     userService = inject(UsersService);
     projectsService = inject(ProjectsService);
-    private authService = inject(Auth);
+    authService = inject(Auth);
 
     get canUseAI(): boolean {
         return this.authService.canUseAI;

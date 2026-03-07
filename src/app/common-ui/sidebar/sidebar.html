@@ -111,22 +111,24 @@
         <!-- Header Row with Create Button -->
         <div class="d-flex align-items-center justify-content-between pe-2 mb-2">
             <label class="modern-label ps-2 mb-0">Your Workspaces</label>
-            <button class="btn-create-mini" (click)="toggleCreateInput()" title="Create Workspace">
-                @if (showCreateInput) {
-                <!-- Minus Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
-                } @else {
-                <!-- Plus Icon -->
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
-                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <line x1="12" y1="5" x2="12" y2="19"></line>
-                    <line x1="5" y1="12" x2="19" y2="12"></line>
-                </svg>
+            @if(authService.isAdmin) {
+                <button class="btn-create-mini" (click)="toggleCreateInput()" title="Create Workspace">
+                    @if (showCreateInput) {
+                    <!-- Minus Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    } @else {
+                    <!-- Plus Icon -->
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
                 }
             </button>
+            }
         </div>
 
         <!-- Create Workspace Input Row -->
