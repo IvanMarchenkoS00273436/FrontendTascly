@@ -1,5 +1,6 @@
 export interface GetUserProfile {
-    id: string;
+    id? : string;
+    userId? : string;
     userName: string;
     firstName: string;
     lastName: string;
