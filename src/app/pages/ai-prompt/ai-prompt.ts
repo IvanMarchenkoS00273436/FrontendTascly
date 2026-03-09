@@ -56,19 +56,30 @@ export class AIPromptComponent {
             const pid = params['projectId'];
             const wid = params['workspaceId'];
 
-            if (pid && wid) {
-                // Came from a project board — lock directly to this workspace + project
-                this.lockedFromProject.set(true);
-                this.selectedWorkspaceId.set(wid);
-                this.selectedProjectId.set(pid);
+            // Always load workspaces so the dropdown can display the name properly
+            this.workspacesService.getWorkspaces().subscribe(ws => {
+                this.workspaces.set(ws);
 
-                // Load projects for the workspace and members
-                this.projectsService.getWorkspaceProjects(wid).subscribe(p => this.projects.set(p));
-                this.workspacesService.getMembersRoles(wid).subscribe(m => this.members.set(m));
-            } else {
-                // Normal navigation — load all workspaces for manual selection
-                this.workspacesService.getWorkspaces().subscribe(ws => this.workspaces.set(ws));
-            }
+                if (pid && wid) {
+                    // Came from a project board — lock directly to this workspace + project
+                    this.lockedFromProject.set(true);
+                    this.selectedWorkspaceId.set(wid);
+                    this.selectedProjectId.set(pid);
+
+                    // Load projects for the workspace and members
+                    this.projectsService.getWorkspaceProjects(wid).subscribe(p => {
+                        this.projects.set(p);
+                    });
+                    this.workspacesService.getMembersRoles(wid).subscribe(m => this.members.set(m));
+                } else {
+                    // Reset explicitly if navigating directly to AI page without params
+                    this.lockedFromProject.set(false);
+                    this.selectedWorkspaceId.set('');
+                    this.selectedProjectId.set('');
+                    this.projects.set([]);
+                    this.members.set([]);
+                }
+            });
         });
     }
 

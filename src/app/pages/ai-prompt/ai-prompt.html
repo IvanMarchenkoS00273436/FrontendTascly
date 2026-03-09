@@ -17,7 +17,9 @@
         <!-- Workspace & Project Selectors -->
         <div class="selectors-row mb-4">
             <div class="d-flex flex-wrap gap-3">
-                <select class="bento-select" (change)="onWorkspaceChange($any($event.target).value)">
+                <select class="bento-select" 
+                        [disabled]="lockedFromProject()"
+                        (change)="onWorkspaceChange($any($event.target).value)">
                     <option value="">Select Workspace...</option>
                     @for (w of workspaces(); track w.id) {
                         <option [value]="w.id" [selected]="w.id === selectedWorkspaceId()">{{ w.name }}</option>
