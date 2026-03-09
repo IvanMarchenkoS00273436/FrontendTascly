@@ -34,4 +34,8 @@ export class TasksService {
         const patch = [{ op: 'replace', path: '/statusId', value: newStatusId }];
         return this.http.patch(`${this.baseUrl}/${taskId}`, patch, { responseType: 'text' });
     }
+
+    updateTask(taskId: string, jsonPatch: any[]): Observable<any> {
+        return this.http.patch(`${this.baseUrl}/${taskId}`, jsonPatch, { responseType: 'text' });
+    }
 }

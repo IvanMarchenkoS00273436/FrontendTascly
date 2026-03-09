@@ -201,8 +201,8 @@
                 <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="newTaskDescription"></textarea>
             </div>
             
-            <div class="row mb-5">
-                <div class="col-4">
+            <div class="row mb-4">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
                     <select class="bento-select w-100" [(ngModel)]="newTaskImportanceId">
                         @for (imp of data.importances; track imp.id) {
@@ -210,11 +210,23 @@
                         }
                     </select>
                 </div>
-                <div class="col-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
                     <input type="date" class="bento-input w-100" [(ngModel)]="newTaskStartDate">
                 </div>
-                <div class="col-4">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
                     <input type="date" class="bento-input w-100" [(ngModel)]="newTaskDueDate">
                 </div>
@@ -258,8 +270,8 @@
                 <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="editTaskDescription"></textarea>
             </div>
             
-            <div class="row mb-5">
-                <div class="col-4">
+            <div class="row mb-4">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
                     <select class="bento-select w-100" [(ngModel)]="editTaskImportanceId">
                         @for (imp of data.importances; track imp.id) {
@@ -267,11 +279,23 @@
                         }
                     </select>
                 </div>
-                <div class="col-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="editTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
                     <input type="date" class="bento-input w-100" [(ngModel)]="editTaskStartDate">
                 </div>
-                <div class="col-4">
+                <div class="col-6">
                     <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
                     <input type="date" class="bento-input w-100" [(ngModel)]="editTaskDueDate">
                 </div>

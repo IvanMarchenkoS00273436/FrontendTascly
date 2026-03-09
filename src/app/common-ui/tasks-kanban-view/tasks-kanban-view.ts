@@ -3,9 +3,11 @@ import { AsyncPipe, DatePipe, UpperCasePipe } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
-import { map, switchMap, forkJoin, tap } from 'rxjs';
+import { WorkspacesService } from '../../data/services/workspaces-service';
+import { map, switchMap, forkJoin, tap, of } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { PostTask } from '../../data/interfaces/tasks/post-task';
+import { GetMemberRoleDto } from '../../data/interfaces/Workspaces/get-member-role-dto';
 import { FormsModule } from '@angular/forms';
 import { Auth } from '../../auth/auth';
 
@@ -21,6 +23,7 @@ export class TasksKanbanView {
     private router = inject(Router);
     private tasksService = inject(TasksService);
     private projectsService = inject(ProjectsService);
+    private workspacesService = inject(WorkspacesService);
     private authService = inject(Auth);
 
     get canUseAI() { return this.authService.canUseAI; }
@@ -37,6 +40,7 @@ export class TasksKanbanView {
     groupedTasks = signal<Record<string, GetTask[]>>({});
     statusIdMap = signal<Map<string, any>>(new Map());
     importances = signal<any[]>([]);
+    workspaceMembers = signal<GetMemberRoleDto[]>([]);
     defaultImportanceId = signal<any>(1);
 
     // Filtered view of tasks based on viewMode
@@ -54,6 +58,7 @@ export class TasksKanbanView {
     newTaskName = '';
     newTaskDescription = '';
     newTaskImportanceId: number = 1;
+    newTaskAssigneeId: string = '';
     newTaskStartDate: string = '';
     newTaskDueDate: string = '';
     projectId: string = '';
@@ -64,6 +69,7 @@ export class TasksKanbanView {
     editTaskName = '';
     editTaskDescription = '';
     editTaskImportanceId: number = 1;
+    editTaskAssigneeId: string = '';
     editTaskStartDate: string = '';
     editTaskDueDate: string = '';
     editTaskStatusId: number | null = null;
@@ -77,15 +83,23 @@ export class TasksKanbanView {
         tap(params => this.projectId = params.get('id')!),
         switchMap(params => {
             const projectId = params.get('id')!;
-            return forkJoin({
-                tasks: this.tasksService.getTasksByProjectId(projectId),
-                statuses: this.projectsService.getProjectStatuses(projectId),
-                importances: this.projectsService.getProjectImportances(projectId)
-            });
+            return this.projectsService.getProjectById(projectId).pipe(
+                switchMap(project => {
+                    return forkJoin({
+                        project: of(project),
+                        members: this.workspacesService.getMembersRoles(project.workspaceId),
+                        tasks: this.tasksService.getTasksByProjectId(projectId),
+                        statuses: this.projectsService.getProjectStatuses(projectId),
+                        importances: this.projectsService.getProjectImportances(projectId)
+                    });
+                })
+            );
         }),
-        map(({ tasks, statuses, importances }) => {
+        map(({ project, members, tasks, statuses, importances }) => {
             const cols = statuses.map(s => s.name);
             this.columns.set(cols);
+
+            this.workspaceMembers.set(members);
 
             const grouped: Record<string, GetTask[]> = {};
             cols.forEach(col => grouped[col] = []);
@@ -114,6 +128,7 @@ export class TasksKanbanView {
         this.newTaskName = '';
         this.newTaskDescription = '';
         this.newTaskImportanceId = 1;
+        this.newTaskAssigneeId = '';
         const now = new Date();
         this.newTaskStartDate = now.toISOString().substring(0, 10);
         const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
@@ -149,6 +164,7 @@ export class TasksKanbanView {
         this.editTaskName = task.name;
         this.editTaskDescription = task.description || '';
         this.editTaskImportanceId = Array.isArray(this.importances()) && this.importances().find(i => i.name === task.importanceName)?.id || 1;
+        this.editTaskAssigneeId = task.assigneeId || '';
         this.editTaskStartDate = task.startDate ? new Date(task.startDate.toString()).toISOString().substring(0, 10) : '';
         this.editTaskDueDate = task.dueDate ? new Date(task.dueDate.toString()).toISOString().substring(0, 10) : '';
         this.editTaskStatusId = this.statusIdMap().get(task.statusName) || null;
@@ -164,28 +180,41 @@ export class TasksKanbanView {
         const task = this.editingTask();
         if (!task || !this.editTaskName.trim()) return;
         
-        // Optimistic UI update since we might not have full PUT in backend
-        const grouped = { ...this.groupedTasks() };
-        const colTasks = grouped[task.statusName];
-        if (colTasks) {
-            const index = colTasks.findIndex(t => t.id === task.id);
-            if (index !== -1) {
-                // Determine new importance name based on ID
-                const newImp = this.importances().find(i => i.id === Number(this.editTaskImportanceId));
-                colTasks[index] = {
-                    ...colTasks[index],
-                    name: this.editTaskName,
-                    description: this.editTaskDescription,
-                    startDate: this.editTaskStartDate ? new Date(this.editTaskStartDate) : colTasks[index].startDate,
-                    dueDate: this.editTaskDueDate ? new Date(this.editTaskDueDate) : colTasks[index].dueDate,
-                    importanceName: newImp ? newImp.name : colTasks[index].importanceName
-                };
-                this.groupedTasks.set(grouped);
+        const patch = [
+            { op: 'replace', path: '/name', value: this.editTaskName },
+            { op: 'replace', path: '/description', value: this.editTaskDescription },
+            { op: 'replace', path: '/importanceId', value: Number(this.editTaskImportanceId) },
+            { op: 'replace', path: '/assigneeId', value: this.editTaskAssigneeId ? this.editTaskAssigneeId : null },
+            { op: 'replace', path: '/startDate', value: this.editTaskStartDate ? new Date(this.editTaskStartDate).toISOString() : null },
+            { op: 'replace', path: '/dueDate', value: this.editTaskDueDate ? new Date(this.editTaskDueDate).toISOString() : null }
+        ];
+
+        this.tasksService.updateTask(task.id, patch).subscribe({
+            next: () => {
+                const grouped = { ...this.groupedTasks() };
+                const colTasks = grouped[task.statusName];
+                if (colTasks) {
+                    const index = colTasks.findIndex(t => t.id === task.id);
+                    if (index !== -1) {
+                        const newImp = this.importances().find(i => i.id === Number(this.editTaskImportanceId));
+                        colTasks[index] = {
+                            ...colTasks[index],
+                            name: this.editTaskName,
+                            description: this.editTaskDescription,
+                            assigneeId: this.editTaskAssigneeId ? this.editTaskAssigneeId : colTasks[index].assigneeId,
+                            startDate: this.editTaskStartDate ? new Date(this.editTaskStartDate) : colTasks[index].startDate,
+                            dueDate: this.editTaskDueDate ? new Date(this.editTaskDueDate) : colTasks[index].dueDate,
+                            importanceName: newImp ? newImp.name : colTasks[index].importanceName
+                        };
+                        this.groupedTasks.set(grouped);
+                    }
+                }
+                this.cancelEdit();
+            },
+            error: err => {
+                console.error('Failed to update task', err);
             }
-        }
-        
-        this.cancelEdit();
-        // Here you would normally call this.tasksService.putTask(task.id, updatedData)
+        });
     }
 
     createTask(statusIdRaw: string | number | undefined, importanceIdRaw: string | number) {
@@ -198,7 +227,7 @@ export class TasksKanbanView {
             description: this.newTaskDescription || '',
             statusId,
             importanceId,
-            assigneeId: null,
+            assigneeId: this.newTaskAssigneeId ? this.newTaskAssigneeId : null,
             startDate: this.newTaskStartDate ? new Date(this.newTaskStartDate) : new Date(),
             dueDate: this.newTaskDueDate ? new Date(this.newTaskDueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
         };
