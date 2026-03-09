@@ -18,7 +18,6 @@ export class UserProfile {
     fb = inject(FormBuilder);
     
     $user = this.userService.getUserProfile();
-    
     // State management
     isEditing = false;
     successMessage: string | null = null;
