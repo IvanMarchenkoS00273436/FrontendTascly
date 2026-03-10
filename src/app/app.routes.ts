@@ -8,6 +8,7 @@ import { UserProfile } from './common-ui/user-profile/user-profile';
 import { OrganizationOverview } from './common-ui/organization-overview/organization-overview';
 import { TasksKanbanView } from './common-ui/tasks-kanban-view/tasks-kanban-view';
 import { TasksCalendarView } from './common-ui/tasks-calendar-view/tasks-calendar-view';
+import { TasksTableView } from './common-ui/tasks-table-view/tasks-table-view';
 import { AIPromptComponent } from './pages/ai-prompt/ai-prompt';
 import { Main } from './pages/main/main';
 import { Careers } from './pages/careers/careers';
@@ -28,6 +29,7 @@ export const routes: Routes = [
             { path: ':id/members', component: WorkspaceMembers },
             { path: 'projects/:id', component: TasksKanbanView },
             { path: 'projects/:id/calendar', component: TasksCalendarView },
+            { path: 'projects/:id/table', component: TasksTableView },
             { path: 'ai-task-generator', component: AIPromptComponent }
         ]
     },

@@ -154,6 +154,10 @@ export class TasksKanbanView {
         this.router.navigate(['/dashboard/projects', this.projectId, 'calendar']);
     }
 
+    navigateToTable() {
+        this.router.navigate(['/dashboard/projects', this.projectId, 'table']);
+    }
+
     cancelCreate() {
         this.isCreating.set(false);
         this.activeColumnForCreate.set(null);

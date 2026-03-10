@@ -1,0 +1,165 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+.page-subtitle {
+    font-weight: 500;
+    color: #888;
+}
+
+/* --- View Toggle --- */
+.view-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.view-btn:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.view-btn.active {
+    background: #ffffff;
+    color: #111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Table Styles (Bento look) --- */
+.table-container {
+    background: #f8f9fa; 
+    border-radius: 20px;
+    position: relative;
+}
+
+.tasks-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Spacing between rows for a "card" look */
+}
+
+.tasks-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #a0a0a0;
+    padding: 0 16px 8px 16px;
+    font-weight: 700;
+    text-align: left;
+    border: none;
+}
+
+.tasks-table tbody tr {
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.tasks-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05); 
+}
+
+.tasks-table td {
+    padding: 16px;
+    vertical-align: middle;
+    border-top: 1px solid rgba(0,0,0,0.01);
+    border-bottom: 1px solid rgba(0,0,0,0.01);
+}
+
+.tasks-table td:first-child {
+    border-left: 1px solid rgba(0,0,0,0.01);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.tasks-table td:last-child {
+    border-right: 1px solid rgba(0,0,0,0.01);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.task-col-name {
+    width: 40%;
+    min-width: 200px;
+}
+
+/* --- Badges --- */
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.badge-importance {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.imp-high, .imp-critical {
+    background-color: #ffe3e3;
+    color: #c92a2a;
+}
+.imp-medium, .imp-normal {
+    background-color: #fff3bf;
+    color: #e67700;
+}
+.imp-low {
+    background-color: #d8f5a2;
+    color: #2b8a3e;
+}

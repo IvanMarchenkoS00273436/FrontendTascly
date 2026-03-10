@@ -188,6 +188,9 @@ export class TasksCalendarView {
     switchToBoard() {
         this.router.navigate(['/dashboard/projects', this.projectId]);
     }
+    navigateToTable() {
+        this.router.navigate(['/dashboard/projects', this.projectId, 'table']);
+    }
     getImportanceClass(task: GetTask): string {
         const name = task.importanceName?.toLowerCase() ?? '';
         if (name.includes('high') || name.includes('critical')) return 'imp-high';
