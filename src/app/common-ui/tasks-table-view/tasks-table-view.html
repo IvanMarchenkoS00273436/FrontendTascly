@@ -62,7 +62,7 @@
                                 <span class="badge-status shadow-sm">{{ task.statusName }}</span>
                             </td>
                             <td>
-                                <span class="badge-importance shadow-sm" [ngClass]="'imp-' + (task.importanceName?.toLowerCase() || 'low')">
+                                <span class="badge-importance shadow-sm" [ngClass]="'imp-' + (task.importanceName.toLowerCase() || 'low')">
                                     {{ task.importanceName }}
                                 </span>
                             </td>
