@@ -3,9 +3,14 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
-import { switchMap, forkJoin, map, tap } from 'rxjs';
+import { switchMap, forkJoin, map, tap, of } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { AsyncPipe } from '@angular/common';
+import { Auth } from '../../auth/auth';
+import { FormsModule } from '@angular/forms';
+import { WorkspacesService } from '../../data/services/workspaces-service';
+import { GetMemberRoleDto } from '../../data/interfaces/Workspaces/get-member-role-dto';
+import { PostTask } from '../../data/interfaces/tasks/post-task';
 
 export type RangeType = 'single' | 'start' | 'middle' | 'end';
 
@@ -36,7 +41,7 @@ function daysBetween(start: Date, end: Date): number {
 @Component({
     selector: 'app-tasks-calendar-view',
     standalone: true,
-    imports: [CommonModule, AsyncPipe],
+    imports: [CommonModule, AsyncPipe, FormsModule],
     templateUrl: './tasks-calendar-view.html',
     styleUrl: './tasks-calendar-view.css',
 })
@@ -45,6 +50,27 @@ export class TasksCalendarView {
     private router = inject(Router);
     private tasksService = inject(TasksService);
     private projectsService = inject(ProjectsService);
+    private workspacesService = inject(WorkspacesService);
+    private authService = inject(Auth);
+
+    get canUseAI() { return this.authService.canUseAI; }
+    get currentUserId() { return this.authService.userId; }
+
+    isCreating = signal(false);
+    newTaskName = '';
+    newTaskDescription = '';
+    newTaskImportanceId: number | string = 1;
+    newTaskAssigneeId: string = '';
+    newTaskStartDate: string = '';
+    newTaskDueDate: string = '';
+
+    statusIdMap = signal<Map<string, any>>(new Map());
+    importances = signal<any[]>([]);
+    workspaceMembers = signal<GetMemberRoleDto[]>([]);
+    defaultStatusId = signal<any>(null);
+    defaultImportanceId = signal<any>(1);
+
+    viewMode = signal<'all' | 'mine'>('all');
 
     projectId: string = '';
     today = new Date();
@@ -56,7 +82,12 @@ export class TasksCalendarView {
     );
 
     calendarDays = computed<CalendarDay[]>(() => {
-        const tasks = this.allTasks();
+        let tasks = this.allTasks();
+        if (this.viewMode() === 'mine') {
+            const uid = this.currentUserId;
+            tasks = tasks.filter(t => t.assigneeId === uid);
+        }
+
         const month = this.currentMonth();
         const year = month.getFullYear();
         const mon = month.getMonth();
@@ -159,18 +190,36 @@ export class TasksCalendarView {
 
     viewData$ = this.route.paramMap.pipe(
         tap(params => this.projectId = params.get('id')!),
-        switchMap(params =>
-            forkJoin({
-                tasks: this.tasksService.getTasksByProjectId(params.get('id')!),
-                project: this.projectsService.getProjectById(params.get('id')!)
-            })
-        ),
-        map(({ tasks, project }) => {
+        switchMap(params => {
+            const projectId = params.get('id')!;
+            return this.projectsService.getProjectById(projectId).pipe(
+                switchMap(project => {
+                    return forkJoin({
+                        project: of(project),
+                        members: this.workspacesService.getMembersRoles(project.workspaceId),
+                        tasks: this.tasksService.getTasksByProjectId(projectId),
+                        statuses: this.projectsService.getProjectStatuses(projectId),
+                        importances: this.projectsService.getProjectImportances(projectId)
+                    });
+                })
+            );
+        }),
+        map(({ project, members, tasks, statuses, importances }) => {
+            this.workspaceMembers.set(members);
             this.allTasks.set(Array.isArray(tasks) ? tasks : []);
+            
+            const sMap = new Map(statuses.map((s: any) => [s.name, s.id]));
+            this.statusIdMap.set(sMap);
+            if (statuses.length > 0) {
+                this.defaultStatusId.set(statuses[0].id);
+            }
+            this.importances.set(importances);
+            const defImp = importances.length > 0 ? importances[0].id : 1;
+            this.defaultImportanceId.set(defImp);
+
             return project;
         })
     );
-
     prevMonth() {
         const m = this.currentMonth();
         this.currentMonth.set(new Date(m.getFullYear(), m.getMonth() - 1, 1));
@@ -191,10 +240,59 @@ export class TasksCalendarView {
     navigateToTable() {
         this.router.navigate(['/dashboard/projects', this.projectId, 'table']);
     }
+
+    navigateToAI() {
+        this.projectsService.getProjectById(this.projectId).subscribe(project => {
+            this.router.navigate(['/dashboard/ai-task-generator'], {
+                queryParams: {
+                    projectId: this.projectId,
+                    workspaceId: project.workspaceId
+                }
+            });
+        });
+    }
+    
     getImportanceClass(task: GetTask): string {
         const name = task.importanceName?.toLowerCase() ?? '';
         if (name.includes('high') || name.includes('critical')) return 'imp-high';
         if (name.includes('medium') || name.includes('normal')) return 'imp-medium';
         return 'imp-low';
+    }
+
+    openCreateForm() {
+        this.isCreating.set(true);
+        this.newTaskName = '';
+        this.newTaskDescription = '';
+        this.newTaskImportanceId = 1;
+        this.newTaskAssigneeId = '';
+        const now = new Date();
+        this.newTaskStartDate = now.toISOString().substring(0, 10);
+        const d = new Date(Date.now() + 7 * 24 * 60 * 60 * 1000);
+        this.newTaskDueDate = d.toISOString().substring(0, 10);
+    }
+
+    cancelCreate() {
+        this.isCreating.set(false);
+    }
+
+    createTask() {
+        if (!this.newTaskName.trim() || this.defaultStatusId() === null) return;
+        const statusId = Number(this.defaultStatusId());
+        const importanceId = Number(this.newTaskImportanceId) || Number(this.defaultImportanceId());
+
+        const payload: PostTask = {
+            name: this.newTaskName,
+            description: this.newTaskDescription || '',
+            statusId,
+            importanceId,
+            assigneeId: this.newTaskAssigneeId ? this.newTaskAssigneeId : null,
+            startDate: this.newTaskStartDate ? new Date(this.newTaskStartDate) : new Date(),
+            dueDate: this.newTaskDueDate ? new Date(this.newTaskDueDate) : new Date(Date.now() + 7 * 24 * 60 * 60 * 1000),
+        };
+
+        this.tasksService.postTaskToProject(this.projectId, payload).subscribe({
+            next: () => { this.cancelCreate(); window.location.reload(); },
+            error: (err) => console.error(err)
+        });
     }
 }

@@ -1,4 +1,4 @@
-<div class="bento-panel h-100 d-flex flex-column overflow-hidden">
+<div class="bento-panel h-100 d-flex flex-column overflow-hidden" *ngIf="viewData$ | async">
     <!-- Header Section -->
     <div class="d-flex justify-content-between align-items-end mb-4 px-1 flex-shrink-0">
         <div>
@@ -37,6 +37,32 @@
                     </svg>
                     Table
                 </button>
+            </div>
+            
+            <!-- My / All Tasks filter -->
+            <div class="view-toggle">
+                <button class="view-btn" [class.active]="viewMode() === 'mine'" (click)="viewMode.set('mine')">
+                    My Tasks
+                </button>
+                <button class="view-btn" [class.active]="viewMode() === 'all'" (click)="viewMode.set('all')">
+                    All Tasks
+                </button>
+            </div>
+
+            <div class="bento-split-btn">
+                <button class="btn-lime-main d-flex align-items-center gap-2" (click)="openCreateForm()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span class="d-none d-sm-inline">New Task</span>
+                </button>
+                @if (canUseAI) {
+                <button class="btn-lime-icon d-flex align-items-center justify-content-center" (click)="navigateToAI()" title="Spark AI Task Generator">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </button>
+                }
             </div>
         </div>
     </div>
@@ -82,4 +108,72 @@
             </div>
         }
     </div>
+
+    <!-- ── Bento Modal Form for Creating Tasks ── -->
+    @if (isCreating()) {
+    <div class="bento-modal-overlay" (click)="cancelCreate()">
+        <div class="bento-modal-content bento-panel" (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1" style="font-size: 1.5rem; font-weight: 800;">Create New Task</h3>
+                    <p class="text-muted small mb-0" style="font-size: 0.95rem;">
+                        Adding new task
+                    </p>
+                </div>
+                <button class="btn-close-mini" (click)="cancelCreate()" title="Close">&times;</button>
+            </div>
+
+            <!-- Body: Inputs -->
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Task Name <span class="text-danger">*</span></label>
+                <input type="text" class="bento-input w-100" placeholder="e.g. Update user profile page..." [(ngModel)]="newTaskName" autofocus>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Description</label>
+                <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="newTaskDescription"></textarea>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskImportanceId">
+                        @for (imp of importances(); track imp.id) {
+                        <option [value]="imp.id">{{ imp.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskStartDate">
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskDueDate">
+                </div>
+            </div>
+
+            <!-- Footer: Buttons -->
+            <div class="d-flex justify-content-end gap-3 mt-auto pt-2 border-top border-light">
+                <button class="bento-btn-secondary" (click)="cancelCreate()">Cancel</button>
+                <button class="bento-btn-primary" [disabled]="!newTaskName.trim()" (click)="createTask()">
+                    Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+    }
 </div>
