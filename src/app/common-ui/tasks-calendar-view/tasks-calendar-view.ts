@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
-import { switchMap, forkJoin, map, tap, of } from 'rxjs';
+import { switchMap, forkJoin, map, tap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { AsyncPipe } from '@angular/common';
 import { Auth } from '../../auth/auth';
@@ -80,6 +80,8 @@ export class TasksCalendarView {
     monthLabel = computed(() =>
         this.currentMonth().toLocaleDateString('en-IE', { month: 'long', year: 'numeric' })
     );
+
+    refresh$ = new BehaviorSubject<void>(undefined);
 
     calendarDays = computed<CalendarDay[]>(() => {
         let tasks = this.allTasks();
@@ -188,9 +190,9 @@ export class TasksCalendarView {
         });
     });
 
-    viewData$ = this.route.paramMap.pipe(
-        tap(params => this.projectId = params.get('id')!),
-        switchMap(params => {
+    viewData$ = combineLatest([this.route.paramMap, this.refresh$]).pipe(
+        tap(([params]) => this.projectId = params.get('id')!),
+        switchMap(([params]) => {
             const projectId = params.get('id')!;
             return this.projectsService.getProjectById(projectId).pipe(
                 switchMap(project => {
@@ -291,7 +293,10 @@ export class TasksCalendarView {
         };
 
         this.tasksService.postTaskToProject(this.projectId, payload).subscribe({
-            next: () => { this.cancelCreate(); window.location.reload(); },
+            next: () => { 
+                this.cancelCreate(); 
+                this.refresh$.next(); 
+            },
             error: (err) => console.error(err)
         });
     }

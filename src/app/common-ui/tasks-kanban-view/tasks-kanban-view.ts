@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
 import { WorkspacesService } from '../../data/services/workspaces-service';
-import { map, switchMap, forkJoin, tap, of } from 'rxjs';
+import { map, switchMap, forkJoin, tap, of, BehaviorSubject, combineLatest } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { PostTask } from '../../data/interfaces/tasks/post-task';
 import { GetMemberRoleDto } from '../../data/interfaces/Workspaces/get-member-role-dto';
@@ -79,9 +79,11 @@ export class TasksKanbanView {
     private draggedFromColumn = signal<string | null>(null);
     dragOverColumn = signal<string | null>(null);
 
-    viewData$ = this.route.paramMap.pipe(
-        tap(params => this.projectId = params.get('id')!),
-        switchMap(params => {
+    refresh$ = new BehaviorSubject<void>(undefined);
+
+    viewData$ = combineLatest([this.route.paramMap, this.refresh$]).pipe(
+        tap(([params]) => this.projectId = params.get('id')!),
+        switchMap(([params]) => {
             const projectId = params.get('id')!;
             return this.projectsService.getProjectById(projectId).pipe(
                 switchMap(project => {
@@ -237,7 +239,10 @@ export class TasksKanbanView {
         };
 
         this.tasksService.postTaskToProject(this.projectId, payload).subscribe({
-            next: () => { this.cancelCreate(); window.location.reload(); },
+            next: () => { 
+                this.cancelCreate(); 
+                this.refresh$.next(); 
+            },
             error: (err) => console.error(err)
         });
     }

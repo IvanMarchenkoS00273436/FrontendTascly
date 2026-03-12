@@ -3,7 +3,7 @@ import { AsyncPipe, DatePipe, CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
-import { switchMap, tap, map, forkJoin, of } from 'rxjs';
+import { switchMap, tap, map, forkJoin, of, BehaviorSubject } from 'rxjs';
 import { Auth } from '../../auth/auth';
 import { combineLatest } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -33,6 +33,8 @@ export class TasksTableView {
   viewMode = signal<'all' | 'mine'>('all');
 
   projectId = '';
+
+  refresh$ = new BehaviorSubject<void>(undefined);
 
   isCreating = signal(false);
   newTaskName = '';
@@ -76,9 +78,9 @@ export class TasksTableView {
   );
 
   tasks$ = combineLatest([
-    this.route.paramMap.pipe(
-      tap(params => this.projectId = params.get('id')!),
-      switchMap(params => this.tasksService.getTasksByProjectId(this.projectId))
+    combineLatest([this.route.paramMap, this.refresh$]).pipe(
+      tap(([params]) => this.projectId = params.get('id')!),
+      switchMap(() => this.tasksService.getTasksByProjectId(this.projectId))
     ),
     toObservable(this.viewMode)
   ]).pipe(
@@ -146,7 +148,10 @@ export class TasksTableView {
     };
 
     this.tasksService.postTaskToProject(this.projectId, payload).subscribe({
-        next: () => { this.cancelCreate(); window.location.reload(); },
+        next: () => { 
+            this.cancelCreate(); 
+            this.refresh$.next(); 
+        },
         error: (err) => console.error(err)
     });
   }
