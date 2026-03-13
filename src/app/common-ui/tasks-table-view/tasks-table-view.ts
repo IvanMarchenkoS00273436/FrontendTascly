@@ -49,6 +49,7 @@ export class TasksTableView {
   workspaceMembers = signal<GetMemberRoleDto[]>([]);
   defaultStatusId = signal<any>(null);
   defaultImportanceId = signal<any>(1);
+  currentUserRole = signal<string | null>(null);
 
   viewData$ = this.route.paramMap.pipe(
     switchMap(params => {
@@ -58,13 +59,15 @@ export class TasksTableView {
                 return forkJoin({
                     project: of(project),
                     members: this.workspacesService.getMembersRoles(project.workspaceId),
+                    role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId),
                     statuses: this.projectsService.getProjectStatuses(projectId),
                     importances: this.projectsService.getProjectImportances(projectId)
                 });
             })
         );
     }),
-    tap(({ project, members, statuses, importances }) => {
+    tap(({ project, members, role, statuses, importances }) => {
+        this.currentUserRole.set(role.name);
         this.workspaceMembers.set(members);
         const sMap = new Map(statuses.map((s: any) => [s.name, s.id]));
         this.statusIdMap.set(sMap);

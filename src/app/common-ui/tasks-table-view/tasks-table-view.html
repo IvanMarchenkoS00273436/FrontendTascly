@@ -49,6 +49,7 @@
                 </button>
             </div>
 
+            @if (currentUserRole() !== 'Limited-access') {
             <div class="bento-split-btn">
                 <button class="btn-lime-main d-flex align-items-center gap-2" (click)="openCreateForm()">
                     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
@@ -64,6 +65,7 @@
                 </button>
                 }
             </div>
+            }
         </div>
     </div>
 

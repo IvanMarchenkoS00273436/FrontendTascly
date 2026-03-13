@@ -190,6 +190,8 @@ export class TasksCalendarView {
         });
     });
 
+    currentUserRole = signal<string | null>(null);
+
     viewData$ = combineLatest([this.route.paramMap, this.refresh$]).pipe(
         tap(([params]) => this.projectId = params.get('id')!),
         switchMap(([params]) => {
@@ -199,6 +201,7 @@ export class TasksCalendarView {
                     return forkJoin({
                         project: of(project),
                         members: this.workspacesService.getMembersRoles(project.workspaceId),
+                        role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId),
                         tasks: this.tasksService.getTasksByProjectId(projectId),
                         statuses: this.projectsService.getProjectStatuses(projectId),
                         importances: this.projectsService.getProjectImportances(projectId)
@@ -206,7 +209,8 @@ export class TasksCalendarView {
                 })
             );
         }),
-        map(({ project, members, tasks, statuses, importances }) => {
+        map(({ project, members, role, tasks, statuses, importances }) => {
+            this.currentUserRole.set(role.name);
             this.workspaceMembers.set(members);
             this.allTasks.set(Array.isArray(tasks) ? tasks : []);
             
