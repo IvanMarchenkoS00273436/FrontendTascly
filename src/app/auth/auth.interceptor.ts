@@ -19,8 +19,8 @@ export const authTokenInterceptor: HttpInterceptorFn = (req, next) => {
     return next(addToken(req, accessToken))
     .pipe(
         catchError(error => {
-            // if refresh token is expired
-            if(error.status === 403) {
+            // if access token is expired (401 Unauthorized)
+            if(error.status === 401) {
                 return refreshAndProceed(authService, req, next);
             }
             return throwError(() => error);
