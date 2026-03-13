@@ -29,8 +29,12 @@ export class WorkspacesService {
         return this.http.get<GetMemberRoleDto[]>(`${this.baseUrl}/${id}/members`);
     }
 
-    postWorkspace(postWorkspace: PostWorkspace): Observable<PostWorkspace> { 
+    postWorkspace(postWorkspace: PostWorkspace): Observable<PostWorkspace> {
         return this.http.post<PostWorkspace>(this.baseUrl, postWorkspace, { responseType: 'text' as 'json' });
+    }
+
+    deleteWorkspace(workspaceId: string): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${workspaceId}`);
     }
 
     postMemberToWorkspace(workspaceId: string, postMemberToWorkspace: PostMemberToWorkspace): Observable<PostMemberToWorkspace> {

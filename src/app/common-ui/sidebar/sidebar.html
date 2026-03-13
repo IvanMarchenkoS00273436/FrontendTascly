@@ -174,7 +174,7 @@
                 <div class="workspace-list-wrapper" [class.expanded]="isExpanded(ws.id)">
                     <ul class="list-unstyled mb-0 pt-2 pb-1 ps-3 ms-3 border-start border-2">
                         <li>
-                            <a class="workspace-item d-flex align-items-center gap-2 small">
+                            <a [routerLink]="['/dashboard', ws.id, 'overview']" routerLinkActive="text-primary fw-bold" class="workspace-item d-flex align-items-center gap-2 small">
                                 <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
