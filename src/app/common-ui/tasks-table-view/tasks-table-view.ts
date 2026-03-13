@@ -3,7 +3,7 @@ import { AsyncPipe, DatePipe, CommonModule } from '@angular/common';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
-import { switchMap, tap, map, forkJoin, of, BehaviorSubject } from 'rxjs';
+import { switchMap, tap, map, forkJoin, of, BehaviorSubject, catchError } from 'rxjs';
 import { Auth } from '../../auth/auth';
 import { combineLatest } from 'rxjs';
 import { toObservable } from '@angular/core/rxjs-interop';
@@ -59,7 +59,9 @@ export class TasksTableView {
                 return forkJoin({
                     project: of(project),
                     members: this.workspacesService.getMembersRoles(project.workspaceId),
-                    role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId),
+                    role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId).pipe(
+                        catchError(() => of({ name: 'None' }))
+                    ),
                     statuses: this.projectsService.getProjectStatuses(projectId),
                     importances: this.projectsService.getProjectImportances(projectId)
                 });

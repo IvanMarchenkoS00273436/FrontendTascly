@@ -4,7 +4,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TasksService } from '../../data/services/tasks-service';
 import { ProjectsService } from '../../data/services/projects-service';
 import { WorkspacesService } from '../../data/services/workspaces-service';
-import { map, switchMap, forkJoin, tap, of, BehaviorSubject, combineLatest } from 'rxjs';
+import { map, switchMap, forkJoin, tap, of, BehaviorSubject, combineLatest, catchError } from 'rxjs';
 import { GetTask } from '../../data/interfaces/tasks/get-task';
 import { PostTask } from '../../data/interfaces/tasks/post-task';
 import { GetMemberRoleDto } from '../../data/interfaces/Workspaces/get-member-role-dto';
@@ -92,7 +92,9 @@ export class TasksKanbanView {
                     return forkJoin({
                         project: of(project),
                         members: this.workspacesService.getMembersRoles(project.workspaceId),
-                        role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId),
+                        role: this.workspacesService.getWorkspaceMemberRole(project.workspaceId).pipe(
+                            catchError(() => of({ name: 'None' }))
+                        ),
                         tasks: this.tasksService.getTasksByProjectId(projectId),
                         statuses: this.projectsService.getProjectStatuses(projectId),
                         importances: this.projectsService.getProjectImportances(projectId)
