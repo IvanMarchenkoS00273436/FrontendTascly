@@ -1,5 +1,5 @@
 import { AsyncPipe, UpperCasePipe } from '@angular/common';
-import { Component, inject, resource, signal } from '@angular/core';
+import { Component, inject, resource, signal, effect } from '@angular/core';
 import { WorkspacesService } from '../../data/services/workspaces-service';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UsersService } from '../../data/services/users-service';
@@ -44,6 +44,29 @@ export class Sidebar {
     newProjectName = '';
     showCreateInput = false;
     newWorkspaceNameWS = '';
+    userRolesMap = signal<Record<string, string>>({});
+
+    constructor() {
+        effect(() => {
+            const wss = this.workspaces.value();
+            if (wss) {
+                wss.forEach(ws => {
+                    // Only fetch if we haven't already
+                    if (!this.userRolesMap()[ws.id]) {
+                        this.workspacesService.getWorkspaceMemberRole(ws.id).subscribe({
+                            next: (role) => {
+                                this.userRolesMap.update(m => ({ ...m, [ws.id]: role.name }));
+                            },
+                            error: () => {
+                                // Default or fallback if failed
+                                this.userRolesMap.update(m => ({ ...m, [ws.id]: 'Unknown' }));
+                            }
+                        });
+                    }
+                });
+            }
+        });
+    }
 
     toggleWorkspace(id: string) {
         if (this.expandedWorkspaceIds.has(id)) {

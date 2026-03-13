@@ -217,6 +217,7 @@
                                 </div>
 
                                 <div class="d-flex align-items-center gap-2">
+                                    @if (userRolesMap()[ws.id] === 'Admin') {
                                     <button
                                         class="btn-icon-mini text-muted p-0 border-0 bg-transparent d-flex align-items-center justify-content-center"
                                         (click)="toggleCreateProject(ws.id, $event)" title="New Project"
@@ -237,6 +238,7 @@
                                         </svg>
                                         }
                                     </button>
+                                    }
 
                                     <svg [class.rotate-chevron]="isProjectsExpanded(ws.id)"
                                         class="chevron-small flex-shrink-0 text-muted"

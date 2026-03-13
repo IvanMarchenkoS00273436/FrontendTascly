@@ -29,6 +29,8 @@ export class WorkspaceMembers {
     selectedUserId: string = '';
     selectedRole: string = 'Limited-access';
 
+    currentUserRole = signal<string | null>(null);
+
     // Helper options for Roles
     availableRoles = ["Admin", "Full-access", "Limited-access"];
 
@@ -149,7 +151,14 @@ export class WorkspaceMembers {
 
     loadMembers() {
         this.members$ = this.route.paramMap.pipe(
-            tap(params => this.workspaceId = params.get('id')!), 
+            tap(params => {
+                this.workspaceId = params.get('id')!;
+                // Load current user's role in this workspace
+                this.workspaceService.getWorkspaceMemberRole(this.workspaceId).subscribe({
+                    next: (role) => this.currentUserRole.set(role.name),
+                    error: () => this.currentUserRole.set('Unknown')
+                });
+            }),
             switchMap(params => {
                 const id = params.get('id');
                 return this.workspaceService.getMembersRoles(id!);
