@@ -176,7 +176,11 @@ export class TasksKanbanView {
         this.editTaskName = task.name;
         this.editTaskDescription = task.description || '';
         this.editTaskImportanceId = Array.isArray(this.importances()) && this.importances().find(i => i.name === task.importanceName)?.id || 1;
-        this.editTaskAssigneeId = task.assigneeId || '';
+        
+        // Handle unassigned tasks clearly (null, empty, or default GUID strings)
+        const isEmptyGuid = task.assigneeId === '00000000-0000-0000-0000-000000000000';
+        this.editTaskAssigneeId = (!task.assigneeId || isEmptyGuid) ? '' : task.assigneeId;
+        
         this.editTaskStartDate = task.startDate ? new Date(task.startDate.toString()).toISOString().substring(0, 10) : '';
         this.editTaskDueDate = task.dueDate ? new Date(task.dueDate.toString()).toISOString().substring(0, 10) : '';
         this.editTaskStatusId = this.statusIdMap().get(task.statusName) || null;
@@ -323,5 +327,60 @@ export class TasksKanbanView {
 
     isDragOver(column: string): boolean {
         return this.dragOverColumn() === column;
+    }
+
+    // --- Mouse Drag & Wheel SCROLL logic ---
+    isDraggingScroll = false;
+    startX = 0;
+    scrollLeft = 0;
+
+    onScrollMouseDown(e: MouseEvent, boardElement: HTMLElement): void {
+        // Prevent drag-scroll if interacting with a task or button
+        if ((e.target as HTMLElement).closest('.task-card, button, .bento-split-btn')) {
+            return;
+        }
+        
+        this.isDraggingScroll = true;
+        boardElement.style.cursor = 'grabbing';
+        this.startX = e.pageX - boardElement.offsetLeft;
+        this.scrollLeft = boardElement.scrollLeft;
+    }
+
+    onScrollMouseLeave(boardElement: HTMLElement): void {
+        if (!this.isDraggingScroll) return;
+        this.isDraggingScroll = false;
+        boardElement.style.cursor = '';
+    }
+
+    onScrollMouseUp(boardElement: HTMLElement): void {
+        if (!this.isDraggingScroll) return;
+        this.isDraggingScroll = false;
+        boardElement.style.cursor = '';
+    }
+
+    onScrollMouseMove(e: MouseEvent, boardElement: HTMLElement): void {
+        if (!this.isDraggingScroll) return;
+        e.preventDefault();
+        const x = e.pageX - boardElement.offsetLeft;
+        const walk = (x - this.startX) * 1.5; // Scroll speed multiplier
+        boardElement.scrollLeft = this.scrollLeft - walk;
+    }
+
+    onScrollWheel(e: WheelEvent, boardElement: HTMLElement): void {
+        const target = e.target as HTMLElement;
+        const scrollableCustomContainer = target.closest('.tasks-container');
+        
+        // If we are over a column's task list and it has vertical scroll, let it scroll normally
+        if (scrollableCustomContainer) {
+            const hasVerticalScroll = scrollableCustomContainer.scrollHeight > scrollableCustomContainer.clientHeight;
+            if (hasVerticalScroll) return; // do not hijack wheel if we can scroll vertically
+        }
+
+        const isScrollableX = boardElement.scrollWidth > boardElement.clientWidth;
+        if (isScrollableX && e.deltaY !== 0 && !e.shiftKey) {
+            boardElement.scrollLeft += e.deltaY;
+            // Prevent vertical scroll only if we use this for horizontal scroll
+            e.preventDefault();
+        }
     }
 }

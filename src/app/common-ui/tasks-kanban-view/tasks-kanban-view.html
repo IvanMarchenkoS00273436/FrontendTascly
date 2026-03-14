@@ -70,7 +70,13 @@
 
     <!-- Kanban Board Area -->
     @if (viewData$ | async; as data) {
-    <div class="kanban-board flex-grow-1 custom-scrollbar">
+    <div class="kanban-board flex-grow-1 custom-scrollbar"
+         #board
+         (mousedown)="onScrollMouseDown($event, board)"
+         (mouseleave)="onScrollMouseLeave(board)"
+         (mouseup)="onScrollMouseUp(board)"
+         (mousemove)="onScrollMouseMove($event, board)"
+         (wheel)="onScrollWheel($event, board)">
 
         @for (status of data.columns; track status) {
         <div class="kanban-column d-flex flex-column h-100" (dragover)="onDragOver($event, status)"

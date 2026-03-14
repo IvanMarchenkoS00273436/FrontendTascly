@@ -1,4 +1,20 @@
-<div class="bento-sidebar">
+<!-- Overlay for mobile/tablet -->
+@if (isSidebarOpen) {
+<div class="sidebar-overlay" (click)="closeSidebar()"></div>
+}
+
+<!-- Toggle Button -->
+<button class="sidebar-toggle-btn" (click)="toggleSidebar()">
+    <!-- Menu Icon (e.g., Hamburger) -->
+    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+         stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+         <line x1="3" y1="12" x2="21" y2="12"></line>
+         <line x1="3" y1="6" x2="21" y2="6"></line>
+         <line x1="3" y1="18" x2="21" y2="18"></line>
+    </svg>
+</button>
+
+<div class="bento-sidebar" [class.sidebar-open]="isSidebarOpen">
 
     <!-- Organization Block -->
     @if ($userProfile | async; as user) {
@@ -7,7 +23,8 @@
 
         <a [routerLink]="['/dashboard', 'organization']"
             class="organization-card d-flex align-items-center gap-3 text-decoration-none text-dark"
-            style="cursor: pointer;">
+            style="cursor: pointer;"
+            (click)="closeSidebar()">
 
             <!-- Icon Box -->
             <div class="org-icon-box flex-shrink-0">
@@ -41,7 +58,8 @@
     <label class="modern-label ps-2 mb-2">Your Profile</label>
     <!-- Added routerLink to navigate to profile -->
     <a [routerLink]="['/dashboard', 'profile']"
-        class="user-profile-card mb-4 d-flex align-items-center gap-3 text-decoration-none">
+        class="user-profile-card mb-4 d-flex align-items-center gap-3 text-decoration-none"
+        (click)="closeSidebar()">
         <!-- Avatar -->
         <div class="avatar-box-small flex-shrink-0">
             {{ user.firstName.charAt(0) | uppercase }}{{ user.lastName.charAt(0) | uppercase }}
@@ -76,7 +94,7 @@
     @if (canUseAI) {
     <div class="mb-4">
         <label class="modern-label ps-2 mb-2">AI Assistant</label>
-        <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="active" class="ai-generator-card">
+        <a [routerLink]="['/dashboard/ai-task-generator']" routerLinkActive="active" class="ai-generator-card" (click)="closeSidebar()">
 
             <!-- Sparkle Icon Box -->
             <div class="ai-icon-box flex-shrink-0">
@@ -174,7 +192,7 @@
                 <div class="workspace-list-wrapper" [class.expanded]="isExpanded(ws.id)">
                     <ul class="list-unstyled mb-0 pt-2 pb-1 ps-3 ms-3 border-start border-2">
                         <li>
-                            <a [routerLink]="['/dashboard', ws.id, 'overview']" routerLinkActive="text-primary fw-bold" class="workspace-item d-flex align-items-center gap-2 small">
+                            <a [routerLink]="['/dashboard', ws.id, 'overview']" routerLinkActive="text-primary fw-bold" class="workspace-item d-flex align-items-center gap-2 small" (click)="closeSidebar()">
                                 <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                     stroke-linecap="round" stroke-linejoin="round">
@@ -186,7 +204,7 @@
                         </li>
                         <li>
                             <a [routerLink]="['/dashboard', ws.id, 'members']" routerLinkActive="text-primary fw-bold"
-                                class="workspace-item d-flex align-items-center gap-2 small">
+                                class="workspace-item d-flex align-items-center gap-2 small" (click)="closeSidebar()">
 
                                 <svg class="text-secondary" xmlns="http://www.w3.org/2000/svg" width="14" height="14"
                                     viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
@@ -280,7 +298,7 @@
                                         <a [routerLink]="['/dashboard', 'projects', project.id]"
                                             routerLinkActive="text-primary fw-bold"
                                             class="workspace-item d-flex align-items-center gap-2 small py-1"
-                                            style="font-size: 0.85rem;">
+                                            style="font-size: 0.85rem;" (click)="closeSidebar()">
                                             <span class="text-truncate">{{ project.name }}</span>
                                         </a>
                                     </li>

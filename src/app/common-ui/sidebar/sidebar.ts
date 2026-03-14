@@ -45,6 +45,7 @@ export class Sidebar {
     showCreateInput = false;
     newWorkspaceNameWS = '';
     userRolesMap = signal<Record<string, string>>({});
+    isSidebarOpen = false;
 
     constructor() {
         effect(() => {
@@ -96,6 +97,14 @@ export class Sidebar {
 
     isProjectsExpanded(workspaceId: string): boolean {
         return this.expandedProjectsIds().has(workspaceId);
+    }
+
+    toggleSidebar() {
+        this.isSidebarOpen = !this.isSidebarOpen;
+    }
+
+    closeSidebar() {
+        this.isSidebarOpen = false;
     }
 
     loadProjectsForWorkspace(workspaceId: string) {

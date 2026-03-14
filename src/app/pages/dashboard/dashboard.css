@@ -4,17 +4,28 @@
     grid-template-columns: 380px 1fr; /* Increased width from 280px to 360px */
     gap: 1.5rem;
     padding: 1.5rem;
-    /* Ensure full height minus header/footer approximations if needed */
-    min-height: calc(100vh - 100px); 
+    /* Force fixed height so child components naturally size to 100% and don't jump */
+    height: 100%; 
 }
 
 .sidebar-area {
     /* Ensures sidebar doesn't shrink */
-    min-width: 0; 
+    min-width: 0;
+    height: 100%;
 }
 
 .content-area {
     min-width: 0;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+/* Ensure routed components span the entire available fixed height */
+.content-area > :not(router-outlet) {
+    flex-grow: 1;
+    height: 100%;
+    min-height: 0; /* Important for nested scrollbars */
 }
 
 /* Card Styling reuse */
@@ -27,9 +38,16 @@
     border: 1px solid rgba(0, 0, 0, 0.02);
 }
 
-/* Responsive: Stack on mobile */
-@media (max-width: 992px) {
+/* Responsive: Stack on mobile and small laptops */
+@media (max-width: 1883px) {
     .dashboard-container {
-        grid-template-columns: 1fr;
+        display: block; /* Remove grid to prevent gap spacing from an empty row */
+    }
+    
+    .sidebar-area {
+        position: absolute;
+        width: 0;
+        height: 0;
+        overflow: visible; /* Let the fixed button and modal break out */
     }
 }

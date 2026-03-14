@@ -50,6 +50,11 @@
     /* Ensure it fills vertical space */
     align-items: flex-start;
     /* columns align correctly */
+    cursor: grab; /* Show grab cursor on the empty board areas natively */
+}
+
+.kanban-board:active {
+    cursor: grabbing; /* Show grabbing cursor when holding click on the board */
 }
 
 /* --- Columns --- */
@@ -66,6 +71,7 @@
     /* Ensure consistent width */
     flex-shrink: 0;
     /* Don't shrink below min-width */
+    cursor: default; /* revert grab cursor for column background */
 }
 
 /* --- Task Cards (Inner Bento) --- */
@@ -283,7 +289,7 @@
     }
 
     .kanban-column {
-        min-height: auto;
+        min-height: 1200px;
         max-height: 500px;
         /* Limit height when stacked */
         min-width: 100%;

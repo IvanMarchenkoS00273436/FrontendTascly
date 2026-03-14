@@ -390,3 +390,73 @@ div.workspace-item {
     opacity: 1;
     transform: translateX(0);
 }
+
+/* --- Responsive Sidebar (Drawer Mode) --- */
+.sidebar-toggle-btn {
+    display: none;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 1883px) {
+    /* Sticky toggle button on the left edge */
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1045;
+        background: #ffffff;
+        color: #000;
+        border: 1px solid #e9ecef;
+        border-left: none;
+        border-radius: 0 12px 12px 0;
+        padding: 12px 6px;
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .sidebar-toggle-btn:hover {
+        background: #f8f9fa;
+        padding-left: 10px; /* Slight bounce outwards */
+    }
+
+    /* Convert standard bento-sidebar into an off-canvas drawer */
+    .bento-sidebar {
+        position: fixed;
+        top: 0;
+        left: -380px; /* Hide offscreen */
+        width: 380px;
+        max-width: 85vw; /* Ensure it doesn't overflow mobile screens completely */
+        height: 100vh;
+        z-index: 1050;
+        border-radius: 0 24px 24px 0; /* Flat on the leftmost edge */
+        transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin: 0;
+        /* Reset box shadow so it shows properly only when open */
+        box-shadow: none; 
+    }
+
+    /* Active open class triggered by TS boolean */
+    .bento-sidebar.sidebar-open {
+        transform: translateX(380px); /* Brings it back */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Blurred background overlay to focus user attention on the drawer */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 1040;
+        animation: fadeIn 0.2s ease-out forwards;
+    }
+}
