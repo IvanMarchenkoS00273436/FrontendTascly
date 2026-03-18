@@ -1,0 +1,462 @@
+/* --- Bento Sidebar Container --- */
+.bento-sidebar {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 1.5rem;
+    height: 100%;
+    /* Ensure it looks like a card */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+}
+
+/* --- User Profile Block --- */
+.user-profile-card {
+    background-color: #f8f9fa;
+    /* Light gray to contrast with white sidebar */
+    border-radius: 16px;
+    padding: 12px;
+    transition: all 0.2s ease;
+    cursor: pointer;
+    border: 1px solid transparent;
+}
+
+.user-profile-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066;
+    /* Lime border */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+}
+
+.avatar-box-small {
+    width: 40px;
+    height: 40px;
+    background-color: #000000;
+    /* Dark for contrast or use #d8f066 for lime */
+    background-color: #d8f066;
+    color: #000;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 12px;
+    /* Bento Radius */
+    font-size: 0.9rem;
+}
+
+.settings-icon {
+    opacity: 0.4;
+    transition: opacity 0.2s;
+}
+
+.user-profile-card:hover .settings-icon {
+    opacity: 1;
+    color: #000;
+}
+
+/* --- Dropdown Toggle Button --- */
+.btn-sidebar-toggle {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background-color: #f8f9fa;
+    /* Very light gray to contrast with white card */
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 12px 16px;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.btn-sidebar-toggle:hover,
+.btn-sidebar-toggle.active {
+    background-color: #ffffff;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    border-color: #efefef;
+    transform: translateY(-1px);
+}
+
+/* Lime Accent Box for Icon */
+.icon-box {
+    width: 32px;
+    height: 32px;
+    background-color: #d8f066;
+    /* Primary Lime Accent */
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+}
+
+/* --- Animations --- */
+.chevron {
+    transition: transform 0.2s ease;
+    color: #666;
+}
+
+.rotate-chevron {
+    transform: rotate(180deg);
+}
+
+/* Smooth Height Animation using Grid */
+.workspace-list-wrapper {
+    display: grid;
+    grid-template-rows: 0fr;
+    transition: grid-template-rows 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.workspace-list-wrapper.expanded {
+    grid-template-rows: 1fr;
+}
+
+.workspace-list-wrapper>ul {
+    overflow: hidden;
+}
+
+/* --- List Items --- */
+.workspace-item {
+    display: block;
+    padding: 0.5rem 0.75rem; /* Ensure padding matches links if they have it */
+    min-height: 32px; /* Enforce height consistency */
+    margin-top: 4px;
+    border-radius: 12px;
+    color: #444;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    cursor: pointer;
+    border-left: 3px solid transparent;
+}
+
+.workspace-item:hover {
+    background-color: #efefef;
+    color: #000;
+    border-left-color: #d8f066;
+    /* Lime highlight on hover */
+}
+
+/* --- Mini Create Button --- */
+.btn-create-mini {
+    width: 28px;
+    height: 28px;
+    border-radius: 8px;
+    border: none;
+    background-color: transparent;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-create-mini:hover {
+    background-color: #efefef;
+    color: #000;
+}
+
+/* --- Create Workspace Box --- */
+.create-workspace-box {
+    background-color: #ffffff;
+    border: 1px solid #eee !important;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.03);
+}
+
+.btn-lime {
+    background-color: #d8f066;
+    color: #000;
+    border: none;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+}
+
+.slide-down {
+    animation: slideDown 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-5px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Icon Box Small --- */
+.icon-box-small {
+    width: 32px;
+    height: 32px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.organization-card {
+    background-color: #f8f9fa;
+    border-color: #eee !important;
+    transition: all 0.2s ease;
+}
+
+/* Hover Effect for Organization Card */
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db !important;
+    /* Slightly darker border */
+    transform: translateY(-1px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    background-color: #f3f4f6;
+}
+
+/* --- Organization Bento Tile --- */
+.organization-card {
+    background-color: #f8f9fa;
+    /* Light gray base */
+    border: 1px solid transparent;
+    border-radius: 16px;
+    /* Bento radius */
+    padding: 12px 16px;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.organization-card:hover {
+    background-color: #ffffff;
+    border-color: #d1d5db;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+}
+
+.organization-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+/* Icon Container */
+.org-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.organization-card:hover .org-icon-box {
+    background-color: #d8f066;
+    /* Lime accent on hover */
+    border-color: transparent;
+    color: #000;
+}
+
+/* Arrow Animation */
+.arrow-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+}
+
+.organization-card:hover .arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* Projects Nested Chevron */
+.chevron-small {
+    transition: transform 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Reusing .rotate-chevron from existing code */
+
+/* Specific spacing for nested items */
+/* FIX: Ensure both div and a tags with .workspace-item have identical box-sizing */
+.workspace-list-wrapper ul li .workspace-item {
+    border-left: none;
+    padding-left: 8px;
+    height: 36px; /* Increased from 32px to ensure comfort match */
+    display: flex; /* Enforce flex layout for both div and a */
+    align-items: center; /* Vertically center content */
+}
+
+/* Specific fix for the div container to ensure it behaves like the link */
+div.workspace-item {
+    padding: 0.5rem 0.75rem; 
+    box-sizing: border-box; /* Crucial for padding/height calculation */
+    width: 100%;
+}
+
+/* --- Mini Plus Button in Tree --- */
+.btn-icon-mini {
+    opacity: 0.5;
+    transition: all 0.2s;
+}
+
+.workspace-item:hover .btn-icon-mini {
+    opacity: 1; /* Make visible on row hover */
+}
+
+.btn-icon-mini:hover {
+    background-color: #e0e0e0 !important;
+    color: #000 !important;
+    transform: scale(1.1);
+}
+
+/* --- Create Workspace Box styles exist... */
+
+/* Specific adjustment for nested creation box to look cohesive */
+.workspace-list-wrapper .create-workspace-box {
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05); /* Slightly stronger shadow for pop over list */
+    border-color: #e5e7eb !important;
+}
+
+.workspace-list-wrapper .create-workspace-box input {
+    background-color: #ffffff; /* Contrast against light gray box */
+}
+
+/* --- AI Generator Card (Bento Tile) --- */
+.ai-generator-card {
+    background-color: #f8f9fa;
+    border: 1px solid transparent;
+    border-radius: 16px;
+    padding: 12px 16px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    text-decoration: none;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.ai-generator-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066;
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.06);
+    transform: translateY(-1px);
+    text-decoration: none;
+    color: #000;
+}
+
+.ai-generator-card:active {
+    transform: translateY(0);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+}
+
+.ai-icon-box {
+    width: 36px;
+    height: 36px;
+    background-color: #d8f066;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    transition: all 0.2s ease;
+}
+
+.ai-generator-card:hover .ai-icon-box {
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(216, 240, 102, 0.4);
+}
+
+.ai-arrow-icon {
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: all 0.2s ease;
+    color: #888;
+}
+
+.ai-generator-card:hover .ai-arrow-icon {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+/* --- Responsive Sidebar (Drawer Mode) --- */
+.sidebar-toggle-btn {
+    display: none;
+}
+
+.sidebar-overlay {
+    display: none;
+}
+
+@media (max-width: 1883px) {
+    /* Sticky toggle button on the left edge */
+    .sidebar-toggle-btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        position: fixed;
+        left: 0;
+        top: 50%;
+        transform: translateY(-50%);
+        z-index: 1045;
+        background: #ffffff;
+        color: #000;
+        border: 1px solid #e9ecef;
+        border-left: none;
+        border-radius: 0 12px 12px 0;
+        padding: 12px 6px;
+        box-shadow: 4px 0 12px rgba(0, 0, 0, 0.05);
+        cursor: pointer;
+        transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+    
+    .sidebar-toggle-btn:hover {
+        background: #f8f9fa;
+        padding-left: 10px; /* Slight bounce outwards */
+    }
+
+    /* Convert standard bento-sidebar into an off-canvas drawer */
+    .bento-sidebar {
+        position: fixed;
+        top: 0;
+        left: -380px; /* Hide offscreen */
+        width: 380px;
+        max-width: 85vw; /* Ensure it doesn't overflow mobile screens completely */
+        height: 100vh;
+        z-index: 1050;
+        border-radius: 0 24px 24px 0; /* Flat on the leftmost edge */
+        transition: transform 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+        margin: 0;
+        /* Reset box shadow so it shows properly only when open */
+        box-shadow: none; 
+    }
+
+    /* Active open class triggered by TS boolean */
+    .bento-sidebar.sidebar-open {
+        transform: translateX(380px); /* Brings it back */
+        box-shadow: 10px 0 30px rgba(0, 0, 0, 0.1);
+    }
+
+    /* Blurred background overlay to focus user attention on the drawer */
+    .sidebar-overlay {
+        display: block;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(2px);
+        z-index: 1040;
+        animation: fadeIn 0.2s ease-out forwards;
+    }
+}

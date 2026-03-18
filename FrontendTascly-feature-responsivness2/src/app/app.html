@@ -1,0 +1,9 @@
+<app-header></app-header>
+<router-outlet></router-outlet>
+<app-footer></app-footer>
+
+@if (loadingService.isLoading()) {
+<div class="global-loader" [style.left.px]="mouseX()" [style.top.px]="mouseY()">
+    <div class="loader-ring"></div>
+</div>
+}

@@ -1,0 +1,322 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+.page-subtitle {
+    font-weight: 500;
+    color: #888;
+}
+
+/* --- View Toggle --- */
+.view-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.view-btn:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.view-btn.active {
+    background: #ffffff;
+    color: #111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Table Styles (Bento look) --- */
+.table-container {
+    background: #f8f9fa; 
+    border-radius: 20px;
+    position: relative;
+}
+
+.tasks-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 8px; /* Spacing between rows for a "card" look */
+}
+
+.tasks-table th {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #a0a0a0;
+    padding: 0 16px 8px 16px;
+    font-weight: 700;
+    text-align: left;
+    border: none;
+}
+
+.tasks-table tbody tr {
+    background: #fff;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.tasks-table tbody tr:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0,0,0,0.05); 
+}
+
+.tasks-table td {
+    padding: 16px;
+    vertical-align: middle;
+    border-top: 1px solid rgba(0,0,0,0.01);
+    border-bottom: 1px solid rgba(0,0,0,0.01);
+}
+
+.tasks-table td:first-child {
+    border-left: 1px solid rgba(0,0,0,0.01);
+    border-top-left-radius: 12px;
+    border-bottom-left-radius: 12px;
+}
+
+.tasks-table td:last-child {
+    border-right: 1px solid rgba(0,0,0,0.01);
+    border-top-right-radius: 12px;
+    border-bottom-right-radius: 12px;
+}
+
+.task-col-name {
+    width: 40%;
+    min-width: 200px;
+}
+
+/* --- Badges --- */
+.badge-status {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    background: #ffffff;
+    border: 1px solid #e9ecef;
+    color: #495057;
+}
+
+.badge-importance {
+    display: inline-block;
+    padding: 4px 10px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    border-radius: 8px;
+    background: #f1f3f5;
+    color: #495057;
+}
+
+.imp-high, .imp-critical {
+    background-color: #ffe3e3;
+    color: #c92a2a;
+}
+.imp-medium, .imp-normal {
+    background-color: #fff3bf;
+    color: #e67700;
+}
+.imp-low {
+    background-color: #d8f5a2;
+    color: #2b8a3e;
+}
+
+/* --- Bento Split Button --- */
+.bento-split-btn {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #d8f066;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+.bento-split-btn:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-lime-main {
+    background: transparent;
+    color: #000000;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-main:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.btn-lime-icon {
+    background: transparent;
+    color: #000000;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-icon:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Bento Modal Overlay (Create Task) ────────────────────── */
+.bento-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.bento-modal-content {
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(20px);
+    animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bento-input, .bento-textarea, .bento-select {
+    background-color: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.85rem 1.15rem;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.bento-input:focus, .bento-textarea:focus, .bento-select:focus {
+    outline: none;
+    border-color: #d8f066;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(216, 240, 102, 0.2);
+}
+
+.bento-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-close-mini {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-close-mini:hover {
+    color: #dc3545;
+}
+
+.bento-btn-primary {
+    background-color: #d8f066;
+    color: #1a2e00;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-primary:hover:not(:disabled) {
+    background-color: #c9e64c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(216, 240, 102, 0.4);
+}
+
+.bento-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bento-btn-secondary {
+    background-color: #ffffff;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}

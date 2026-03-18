@@ -1,0 +1,143 @@
+/* --- Bento Navbar Container --- */
+.navbar-bento {
+    background-color: #ffffff; /* Card Background */
+    border-radius: 24px;       /* Bento Rounded styling */
+    margin: 1rem 1.5rem;       /* Floating effect */
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    transition: all 0.3s ease;
+    z-index: 1030;
+    /* Ensure sticky works with margins */
+    position: sticky;
+    top: 1rem;
+}
+
+/* --- Brand / Logo --- */
+.brand-bento {
+    color: #000000 !important; /* Text Color (Black) */
+    font-weight: 800;
+    letter-spacing: -0.5px;
+    text-decoration: none;
+    transition: transform 0.2s;
+}
+
+.brand-bento:hover {
+    transform: scale(1.02);
+}
+
+/* --- Navigation Links --- */
+.nav-link {
+    color: #000000 !important;
+    font-weight: 600;
+    font-size: 0.95rem;
+    padding: 0.6rem 1.25rem !important;
+    border-radius: 12px;
+    transition: all 0.2s ease-in-out;
+}
+
+.nav-link:hover {
+    background-color: #efefef; /* Light Gray Hover */
+}
+
+.nav-link.active {
+    background-color: #88d8f9; /* Secondary Accent (Sky Blue) for active state */
+    color: #000000 !important;
+}
+
+/* --- Buttons --- */
+.btn-lime {
+    background-color: #d8f066; /* Primary Accent (Lime Green) */
+    color: #000000;
+    border: none;
+    padding: 0.6rem 1.5rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.btn-lime:hover {
+    background-color: #cce64d; /* Slightly darker lime */
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-ghost {
+    color: #000000;
+    font-weight: 600;
+    border-radius: 12px;
+    padding: 0.6rem 1.25rem;
+    border: 2px solid transparent;
+    transition: all 0.2s;
+}
+
+.btn-ghost:hover {
+    background-color: #efefef;
+}
+
+/* --- User Profile Button --- */
+.user-dropdown-btn {
+    background-color: #efefef; /* Light Gray */
+    border-radius: 50px;       /* Pill Shape */
+    padding: 4px 16px 4px 4px;
+    border: 2px solid transparent;
+    transition: all 0.2s ease;
+}
+
+.user-dropdown-btn:hover, .dropdown-menu.show ~ .user-dropdown-btn {
+    background-color: #ffffff;
+    border-color: #d8f066; /* Lime border on hover */
+    box-shadow: 0 0 0 4px rgba(216, 240, 102, 0.2);
+}
+
+/* Avatar Circle */
+.avatar-circle {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background-color: #000000;
+    color: #ffffff;
+    font-size: 14px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* --- Dropdown Menu --- */
+.dropdown-menu {
+    border: none;
+    border-radius: 20px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.1);
+    padding: 0.75rem;
+    margin-top: 12px !important;
+    background-color: #ffffff;
+}
+
+.dropdown-item {
+    border-radius: 12px;
+    font-weight: 500;
+    padding: 0.7rem 1rem;
+    color: #000000;
+    margin-bottom: 2px;
+}
+
+.dropdown-item:hover {
+    background-color: #efefef;
+}
+
+.dropdown-item.text-danger:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+/* Animation */
+.dropdown-menu.show {
+    animation: scaleIn 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95) translateY(-10px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}

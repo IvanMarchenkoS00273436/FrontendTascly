@@ -1,0 +1,196 @@
+<div class="bento-panel h-100 d-flex flex-column overflow-hidden">
+
+    <!-- Header -->
+    <div class="d-flex justify-content-between align-items-end mb-4 px-1 flex-shrink-0">
+        <div>
+            <h2 class="page-title mb-1">Calendar</h2>
+            <p class="page-subtitle mb-0">Tasks by due date.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <div class="view-toggle">
+                <button class="view-btn" (click)="switchToBoard()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    Board
+                </button>
+                <button class="view-btn active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    Calendar
+                </button>
+                <button class="view-btn" (click)="navigateToTable()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                    Table
+                </button>
+            </div>
+
+            <!-- My / All Tasks filter -->
+            <div class="view-toggle">
+                <button class="view-btn" [class.active]="viewMode() === 'mine'" (click)="viewMode.set('mine')">
+                    My Tasks
+                </button>
+                <button class="view-btn" [class.active]="viewMode() === 'all'" (click)="viewMode.set('all')">
+                    All Tasks
+                </button>
+            </div>
+
+            @if (currentUserRole() === 'Admin' || currentUserRole() === 'Full-access') {
+            <div class="bento-split-btn">
+                <button class="btn-lime-main d-flex align-items-center gap-2" (click)="openCreateForm()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span class="d-none d-sm-inline">New Task</span>
+                </button>
+                @if (canUseAI) {
+                <button class="btn-lime-icon d-flex align-items-center justify-content-center" (click)="navigateToAI()" title="Spark AI Task Generator">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </button>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+    @if (viewData$ | async; as project) {
+
+    <!-- Month nav -->
+    <div class="d-flex align-items-center justify-content-between mb-3 px-1 flex-shrink-0">
+        <h5 class="month-label mb-0">{{ monthLabel() }}</h5>
+        <div class="d-flex align-items-center gap-2">
+            <button class="nav-btn" (click)="goToToday()">Today</button>
+            <button class="nav-arrow" (click)="prevMonth()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m15 18-6-6 6-6" />
+                </svg>
+            </button>
+            <button class="nav-arrow" (click)="nextMonth()">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="m9 18 6-6-6-6" />
+                </svg>
+            </button>
+        </div>
+    </div>
+
+    <!-- Calendar grid -->
+    <div class="cal-grid flex-grow-1 overflow-auto">
+        <div class="cal-day-header">Mon</div>
+        <div class="cal-day-header">Tue</div>
+        <div class="cal-day-header">Wed</div>
+        <div class="cal-day-header">Thu</div>
+        <div class="cal-day-header">Fri</div>
+        <div class="cal-day-header">Sat</div>
+        <div class="cal-day-header">Sun</div>
+
+        @for (day of calendarDays(); track day.date.toISOString()) {
+        <div class="cal-cell" [class.other-month]="!day.isCurrentMonth" [class.today]="isToday(day.date)">
+            <span class="cal-date-num" [class.today-num]="isToday(day.date)">{{ day.date.getDate() }}</span>
+
+            <!-- Task bars stacked by lane -->
+            <div class="cal-tasks">
+                @for (item of day.tasks; track item.task.id + item.rangeType) {
+                <div class="cal-task-bar {{ getImportanceClass(item.task) }} {{ item.rangeType }}"
+                    [title]="item.task.name">
+                    @if (item.rangeType === 'single' || item.rangeType === 'start') {
+                    <span class="bar-label">{{ item.task.name }}</span>
+                    }
+                </div>
+                }
+            </div>
+        </div>
+        }
+    </div>
+
+    } @else {
+    <div class="d-flex align-items-center justify-content-center flex-grow-1">
+        <div class="spinner-border text-secondary" role="status"></div>
+    </div>
+    }
+
+    <!-- ── Bento Modal Form for Creating Tasks ── -->
+    @if (isCreating()) {
+    <div class="bento-modal-overlay" (click)="cancelCreate()">
+        <div class="bento-modal-content bento-panel" (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1" style="font-size: 1.5rem; font-weight: 800;">Create New Task</h3>
+                    <p class="text-muted small mb-0" style="font-size: 0.95rem;">
+                        Adding new calendar task
+                    </p>
+                </div>
+                <button class="btn-close-mini" (click)="cancelCreate()" title="Close">&times;</button>
+            </div>
+
+            <!-- Body: Inputs -->
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Task Name <span class="text-danger">*</span></label>
+                <input type="text" class="bento-input w-100" placeholder="e.g. Update user profile page..." [(ngModel)]="newTaskName" autofocus>
+            </div>
+
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Description</label>
+                <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="newTaskDescription"></textarea>
+            </div>
+
+            <div class="row mb-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskImportanceId">
+                        @for (imp of importances(); track imp.id) {
+                        <option [value]="imp.id">{{ imp.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskStartDate">
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskDueDate">
+                </div>
+            </div>
+
+            <!-- Footer: Buttons -->
+            <div class="d-flex justify-content-end gap-3 mt-auto pt-2 border-top border-light">
+                <button class="bento-btn-secondary" (click)="cancelCreate()">Cancel</button>
+                <button class="bento-btn-primary" [disabled]="!newTaskName.trim()" (click)="createTask()">
+                    Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+</div>

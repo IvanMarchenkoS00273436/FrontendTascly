@@ -1,0 +1,228 @@
+/* --- Main Component Container (The Bento Panel) --- */
+.user-profile-container {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    /* Ensure internal grid doesn't overflow */
+    overflow-y: auto; 
+    max-width: none; /* Reset max-width if it was set */
+}
+
+/* --- Bento Grid Layout --- */
+.bento-grid-profile {
+    display: grid;
+    /* 2 columns on desktop */
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+/* 1. Header spans full width */
+.profile-header-card {
+    grid-column: 1 / -1;
+    padding: 2.5rem !important;
+    /* Light gray background for inner cards to contrast with white panel */
+    background-color: #f8f9fa !important;
+    border: 1px solid transparent;
+}
+
+/* 2 & 3. Detail cards */
+.detail-card {
+    display: flex;
+    flex-direction: column;
+     /* Light gray background for inner cards */
+    background-color: #f8f9fa !important;
+    border: 1px solid transparent;
+}
+
+/* 4. Technical Card spans full width */
+.technical-card {
+    grid-column: 1 / -1;
+}
+
+/* --- Card Styles (Inner Bento Cards) --- */
+.bento-card {
+    border-radius: 24px;
+    padding: 2rem;
+    color: #000000;
+    transition: transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease;
+    height: 100%;
+}
+
+.bento-card:hover {
+    background-color: #ffffff !important; /* Turn white on hover */
+    border-color: #d8f066; /* Lime border hint */
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Edit Form Specific Shadow */
+.edit-form-card {
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08) !important;
+    border-color: rgba(0,0,0,0.05);
+}
+
+/* --- Avatar --- */
+.avatar-large {
+    width: 90px;
+    height: 90px;
+    border-radius: 28px;
+    background-color: #d8f066;
+    color: #000;
+    font-size: 2.25rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 8px 16px rgba(216, 240, 102, 0.4);
+    transition: transform 0.3s ease;
+}
+
+.bento-card:hover .avatar-large {
+    transform: scale(1.05) rotate(-3deg);
+}
+
+/* --- Icons --- */
+.icon-circle {
+    width: 48px;
+    height: 48px;
+    /* White bg for icons inside gray cards */
+    background-color: #ffffff;
+    border-radius: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #000;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.bg-sky-light {
+    background-color: #e0f2fe;
+}
+
+.text-primary {
+    color: #0284c7;
+}
+
+.icon-circle-small {
+    width: 36px;
+    height: 36px;
+    background-color: #ffffff;
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+/* --- Buttons --- */
+.btn-lime {
+    background-color: #d8f066;
+    color: #000;
+    font-weight: 700;
+    padding: 0.6rem 1.25rem;
+    border-radius: 10px;
+    border: none;
+    transition: all 0.2s;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.2);
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+    transform: translateY(-2px);
+}
+
+/* --- Modern Input (From Login Theme) --- */
+.modern-input {
+    background-color: #f4f4f5;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 12px 16px;
+    font-size: 1rem;
+    color: #000000;
+    font-weight: 500;
+    transition: all 0.2s ease;
+}
+
+.modern-input:focus {
+    background-color: #ffffff;
+    border-color: #000000;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0, 0, 0, 0.05);
+}
+
+.modern-input::placeholder {
+    color: #999;
+}
+
+.bg-success-subtle {
+    background-color: #d1e7dd;
+}
+
+.text-success {
+    color: #0f5132 !important;
+}
+
+@keyframes slideIn {
+    from { transform: translateY(100%); opacity: 0; }
+    to { transform: translateY(0); opacity: 1; }
+}
+
+/* --- Animation --- */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Utility --- */
+.font-monospace {
+    font-family: 'SF Mono', SFMono-Regular, ui-monospace, 'DejaVu Sans Mono', monospace;
+    letter-spacing: -0.5px;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .user-profile-container {
+        padding: 1.5rem;
+    }
+
+    .bento-grid-profile {
+        grid-template-columns: 1fr;
+    }
+    
+    .profile-header-card {
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .profile-header-card .border-start {
+        border-left: 0 !important;
+        padding-left: 0 !important;
+        margin-left: 0 !important;
+        margin-top: 1.5rem;
+        width: 100%;
+        border-top: 1px solid #eee;
+        padding-top: 1.5rem;
+    }
+
+    .technical-card {
+        flex-direction: column;
+        align-items: flex-start !important;
+        gap: 1rem !important;
+    }
+    
+    .technical-card .bg-light {
+        width: 100%;
+        text-align: center;
+        background-color: #ffffff !important;
+    }
+}

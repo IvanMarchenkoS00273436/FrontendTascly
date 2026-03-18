@@ -1,0 +1,73 @@
+<div class="landing-container">
+    <!-- Header Section -->
+    <header class="hero-section pb-4">
+        <div class="hero-content">
+            <div class="pulse-badge d-inline-flex align-items-center gap-2 mb-4 mx-auto">
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                We're Hiring
+            </div>
+            <h1 class="hero-title pt-2">Build the future<br>of productivity.</h1>
+            <p class="hero-subtitle mt-3">Help us create the AI-driven ecosystem where teams plan better, collaborate faster, and execute flawlessly. We're looking for passionate builders.</p>
+        </div>
+    </header>
+
+    <!-- Bento Values Grid -->
+    <section class="careers-bento-grid mb-5">
+        <div class="bento-feature-card d-flex flex-column justify-content-center text-center">
+            <div class="feature-icon mx-auto bg-dark text-lime mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2v20"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+            </div>
+            <h3 class="fw-bold">Scale Fast</h3>
+            <p class="text-muted small">We ship updates every day and move quickly to solve real problems for our users.</p>
+        </div>
+        <div class="bento-feature-card d-flex flex-column justify-content-center text-center">
+            <div class="feature-icon mx-auto bg-dark text-lime mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="m14.31 8-5.74 9.94"/><path d="M9.69 8h11.48"/><path d="M7.38 12h13.24"/></svg>
+            </div>
+            <h3 class="fw-bold">Own Your Work</h3>
+            <p class="text-muted small">From ideation to deployment, you take complete ownership of the features you build.</p>
+        </div>
+        <div class="bento-feature-card d-flex flex-column justify-content-center text-center">
+            <div class="feature-icon mx-auto bg-dark text-lime mb-3">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path><circle cx="9" cy="7" r="4"></circle><path d="M23 21v-2a4 4 0 0 0-3-3.87"></path><path d="M16 3.13a4 4 0 0 1 0 7.75"></path></svg>
+            </div>
+            <h3 class="fw-bold">Remote First</h3>
+            <p class="text-muted small">Work from anywhere. We care about the impact you make, not where you sit.</p>
+        </div>
+    </section>
+
+    <!-- Open Positions List -->
+    <section class="positions-section max-w-container mx-auto w-100">
+        <div class="d-flex justify-content-between align-items-center mb-4 pb-2 border-bottom">
+            <h2 class="fw-bolder">Open Roles</h2>
+            <span class="badge bg-light text-dark border">{{ openPositions().length }} positions</span>
+        </div>
+
+        <div class="d-flex flex-column gap-3">
+            @for (job of openPositions(); track job.id) {
+            <div class="job-card bento-card p-4 d-flex justify-content-between align-items-center">
+                <div>
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <span class="job-department">{{ job.department }}</span>
+                        @if (job.isHot) {
+                            <span class="badge bg-lime text-dark border-0">🔥 High Priority</span>
+                        }
+                    </div>
+                    <h4 class="job-title mb-1 fw-bold text-dark">{{ job.title }}</h4>
+                    <div class="d-flex align-items-center gap-3 text-muted small mt-2">
+                        <span class="d-flex align-items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10c0 4.993-5.539 10.193-7.399 11.799a1 1 0 0 1-1.202 0C9.539 20.193 4 14.993 4 10a8 8 0 0 1 16 0"/></svg>
+                            {{ job.location }}
+                        </span>
+                        <span class="d-flex align-items-center gap-1">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="18" height="18" x="3" y="4" rx="2" ry="2"/><line x1="16" x2="16" y1="2" y2="6"/><line x1="8" x2="8" y1="2" y2="6"/><line x1="3" x2="21" y1="10" y2="10"/></svg>
+                            {{ job.type }}
+                        </span>
+                    </div>
+                </div>
+                <button class="bento-btn-primary bento-glow px-4 py-2" onclick="alert('Applications arent hooked up to backend yet!')">Apply</button>
+            </div>
+            }
+        </div>
+    </section>
+</div>

@@ -1,0 +1,491 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    /* Large internal padding */
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* --- Kanban Board Layout --- */
+.kanban-board {
+    display: flex;
+    flex-wrap: nowrap;
+    /* Prevent wrapping to next line */
+    gap: 1.5rem;
+    padding-bottom: 0.5rem;
+    overflow-x: auto;
+    /* Enable horizontal scroll */
+    height: 100%;
+    /* Ensure it fills vertical space */
+    align-items: flex-start;
+    /* columns align correctly */
+    cursor: grab; /* Show grab cursor on the empty board areas natively */
+}
+
+.kanban-board:active {
+    cursor: grabbing; /* Show grabbing cursor when holding click on the board */
+}
+
+/* --- Columns --- */
+.kanban-column {
+    background-color: #f8f9fa;
+    /* Light Gray Track */
+    border-radius: 20px;
+    /* Consistent Radius */
+    padding: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.01);
+    min-width: 320px;
+    /* Fixed minimum width for columns */
+    width: 320px;
+    /* Ensure consistent width */
+    flex-shrink: 0;
+    /* Don't shrink below min-width */
+    cursor: default; /* revert grab cursor for column background */
+}
+
+/* --- Task Cards (Inner Bento) --- */
+.task-card {
+    background-color: #ffffff;
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.02);
+    border-radius: 16px;
+    /* Slightly smaller than main panel */
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    cursor: pointer;
+    position: relative;
+    border-left: 3px solid transparent;
+}
+
+.task-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.06);
+    border-color: rgba(0, 0, 0, 0.08);
+}
+
+/* Hover effect to show options dots */
+.task-card:hover .options-dots {
+    opacity: 1 !important;
+    transition: opacity 0.2s;
+}
+
+/* Delete button — hidden until card is hovered */
+.btn-delete-task {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px;
+    height: 24px;
+    border: none;
+    background: transparent;
+    border-radius: 6px;
+    color: #aaa;
+    opacity: 0;
+    transition: opacity 0.15s, background-color 0.15s, color 0.15s;
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.task-card:hover .btn-delete-task {
+    opacity: 1;
+}
+
+.btn-delete-task:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+/* Column drag-over highlight */
+.kanban-column.drag-over {
+    background-color: #f0fdf4;
+    border: 2px dashed #86efac;
+    transition: background-color 0.15s, border 0.15s;
+}
+
+/* --- Typography & Badges --- */
+.line-clamp-2 {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+.ls-1 {
+    letter-spacing: 0.05em;
+}
+
+/* Importance Badges - leveraging utility classes */
+.bg-danger-subtle {
+    background-color: #fee2e2;
+}
+
+.text-danger {
+    color: #ef4444 !important;
+}
+
+.border-danger-subtle {
+    border-color: #fca5a5 !important;
+}
+
+.bg-warning-subtle {
+    background-color: #fef3c7;
+}
+
+.text-warning-dark {
+    color: #d97706 !important;
+}
+
+.border-warning-subtle {
+    border-color: #fcd34d !important;
+}
+
+.bg-success-subtle {
+    background-color: #dcfce7;
+}
+
+.text-success {
+    color: #16a34a !important;
+}
+
+.border-success-subtle {
+    border-color: #86efac !important;
+}
+
+/* Empty State */
+.empty-placeholder {
+    background-color: transparent;
+    border-color: #e5e7eb !important;
+    transition: all 0.2s;
+    cursor: pointer;
+}
+
+.empty-placeholder:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+    border-color: #d1d5db !important;
+}
+
+/* --- Buttons --- */
+.btn-lime {
+    background-color: #d8f066;
+    color: #000000;
+    border: none;
+    font-weight: 800;
+    font-size: 0.95rem;
+    padding: 0.8rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+/* Soft Icon Button */
+.btn-icon-soft {
+    border-radius: 8px;
+    transition: background-color 0.2s;
+}
+
+.btn-icon-soft:hover {
+    background-color: #e5e7eb;
+    color: #000;
+}
+
+/* Custom Scrollbar for columns */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: #e5e7eb;
+    border-radius: 4px;
+}
+
+.custom-scrollbar:hover::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+}
+
+/* --- Task Typography --- */
+.task-title {
+    font-weight: 700;
+    /* Bold but not heavy black */
+    font-size: 1.1rem;
+    /* Larger title (approx 17-18px) */
+    line-height: 1.3;
+    letter-spacing: -0.01em;
+    margin-bottom: 0.5rem;
+    color: #111;
+}
+
+.task-desc {
+    font-size: 0.95rem;
+    /* Readable body text (approx 15px) */
+    color: #555;
+    /* Darker gray for better contrast */
+    line-height: 1.5;
+    font-weight: 400;
+}
+
+.fs-7 {
+    font-size: 0.85rem;
+    /* Meta data size */
+}
+
+/* Badge Tweaks for readability */
+.badge {
+    font-size: 0.75rem !important;
+    padding: 0.35em 0.8em !important;
+}
+
+/* Mobile Responsive */
+@media (max-width: 992px) {
+    .bento-panel {
+        padding: 1.5rem;
+    }
+
+    .kanban-board {
+        grid-template-columns: 100%;
+        /* Stack columns */
+        overflow-y: auto;
+    }
+
+    .kanban-column {
+        min-height: 1200px;
+        max-height: 500px;
+        /* Limit height when stacked */
+        min-width: 100%;
+    }
+}
+
+/* ── View Toggle ──────────────────────────────────────────── */
+.view-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.view-btn:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.view-btn.active {
+    background: #ffffff;
+    color: #111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* --- Bento Split Button --- */
+.bento-split-btn {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #d8f066;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+.bento-split-btn:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-lime-main {
+    background: transparent;
+    color: #000000;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-main:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.btn-lime-icon {
+    background: transparent;
+    color: #000000;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-icon:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Bento Modal Overlay (Create Task) ────────────────────── */
+.bento-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.bento-modal-content {
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(20px);
+    animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bento-input, .bento-textarea, .bento-select {
+    background-color: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.85rem 1.15rem;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.bento-input:focus, .bento-textarea:focus, .bento-select:focus {
+    outline: none;
+    border-color: #d8f066;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(216, 240, 102, 0.2);
+}
+
+.bento-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-close-mini {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-close-mini:hover {
+    color: #dc3545;
+}
+
+.bento-btn-primary {
+    background-color: #d8f066;
+    color: #1a2e00;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-primary:hover:not(:disabled) {
+    background-color: #c9e64c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(216, 240, 102, 0.4);
+}
+
+.bento-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bento-btn-secondary {
+    background-color: #ffffff;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}

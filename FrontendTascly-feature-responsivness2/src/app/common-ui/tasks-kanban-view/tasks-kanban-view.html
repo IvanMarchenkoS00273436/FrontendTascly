@@ -1,0 +1,328 @@
+<div class="bento-panel h-100 d-flex flex-column overflow-hidden">
+
+    <!-- Header Section -->
+    <div class="d-flex justify-content-between align-items-end mb-4 px-1 flex-shrink-0">
+        <div>
+            <h2 class="page-title mb-1">Project Board</h2>
+            <p class="page-subtitle mb-0">Track progress and manage tasks.</p>
+        </div>
+        <div class="d-flex align-items-center gap-2">
+            <!-- View toggle -->
+            <div class="view-toggle">
+                <button class="view-btn active">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" />
+                        <rect x="14" y="3" width="7" height="7" />
+                        <rect x="3" y="14" width="7" height="7" />
+                        <rect x="14" y="14" width="7" height="7" />
+                    </svg>
+                    Board
+                </button>
+                <button class="view-btn" (click)="navigateToCalendar()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    Calendar
+                </button>
+                <button class="view-btn" (click)="navigateToTable()">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                    Table
+                </button>
+            </div>
+            <!-- My / All Tasks filter -->
+            <div class="view-toggle">
+                <button class="view-btn" [class.active]="viewMode() === 'mine'" (click)="viewMode.set('mine')">
+                    My Tasks
+                </button>
+                <button class="view-btn" [class.active]="viewMode() === 'all'" (click)="viewMode.set('all')">
+                    All Tasks
+                </button>
+            </div>
+            @if (currentUserRole() === 'Admin' || currentUserRole() === 'Full-access') {
+            <div class="bento-split-btn">
+                <button class="btn-lime-main d-flex align-items-center gap-2" (click)="openCreateFormFirstColumn(columns())">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="5" x2="12" y2="19"></line>
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                    </svg>
+                    <span class="d-none d-sm-inline">New Task</span>
+                </button>
+                @if (canUseAI) {
+                <button class="btn-lime-icon d-flex align-items-center justify-content-center" (click)="navigateToAI()" title="Spark AI Task Generator">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                </button>
+                }
+            </div>
+            }
+        </div>
+    </div>
+
+    <!-- Kanban Board Area -->
+    @if (viewData$ | async; as data) {
+    <div class="kanban-board flex-grow-1 custom-scrollbar"
+         #board
+         (mousedown)="onScrollMouseDown($event, board)"
+         (mouseleave)="onScrollMouseLeave(board)"
+         (mouseup)="onScrollMouseUp(board)"
+         (mousemove)="onScrollMouseMove($event, board)"
+         (wheel)="onScrollWheel($event, board)">
+
+        @for (status of data.columns; track status) {
+        <div class="kanban-column d-flex flex-column h-100" (dragover)="onDragOver($event, status)"
+            (dragleave)="onDragLeave()" (drop)="onDrop($event, status)" [class.drag-over]="isDragOver(status)">
+
+            <!-- Column Header -->
+            <div class="column-header mb-3 d-flex align-items-center justify-content-between px-2">
+                <div class="d-flex align-items-center gap-2">
+                    <h6 class="fw-bold mb-0 text-uppercase ls-1 text-secondary small">{{ status }}</h6>
+                    <span class="badge bg-white text-dark border shadow-sm rounded-pill fw-bold">{{
+                        getGroupedTasks(status).length }}</span>
+                </div>
+                <button class="btn btn-icon-soft btn-sm p-1" title="Options">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="text-muted">
+                        <circle cx="12" cy="12" r="1" />
+                        <circle cx="19" cy="12" r="1" />
+                        <circle cx="5" cy="12" r="1" />
+                    </svg>
+                </button>
+            </div>
+
+            <!-- Tasks List Container -->
+            <div class="tasks-container flex-grow-1 overflow-auto custom-scrollbar px-2 pb-2">
+                <div class="d-flex flex-column gap-3">
+
+                    @for (task of getGroupedTasks(status); track task.id) {
+                    <div class="bento-card task-card p-3" draggable="true" (dragstart)="onDragStart(task, status)"
+                        (dragend)="onDragEnd()" (click)="openEditForm(task)" style="cursor: grab;">
+
+                        <!-- Meta Row -->
+                        <div class="d-flex justify-content-between align-items-center mb-2">
+                            @if(task.importanceName) {
+                            <span class="badge rounded-pill fw-bold border"
+                                [class.bg-danger-subtle]="task.importanceName === 'High'"
+                                [class.text-danger]="task.importanceName === 'High'"
+                                [class.border-danger-subtle]="task.importanceName === 'High'"
+                                [class.bg-warning-subtle]="task.importanceName === 'Medium'"
+                                [class.text-warning-dark]="task.importanceName === 'Medium'"
+                                [class.border-warning-subtle]="task.importanceName === 'Medium'"
+                                [class.bg-success-subtle]="task.importanceName === 'Low'"
+                                [class.text-success]="task.importanceName === 'Low'"
+                                [class.border-success-subtle]="task.importanceName === 'Low'"
+                                style="font-size: 0.65rem; letter-spacing: 0.5px;">
+                                {{ task.importanceName | uppercase }}
+                            </span>
+                            }
+
+                            <!-- Delete Button (visible on hover) -->
+                            <button class="btn-delete-task ms-auto" (click)="deleteTask(task); $event.stopPropagation()" title="Delete task"
+                                draggable="false">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="13" height="13" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                                </svg>
+                            </button>
+                        </div>
+
+                        <!-- Content -->
+                        <h6 class="task-title mb-2 text-dark">{{ task.name }}</h6>
+                        <p class="task-desc text-muted mb-3 line-clamp-2">{{ task.description }}</p>
+
+                        <!-- Footer -->
+                        <div
+                            class="d-flex align-items-center justify-content-between mt-auto border-top pt-3 border-light">
+                            <div class="d-flex align-items-center gap-1 text-muted fw-medium fs-7">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24"
+                                    fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect>
+                                    <line x1="16" y1="2" x2="16" y2="6"></line>
+                                    <line x1="8" y1="2" x2="8" y2="6"></line>
+                                    <line x1="3" y1="10" x2="21" y2="10"></line>
+                                </svg>
+                                {{ task.dueDate | date:'MMM d' }}
+                            </div>
+                            <div class="avatar-created d-flex align-items-center justify-content-center fw-bold bg-light text-dark rounded-circle border"
+                                style="width: 32px; height: 32px; font-size: 0.85rem;">
+                                {{ getAssigneeInitials(task.assigneeId) }}
+                            </div>
+                        </div>
+                    </div>
+                    } @empty {
+                    <div class="empty-placeholder p-4 text-center rounded-4 border border-dashed d-flex flex-column align-items-center justify-content-center gap-2">
+                        <div class="p-2 bg-white rounded-circle">
+                            <span class="text-muted small fw-medium">No tasks</span>
+                        </div>
+                    </div>
+                    }
+                </div>
+
+            </div>
+
+            <!-- Add Task button -->
+            @if (currentUserRole() === 'Admin' || currentUserRole() === 'Full-access') {
+            <button class="btn btn-light w-100 mt-2 text-muted fw-bold small py-2 border-0"
+                (click)="openCreateForm(status)"
+                style="background: transparent; transition: background 0.2s; border-radius: 12px;"
+                onmouseover="this.style.background='#f1f3f5'"
+                onmouseout="this.style.background='transparent'">
+                + Add Task
+            </button>
+            }
+        </div>
+        }
+    </div>
+
+    <!-- ── Bento Modal Form for Adding Tasks ── -->
+    @if (isCreating()) {
+    <div class="bento-modal-overlay" (click)="cancelCreate()">
+        <div class="bento-modal-content bento-panel" (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1" style="font-size: 1.5rem; font-weight: 800;">Create New Task</h3>
+                    <p class="text-muted small mb-0" style="font-size: 0.95rem;">
+                        Adding to <span class="badge bg-light text-dark border ms-1">{{ activeColumnForCreate() }}</span>
+                    </p>
+                </div>
+                <button class="btn-close-mini" (click)="cancelCreate()" title="Close">&times;</button>
+            </div>
+            
+            <!-- Body: Inputs -->
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Task Name <span class="text-danger">*</span></label>
+                <input type="text" class="bento-input w-100" placeholder="e.g. Update user profile page..." [(ngModel)]="newTaskName" autofocus>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Description</label>
+                <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="newTaskDescription"></textarea>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskImportanceId">
+                        @for (imp of data.importances; track imp.id) {
+                        <option [value]="imp.id">{{ imp.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="newTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+
+            <div class="row mb-5">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskStartDate">
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="newTaskDueDate">
+                </div>
+            </div>
+            
+            <!-- Footer: Buttons -->
+            <div class="d-flex justify-content-end gap-3 mt-auto pt-2 border-top border-light">
+                <button class="bento-btn-secondary" (click)="cancelCreate()">Cancel</button>
+                <button class="bento-btn-primary" [disabled]="!newTaskName.trim()"
+                    (click)="createTask(data.statusIdMap.get(activeColumnForCreate() || ''), data.defaultImportanceId)">
+                    Create Task
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+
+    <!-- ── Bento Modal Form for Editing Tasks ── -->
+    @if (isEditing()) {
+    <div class="bento-modal-overlay" (click)="cancelEdit()">
+        <div class="bento-modal-content bento-panel" (click)="$event.stopPropagation()">
+            <!-- Header -->
+            <div class="d-flex justify-content-between align-items-start mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1" style="font-size: 1.5rem; font-weight: 800;">Edit Task</h3>
+                    <p class="text-muted small mb-0" style="font-size: 0.95rem;">
+                        Modifying info for <span class="badge bg-light text-dark border ms-1">{{ activeColumnForCreate() || editingTask()?.statusName }}</span>
+                    </p>
+                </div>
+                <button class="btn-close-mini" (click)="cancelEdit()" title="Close">&times;</button>
+            </div>
+            
+            <!-- Body: Inputs -->
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Task Name <span class="text-danger">*</span></label>
+                <input type="text" class="bento-input w-100" placeholder="e.g. Update user profile page..." [(ngModel)]="editTaskName" autofocus>
+            </div>
+            
+            <div class="mb-4">
+                <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Description</label>
+                <textarea class="bento-textarea w-100" rows="3" placeholder="Add detailed description here..." [(ngModel)]="editTaskDescription"></textarea>
+            </div>
+            
+            <div class="row mb-4">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Importance</label>
+                    <select class="bento-select w-100" [(ngModel)]="editTaskImportanceId">
+                        @for (imp of data.importances; track imp.id) {
+                        <option [value]="imp.id">{{ imp.name }}</option>
+                        }
+                    </select>
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Assignee</label>
+                    <select class="bento-select w-100" [(ngModel)]="editTaskAssigneeId">
+                        <option value="">Unassigned</option>
+                        @for (member of workspaceMembers(); track member.memberId) {
+                        <option [value]="member.memberId">{{ member.firstName }} {{ member.lastName }}</option>
+                        }
+                    </select>
+                </div>
+            </div>
+            
+            <div class="row mb-5">
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Start Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="editTaskStartDate">
+                </div>
+                <div class="col-6">
+                    <label class="form-label text-muted fw-bold" style="font-size: 0.85rem;">Due Date</label>
+                    <input type="date" class="bento-input w-100" [(ngModel)]="editTaskDueDate">
+                </div>
+            </div>
+            
+            <!-- Footer: Buttons -->
+            <div class="d-flex justify-content-end gap-3 mt-auto pt-2 border-top border-light">
+                <button class="bento-btn-secondary" (click)="cancelEdit()">Cancel</button>
+                <button class="bento-btn-primary" [disabled]="!editTaskName.trim()"
+                    (click)="saveTaskEdit()">
+                    Save Changes
+                </button>
+            </div>
+        </div>
+    </div>
+    }
+    }
+</div>

@@ -1,0 +1,162 @@
+<div class="bento-panel ai-bento-wrapper">
+
+    <!-- Header Section -->
+    <div class="ai-header-section">
+        <div class="bento-title-group">
+            <h1 class="ai-title">Tascly AI Task Generator</h1>
+            <p class="ai-subtitle">Transform your ideas into structured tasks and assignments instantly using AI.</p>
+        </div>
+    </div>
+
+    <!-- AI Input Card -->
+    <div class="bento-card ai-input-card">
+        @if (errorMessage()) {
+            <div class="alert alert-danger bento-alert mb-3">{{ errorMessage() }}</div>
+        }
+
+        <!-- Workspace & Project Selectors -->
+        <div class="selectors-row mb-4">
+            <div class="d-flex flex-wrap gap-3">
+                <select class="bento-select" 
+                        [disabled]="lockedFromProject()"
+                        (change)="onWorkspaceChange($any($event.target).value)">
+                    <option value="">Select Workspace...</option>
+                    @for (w of workspaces(); track w.id) {
+                        <option [value]="w.id" [selected]="w.id === selectedWorkspaceId()">{{ w.name }}</option>
+                    }
+                </select>
+
+                <select class="bento-select" 
+                        [disabled]="lockedFromProject() || !selectedWorkspaceId()"
+                        (change)="selectedProjectId.set($any($event.target).value)">
+                    <option value="">Select Project...</option>
+                    @if (lockedFromProject()) {
+                        <option [value]="selectedProjectId()" selected>{{ lockedProjectName }}</option>
+                    } @else {
+                        @for (p of projects(); track p.id) {
+                            <option [value]="p.id" [selected]="p.id === selectedProjectId()">{{ p.name }}</option>
+                        }
+                    }
+                </select>
+            </div>
+        </div>
+
+        <!-- Prompt Textarea -->
+        <div class="prompt-textarea-wrapper mb-3">
+            <textarea class="bento-textarea w-100" rows="4" 
+                [value]="promptText()"
+                (input)="promptText.set($any($event.target).value)" 
+                [disabled]="isProcessing()"
+                placeholder="E.g., Create 5 tasks to build a real-time chat interface. Tell Ivan to do backend APIs and Ryan to do the CSS styling. Assign deadline to next Friday."></textarea>
+        </div>
+
+        <!-- Example Prompts -->
+        <div class="examples-section mb-4">
+            <p class="examples-label">Suggested Prompts:</p>
+            <div class="d-flex flex-wrap gap-2">
+                @for (ex of examplePrompts; track ex) {
+                    <button class="bento-chip-btn" (click)="useExamplePrompt(ex)">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                        {{ ex }}
+                    </button>
+                }
+            </div>
+        </div>
+
+        <!-- Team Mentions Context -->
+        @if (selectedWorkspaceId()) {
+            <div class="mentions-context mb-4">
+                <span class="mentions-label">Available Team Mentions:</span>
+                <div class="d-flex flex-wrap gap-2 mt-2">
+                    @for (m of members(); track m.memberId || $index) {
+                        <span class="bento-member-tag">
+                            <span class="bento-avatar-mini">{{ (m.firstName[0] || '') + (m.lastName[0] || '') }}</span>
+                            {{ m.firstName }} {{ m.lastName }}
+                        </span>
+                    }
+                </div>
+            </div>
+        }
+
+        <!-- Generate & Voice Controls -->
+        <div class="ai-controls-row d-flex flex-wrap gap-3 align-items-center justify-content-between pt-2">
+            
+            <div class="left-controls d-flex gap-2">
+                @if (!isListening()) {
+                    <button class="bento-btn-secondary" (click)="startVoiceInput()" [disabled]="isProcessing()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2a3 3 0 0 0-3 3v7a3 3 0 0 0 6 0V5a3 3 0 0 0-3-3Z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" x2="12" y1="19" y2="22"/></svg>
+                        Voice Input
+                    </button>
+                } @else {
+                    <button class="bento-btn-secondary listening" (click)="stopVoiceInput()">
+                        <span class="spinner-grow spinner-grow-sm text-danger me-1" role="status"></span>
+                        Stop Listening
+                    </button>
+                }
+                
+                @if (draftTasks().length > 0) {
+                    <button class="bento-btn-text text-danger" (click)="clearPrompt()">Clear All</button>
+                }
+            </div>
+
+            <button class="bento-btn-primary bento-glow" (click)="generateTasks()" [disabled]="isGenerateDisabled()">
+                @if (isProcessing()) {
+                    <span class="spinner-border spinner-border-sm" role="status"></span>
+                    Thinking...
+                } @else {
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="currentColor" class="lucide lucide-sparkles"><path d="m12 3-1.912 5.813a2 2 0 0 1-1.275 1.275L3 12l5.813 1.912a2 2 0 0 1 1.275 1.275L12 21l1.912-5.813a2 2 0 0 1 1.275-1.275L21 12l-5.813-1.912a2 2 0 0 1-1.275-1.275L12 3Z"/></svg>
+                    Generate Tasks
+                }
+            </button>
+        </div>
+    </div>
+
+    <!-- Draft Tasks Output... -->
+    @if (draftTasks().length > 0) {
+        <div class="bento-card draft-tasks-card mt-4">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <div>
+                    <h3 class="bento-section-title mb-1">Generated Tasks</h3>
+                    <p class="text-muted small mb-0">Review and adjust task details before finalizing.</p>
+                </div>
+                <div class="d-flex gap-2 align-items-center">
+                    <span class="bento-badge fw-bold">{{ draftTasks().length }} Tasks</span>
+                    <button class="bento-btn-primary ms-3" (click)="confirmAllTasks()" [disabled]="isProcessing() || !selectedProjectId()">
+                        @if (isProcessing()) {
+                            <span class="spinner-border spinner-border-sm" role="status"></span>
+                        } @else {
+                            Approve & Create
+                        }
+                    </button>
+                </div>
+            </div>
+
+            <div class="task-grid">
+                @for (task of draftTasks(); track task.tempId) {
+                    <div class="bento-task-item p-3">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <h5 class="task-title mb-0">{{ task.name }}</h5>
+                            <button class="btn-close-mini" (click)="removeDraftTask(task.tempId)">&times;</button>
+                        </div>
+                        <p class="task-desc text-muted small mb-3">{{ task.description }}</p>
+
+                        <div class="task-meta-row d-flex flex-wrap gap-2 align-items-center">
+                            <span class="bento-tag fw-bold" [ngClass]="getImportanceClass(task.importanceId)">
+                                {{ getImportanceLabel(task.importanceId) }}
+                            </span>
+                            
+                            <div class="assignee-select-wrap">
+                                <select class="bento-select bento-select-sm" (change)="onAssigneeChange(task.tempId, $any($event.target).value)">
+                                    <option value="" [selected]="!task.assigneeId">Unassigned</option>
+                                    @for (m of members(); track m.memberId || $index) {
+                                        <option [value]="m.memberId" [selected]="m.memberId === task.assigneeId">{{ m.firstName }} {{ m.lastName }}</option>
+                                    }
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                }
+            </div>
+        </div>
+    }
+</div>

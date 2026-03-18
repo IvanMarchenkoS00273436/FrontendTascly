@@ -1,0 +1,467 @@
+/* --- Main Panel (Consistent with Bento) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* --- Headers --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+/* ── View Toggle ──────────────────────────────────────────── */
+.view-toggle {
+    display: inline-flex;
+    align-items: center;
+    background-color: #f8f9fa;
+    border: 1px solid #e9ecef;
+    border-radius: 14px;
+    padding: 4px;
+    gap: 2px;
+}
+
+.view-btn {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    background: transparent;
+    border: none;
+    border-radius: 10px;
+    padding: 8px 16px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #6b7280;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.view-btn:hover {
+    color: #111;
+    background: rgba(0, 0, 0, 0.03);
+}
+
+.view-btn.active {
+    background: #ffffff;
+    color: #111;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+/* ── Month nav ────────────────────────────────────────────── */
+.month-label {
+    font-size: 1.05rem;
+    font-weight: 700;
+    letter-spacing: -0.3px;
+    color: #111;
+}
+
+.nav-btn {
+    background: #f1f3f5;
+    border: none;
+    border-radius: 8px;
+    padding: 5px 12px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nav-btn:hover {
+    background: #e5e7eb;
+}
+
+.nav-arrow {
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: #f1f3f5;
+    border: none;
+    border-radius: 8px;
+    color: #374151;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.nav-arrow:hover {
+    background: #e5e7eb;
+}
+
+/* ── Calendar Grid ────────────────────────────────────────── */
+.cal-grid {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    grid-auto-rows: minmax(120px, auto);
+    background: #e9ecef;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+    gap: 1px;
+}
+
+.cal-day-header {
+    background: #ffffff;
+    text-align: center;
+    padding: 12px 0;
+    font-size: 0.85rem;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #4b5563;
+    border-bottom: 2px solid #f3f4f6;
+}
+
+/* Day cells — overflow visible so bars can bleed out */
+.cal-cell {
+    background: #ffffff;
+    padding: 8px 4px;
+    min-height: 120px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    overflow: visible;
+    position: relative;
+    transition: background-color 0.2s ease;
+}
+
+.cal-cell:hover {
+    background: #f8fafc;
+}
+
+.cal-cell.other-month {
+    background: #f8fafc;
+}
+
+.cal-cell.other-month .cal-date-num {
+    color: #94a3b8;
+}
+
+.cal-cell.today {
+    background: #fff;
+}
+
+.cal-cell.today::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border: 2px solid #d8f066;
+    pointer-events: none;
+    z-index: 10;
+}
+
+.cal-date-num {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #475569;
+    line-height: 1;
+    align-self: flex-start;
+    padding-left: 8px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+    margin-bottom: 4px;
+}
+
+.today-num {
+    background: #d8f066;
+    color: #1a3300;
+    border-radius: 50%;
+    width: 26px;
+    height: 26px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 800;
+    font-size: 0.8rem;
+    box-shadow: 0 2px 4px rgba(216, 240, 102, 0.4);
+}
+
+/* ── Task bars container ──────────────────────────────────── */
+.cal-tasks {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    z-index: 5;
+}
+
+/* ── Base bar ─────────────────────────────────────────────── */
+.cal-task-bar {
+    position: relative;
+    display: flex;
+    align-items: center;
+    height: 24px;
+    flex-shrink: 0;
+    border-radius: 0;
+    cursor: pointer;
+    overflow: visible;
+    margin-left: -1px;
+    margin-right: -1px;
+    transition: filter 0.2s ease, transform 0.1s ease;
+    box-shadow: 0 1px 2px rgba(0,0,0,0.05);
+}
+
+.cal-task-bar:hover {
+    filter: brightness(0.95);
+    z-index: 20;
+}
+
+/* Start: left-rounded, small left indent */
+.cal-task-bar.start {
+    border-radius: 6px 0 0 6px;
+    margin-left: 4px;
+    margin-right: -1px;
+    padding-left: 6px;
+}
+
+/* Middle: bleed both sides */
+.cal-task-bar.middle {
+    border-radius: 0;
+    margin-left: -1px;
+    margin-right: -1px;
+}
+
+/* End: right-rounded, small right indent */
+.cal-task-bar.end {
+    border-radius: 0 6px 6px 0;
+    margin-left: -1px;
+    margin-right: 4px;
+}
+
+/* Single: fully rounded, indent both sides */
+.cal-task-bar.single {
+    border-radius: 6px;
+    margin-left: 4px;
+    margin-right: 4px;
+    padding-left: 6px;
+}
+
+/* Label sits inside bar, absolutely — never influences bar height */
+.bar-label {
+    position: absolute;
+    top: 0;
+    left: 8px;
+    right: 4px;
+    height: 24px;
+    line-height: 24px;
+    font-size: 0.72rem;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    pointer-events: none;
+    text-shadow: 0 1px 1px rgba(255, 255, 255, 0.4);
+}
+
+/* ── Importance colours ───────────────────────────────────── */
+.imp-high {
+    background: #ffe4e6;
+    color: #9f1239;
+    border-left: 3px solid #fda4af;
+}
+
+.imp-medium {
+    background: #fef3c7;
+    color: #b45309;
+    border-left: 3px solid #fcd34d;
+}
+
+.imp-low {
+    background: #dcfce7;
+    color: #14532d;
+    border-left: 3px solid #86efac;
+}
+
+.cal-task-bar.middle {
+    border-left: none;
+}
+.cal-task-bar.end {
+    border-left: none;
+}
+
+/* --- Bento Split Button --- */
+.bento-split-btn {
+    display: inline-flex;
+    align-items: stretch;
+    background-color: #d8f066;
+    border-radius: 12px;
+    box-shadow: 0 4px 10px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    overflow: hidden;
+}
+
+.bento-split-btn:hover {
+    background-color: #cce64d;
+    transform: translateY(-2px);
+    box-shadow: 0 8px 16px rgba(180, 204, 51, 0.4);
+}
+
+.btn-lime-main {
+    background: transparent;
+    color: #000000;
+    border: none;
+    font-weight: 700;
+    font-size: 0.95rem;
+    padding: 0.65rem 1.25rem;
+    cursor: pointer;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-main:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+.btn-lime-icon {
+    background: transparent;
+    color: #000000;
+    border: none;
+    border-left: 1px solid rgba(0, 0, 0, 0.1);
+    padding: 0 0.8rem;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: background-color 0.2s;
+}
+
+.btn-lime-icon:hover {
+    background-color: rgba(0, 0, 0, 0.04);
+}
+
+/* ── Bento Modal Overlay (Create Task) ────────────────────── */
+.bento-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.45);
+    backdrop-filter: blur(4px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1050;
+    animation: fadeIn 0.2s ease-out;
+}
+
+.bento-modal-content {
+    width: 100%;
+    max-width: 540px;
+    height: auto;
+    padding: 2.5rem;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.12);
+    transform: translateY(20px);
+    animation: slideUp 0.3s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+@keyframes slideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.bento-input, .bento-textarea, .bento-select {
+    background-color: #f8f9fa;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 0.85rem 1.15rem;
+    font-size: 1rem;
+    color: #333;
+    transition: all 0.2s ease;
+}
+
+.bento-input:focus, .bento-textarea:focus, .bento-select:focus {
+    outline: none;
+    border-color: #d8f066;
+    background-color: #ffffff;
+    box-shadow: 0 0 0 3px rgba(216, 240, 102, 0.2);
+}
+
+.bento-textarea {
+    resize: vertical;
+    min-height: 100px;
+}
+
+.btn-close-mini {
+    background: none;
+    border: none;
+    color: #adb5bd;
+    font-size: 2rem;
+    line-height: 1;
+    cursor: pointer;
+    padding: 0;
+    transition: color 0.2s;
+}
+
+.btn-close-mini:hover {
+    color: #dc3545;
+}
+
+.bento-btn-primary {
+    background-color: #d8f066;
+    color: #1a2e00;
+    border: none;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-primary:hover:not(:disabled) {
+    background-color: #c9e64c;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(216, 240, 102, 0.4);
+}
+
+.bento-btn-primary:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.bento-btn-secondary {
+    background-color: #ffffff;
+    border: 1.5px solid #e9ecef;
+    border-radius: 12px;
+    padding: 10px 24px;
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: #495057;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.bento-btn-secondary:hover {
+    background-color: #f8f9fa;
+    border-color: #dee2e6;
+}

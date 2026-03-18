@@ -1,0 +1,414 @@
+/* --- Main Component Container (The Bento Card) --- */
+.bento-panel {
+    background-color: #ffffff;
+    border-radius: 24px;
+    padding: 2.5rem;
+    height: 100%;
+    width: 100%;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+    border: 1px solid rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* --- Grid Layout --- */
+.members-grid {
+    display: grid;
+    /* Adaptive grid for inner tiles */
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); 
+    gap: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+/* --- Member Tile (Inner) --- */
+.member-card {
+    /* Changed from White to Light Gray for contrast inside White Panel */
+    background-color: #f8f9fa; 
+    border-radius: 20px;
+    padding: 2rem 1.5rem;
+    position: relative;
+    border: 1px solid transparent;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    min-height: 400px;
+    justify-content: space-between;
+}
+
+.member-card:hover {
+    background-color: #ffffff;
+    border-color: #d8f066; /* Lime Border */
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
+}
+
+/* Ensure card with open menu stays on top */
+.member-card.menu-open {
+    z-index: 20;
+    border-color: rgba(0,0,0,0.1);
+}
+
+/* --- Avatar --- */
+.avatar-large {
+    width: 96px;
+    height: 96px;
+    border-radius: 32px;
+    background-color: #d8f066; /* Lime Accent */
+    color: #000000;
+    font-size: 2.5rem;
+    font-weight: 800;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.5rem;
+    letter-spacing: -1.5px;
+    /* Shadow for pop */
+    box-shadow: 0 8px 16px rgba(216, 240, 102, 0.4); 
+    transition: transform 0.3s ease;
+}
+
+.member-card:hover .avatar-large {
+    transform: scale(1.1) rotate(-3deg);
+}
+
+/* --- Typography --- */
+.name-group {
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.first-name {
+    font-size: 2rem;
+    font-weight: 900;
+    color: #000000;
+    line-height: 1;
+    display: block;
+    letter-spacing: -0.03em;
+    margin-bottom: 0.2rem;
+}
+
+.last-name {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #888888;
+    line-height: 1;
+    display: block;
+}
+
+/* --- Info Section --- */
+.info-section {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    /* White background inside gray tile */
+    background-color: #ffffff; 
+    padding: 1rem;
+    border-radius: 16px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.02);
+}
+
+.info-row {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.9rem;
+    color: #000;
+    font-weight: 600;
+}
+
+.info-icon {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background-color: #f4f4f5;
+    border-radius: 10px;
+    color: #000;
+}
+
+/* --- Header & Buttons --- */
+.page-title {
+    font-weight: 900;
+    font-size: 2.5rem;
+    letter-spacing: -0.03em;
+    color: #000;
+}
+
+.page-subtitle {
+    font-size: 1.1rem;
+    color: #666;
+    font-weight: 500;
+}
+
+.btn-lime {
+    background-color: #d8f066;
+    color: #000000;
+    border: none;
+    font-weight: 800;
+    font-size: 1rem;
+    padding: 0.8rem 1.75rem;
+    border-radius: 14px;
+    box-shadow: 0 8px 20px rgba(216, 240, 102, 0.3);
+    transition: all 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.btn-lime:hover {
+    background-color: #cce64d;
+    transform: translateY(-4px);
+    box-shadow: 0 12px 30px rgba(180, 204, 51, 0.5);
+}
+
+/* --- Modal Styles (New) --- */
+.modal-overlay {
+    position: fixed; /* Fixed to cover whole screen/container */
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(255, 255, 255, 0.6);
+    backdrop-filter: blur(8px);
+    z-index: 1050;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeInOverlay 0.2s ease-out;
+}
+
+.bento-modal {
+    background: #ffffff;
+    width: 480px;
+    max-width: 90%;
+    border-radius: 28px;
+    padding: 2.5rem;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.fw-black {
+    font-weight: 800;
+}
+
+/* Close Utility Button */
+.btn-icon-soft {
+    width: 36px;
+    height: 36px;
+    border-radius: 12px;
+    background-color: #f4f4f5;
+    color: #666;
+    border: none;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.btn-icon-soft:hover {
+    background-color: #eee;
+    color: #000;
+    transform: rotate(90deg);
+}
+
+/* Modern Input/Select Reused from Login */
+.modern-label {
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: #888;
+    margin-bottom: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+}
+
+.modern-select {
+    background-color: #f8f9fa;
+    border: 2px solid transparent;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 1rem;
+    color: #000;
+    font-weight: 600;
+    appearance: none; /* Hide default arrow */
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.modern-select:focus {
+    background-color: #fff;
+    border-color: #000;
+    outline: none;
+    box-shadow: 0 0 0 4px rgba(0,0,0,0.05);
+}
+
+.select-chevron {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+    color: #666;
+}
+
+/* Role Radio Options */
+.role-option {
+    display: block;
+    cursor: pointer;
+    background-color: #ffffff;
+    border: 1px solid #e5e5e5;
+    border-radius: 16px;
+    padding: 1rem;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+    position: relative;
+    overflow: hidden;
+}
+
+.role-option:hover {
+    border-color: #ccc;
+    background-color: #fafafa;
+}
+
+.role-option.selected {
+    border-color: #d8f066;
+    background-color: #fdffe8; /* Very light lime tint */
+    box-shadow: 0 4px 12px rgba(216, 240, 102, 0.2);
+}
+
+/* Custom Radio Circle */
+.custom-radio {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    border: 2px solid #ddd;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s;
+}
+
+.role-option.selected .custom-radio {
+    border-color: #000;
+    background-color: #000;
+}
+
+.custom-radio .dot {
+    width: 8px;
+    height: 8px;
+    background-color: #d8f066;
+    border-radius: 50%;
+    transform: scale(0);
+    transition: transform 0.2s;
+}
+
+.role-option.selected .custom-radio .dot {
+    transform: scale(1);
+}
+
+/* Animations */
+@keyframes fadeInOverlay {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+.slide-up {
+    animation: slideUpModal 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+@keyframes slideUpModal {
+    from { opacity: 0; transform: translateY(20px) scale(0.98); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- Member Card Three-Dots Menu --- */
+.member-menu-wrapper {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    z-index: 10;
+}
+
+.btn-dots {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    border: none;
+    background-color: transparent;
+    color: #888;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.member-card:hover .btn-dots,
+.member-card.menu-open .btn-dots {
+    color: #000;
+}
+
+.btn-dots:hover {
+    background-color: #efefef;
+    color: #000;
+    transform: scale(1.1);
+}
+
+/* --- Dropdown Menu --- */
+.member-dropdown {
+    position: absolute;
+    top: calc(100% + 6px);
+    right: 0;
+    background-color: #ffffff;
+    border-radius: 16px;
+    padding: 0.5rem;
+    min-width: 180px;
+    box-shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.12);
+    border: 1px solid rgba(0, 0, 0, 0.04);
+    animation: scaleInMenu 0.2s cubic-bezier(0.165, 0.84, 0.44, 1);
+    z-index: 30;
+}
+
+.member-dropdown-item {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    width: 100%;
+    border: none;
+    background: none;
+    padding: 0.65rem 0.85rem;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    color: #000;
+    cursor: pointer;
+    transition: all 0.15s;
+}
+
+.member-dropdown-item:hover {
+    background-color: #f4f4f5;
+}
+
+.member-dropdown-item.text-danger {
+    color: #ef4444;
+}
+
+.member-dropdown-item.text-danger:hover {
+    background-color: #fee2e2;
+    color: #ef4444;
+}
+
+@keyframes scaleInMenu {
+    from { opacity: 0; transform: scale(0.95) translateY(-6px); }
+    to { opacity: 1; transform: scale(1) translateY(0); }
+}
