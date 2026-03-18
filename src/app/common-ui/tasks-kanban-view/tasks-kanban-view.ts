@@ -41,6 +41,13 @@ export class TasksKanbanView {
     statusIdMap = signal<Map<string, any>>(new Map());
     importances = signal<any[]>([]);
     workspaceMembers = signal<GetMemberRoleDto[]>([]);
+    memberLookup = computed(() => {
+        const map = new Map<string, GetMemberRoleDto>();
+        for (const m of this.workspaceMembers()) {
+            map.set(m.memberId, m);
+        }
+        return map;
+    });
     defaultImportanceId = signal<any>(1);
 
     // Filtered view of tasks based on viewMode
@@ -327,6 +334,36 @@ export class TasksKanbanView {
 
     isDragOver(column: string): boolean {
         return this.dragOverColumn() === column;
+    }
+
+    getAssigneeInitials(task: GetTask): string {
+        const assigneeId = task.assigneeId;
+        if (!assigneeId || assigneeId === '00000000-0000-0000-0000-000000000000') {
+            return 'UN';
+        }
+
+        const member = this.memberLookup().get(assigneeId);
+        if (!member) return 'UN';
+
+        const first = (member.firstName || '').trim();
+        const last = (member.lastName || '').trim();
+
+        if (first && last) return `${first.charAt(0)}${last.charAt(0)}`.toUpperCase();
+        if (first) return first.slice(0, 2).toUpperCase();
+        if (last) return last.slice(0, 2).toUpperCase();
+        return 'UN';
+    }
+
+    getAssigneeDisplayName(task: GetTask): string {
+        const assigneeId = task.assigneeId;
+        if (!assigneeId || assigneeId === '00000000-0000-0000-0000-000000000000') {
+            return 'Unassigned';
+        }
+
+        const member = this.memberLookup().get(assigneeId);
+        if (!member) return 'Unassigned';
+
+        return `${member.firstName} ${member.lastName}`.trim();
     }
 
     // --- Mouse Drag & Wheel SCROLL logic ---

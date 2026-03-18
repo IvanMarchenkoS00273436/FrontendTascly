@@ -157,8 +157,8 @@
                                 {{ task.dueDate | date:'MMM d' }}
                             </div>
                             <div class="avatar-created d-flex align-items-center justify-content-center fw-bold bg-light text-dark rounded-circle border"
-                                style="width: 32px; height: 32px; font-size: 0.85rem;">
-                                U
+                                style="width: 32px; height: 32px; font-size: 0.85rem;" [title]="getAssigneeDisplayName(task)">
+                                {{ getAssigneeInitials(task) }}
                             </div>
                         </div>
                     </div>
