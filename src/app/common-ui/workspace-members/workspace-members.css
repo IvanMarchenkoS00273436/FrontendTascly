@@ -1,3 +1,10 @@
+/* Ensure routed component host stretches to dashboard content height */
+:host {
+    display: block;
+    height: 100%;
+    min-height: 0;
+}
+
 /* --- Main Component Container (The Bento Card) --- */
 .bento-panel {
     background-color: #ffffff;
@@ -9,7 +16,15 @@
     border: 1px solid rgba(0, 0, 0, 0.02);
     display: flex;
     flex-direction: column;
+    min-height: 0;
     animation: fadeIn 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Dedicated scroll container for members list */
+.members-scroll-area {
+    flex: 1;
+    min-height: 0;
+    overflow: auto;
 }
 
 /* --- Grid Layout --- */

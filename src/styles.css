@@ -2,11 +2,11 @@ html {
     font-size:100%; 
 }
 
-/* Exclude modals from the static height rule so they can size to their contents */
+/* Exclude modals from the static height rule so they can size to their contents
 .bento-panel:not(.bento-modal-content), .bento-panel-slim:not(.bento-modal-content) {
-    height: calc(100vh - 120px) !important;
-    overflow-y: auto !important;
-}
+    height: calc(100vh - 120px) !important; 
+    overflow-y: auto !important; 
+} */
 
 body {
     background-color: #efefef;

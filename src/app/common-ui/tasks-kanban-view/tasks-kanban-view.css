@@ -1,3 +1,10 @@
+/* Ensure routed component host stretches to dashboard content height */
+:host {
+    display: block;
+    height: 100%;
+    min-height: 0;
+}
+
 /* --- Main Panel (Consistent with Bento) --- */
 .bento-panel {
     background-color: #ffffff;
@@ -5,6 +12,7 @@
     padding: 2.5rem;
     /* Large internal padding */
     height: 100%;
+    min-height: 0;
     width: 100%;
     box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
     border: 1px solid rgba(0, 0, 0, 0.02);
@@ -37,6 +45,15 @@
     font-weight: 500;
 }
 
+.kanban-toolbar {
+    gap: 1rem;
+}
+
+.kanban-toolbar-actions {
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
 /* --- Kanban Board Layout --- */
 .kanban-board {
     display: flex;
@@ -47,9 +64,10 @@
     overflow-x: auto;
     /* Enable horizontal scroll */
     height: 100%;
+    min-height: 0;
     /* Ensure it fills vertical space */
-    align-items: flex-start;
-    /* columns align correctly */
+    align-items: stretch;
+    /* Stretch columns to full panel height */
     cursor: grab; /* Show grab cursor on the empty board areas natively */
 }
 
@@ -274,6 +292,91 @@
 .badge {
     font-size: 0.75rem !important;
     padding: 0.35em 0.8em !important;
+}
+
+/* Small laptops: tighten spacing/typography so all columns fit more naturally */
+@media (max-width: 1434px) and (min-width: 1024px) {
+    .bento-panel {
+        padding: 1.5rem;
+    }
+
+    .page-title {
+        font-size: 1.7rem;
+    }
+
+    .page-subtitle {
+        font-size: 0.92rem;
+    }
+
+    .kanban-toolbar {
+        align-items: flex-start !important;
+    }
+
+    .kanban-toolbar-actions {
+        gap: 0.5rem !important;
+    }
+
+    .view-toggle {
+        border-radius: 12px;
+        padding: 3px;
+    }
+
+    .view-btn {
+        padding: 6px 10px;
+        font-size: 0.78rem;
+        gap: 4px;
+    }
+
+    .view-btn svg {
+        width: 12px;
+        height: 12px;
+    }
+
+    .btn-lime-main {
+        padding: 0.55rem 0.9rem;
+        font-size: 0.85rem;
+    }
+
+    .btn-lime-icon {
+        padding: 0 0.65rem;
+    }
+
+    .kanban-board {
+        gap: 1rem;
+    }
+
+    .kanban-column {
+        min-width: 240px;
+        width: 240px;
+        padding: 0.75rem;
+        border-radius: 16px;
+    }
+
+    .column-header {
+        margin-bottom: 0.6rem !important;
+    }
+
+    .task-card {
+        padding: 0.75rem !important;
+        border-radius: 12px;
+    }
+
+    .task-title {
+        font-size: 0.95rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .task-desc {
+        font-size: 0.82rem;
+        line-height: 1.35;
+        margin-bottom: 0.75rem !important;
+    }
+
+    .avatar-created {
+        width: 26px !important;
+        height: 26px !important;
+        font-size: 0.72rem !important;
+    }
 }
 
 /* Mobile Responsive */
