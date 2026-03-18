@@ -56,8 +56,13 @@
                         style="font-size: 0.85rem;">Forgot password?</a>
                 </div>
 
-                <button type="submit" class="btn btn-modern">
+                <button type="submit" class="btn btn-modern" [disabled]="isSubmitting">
+                    @if (isSubmitting) {
+                    <span class="spinner-border spinner-border-sm me-2" role="status" aria-hidden="true"></span>
+                    Signing In...
+                    } @else {
                     Sign In
+                    }
                 </button>
             </form>
         </div>

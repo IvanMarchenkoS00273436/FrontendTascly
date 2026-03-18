@@ -16,6 +16,7 @@ export class Login {
     
     // Controls the inline error API message
     errorMessage: string | null = null;
+    isSubmitting = false;
 
     form: FormGroup = new FormGroup({
         username: new FormControl<string | null>(null, [Validators.required]),
@@ -26,11 +27,14 @@ export class Login {
         this.errorMessage = null;
 
         if (this.form.valid) {
+            this.isSubmitting = true;
             this.authService.login(this.form.value).subscribe({
                 next: (res) => {
+                    this.isSubmitting = false;
                     this.router.navigate(['/dashboard']);
                 },
                 error: (err) => {
+                    this.isSubmitting = false;
                     console.error(err);
                     this.errorMessage = "Email or password wrong";
                 }

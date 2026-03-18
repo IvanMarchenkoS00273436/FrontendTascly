@@ -5,7 +5,7 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { UsersService } from '../../data/services/users-service';
 import { ProjectsService } from '../../data/services/projects-service';
 import { FormsModule } from '@angular/forms';
-import { tap, firstValueFrom } from 'rxjs';
+import { tap, firstValueFrom, finalize } from 'rxjs';
 import { GetProject } from '../../data/interfaces/projects/get-project';
 import { Auth } from '../../auth/auth';
 
@@ -30,10 +30,15 @@ export class Sidebar {
 
     // Signal that holds ALL projects keyed by workspace ID
     projectsMap = signal<Record<string, GetProject[]>>({});
+    projectsLoadingMap = signal<Record<string, boolean>>({});
 
     // Read signal directly for template usage
     getProjects(workspaceId: string): GetProject[] {
         return this.projectsMap()[workspaceId] ?? [];
+    }
+
+    isProjectsLoading(workspaceId: string): boolean {
+        return !!this.projectsLoadingMap()[workspaceId];
     }
 
     $userProfile = this.userService.getUserProfile();
@@ -108,7 +113,12 @@ export class Sidebar {
     }
 
     loadProjectsForWorkspace(workspaceId: string) {
-        this.projectsService.getWorkspaceProjects(workspaceId).subscribe({
+        this.projectsLoadingMap.update(map => ({ ...map, [workspaceId]: true }));
+        this.projectsService.getWorkspaceProjects(workspaceId).pipe(
+            finalize(() => {
+                this.projectsLoadingMap.update(map => ({ ...map, [workspaceId]: false }));
+            })
+        ).subscribe({
             next: (projects) => {
                 // Force a new object reference to trigger change detection
                 const currentMap = this.projectsMap();

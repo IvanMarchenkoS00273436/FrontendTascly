@@ -22,6 +22,7 @@ export class Register implements OnInit {
 
     errorMessage: string | null = null;
     successMessage: string | null = null;
+    isSubmitting = false;
 
     form: FormGroup = new FormGroup({
         email: new FormControl<string | null>(null, [Validators.required, Validators.email]),
@@ -55,6 +56,8 @@ export class Register implements OnInit {
                 return;
             }
 
+            this.isSubmitting = true;
+
             if (this.isInviteMode && this.inviteToken) {
                 // Invite registration — no org name needed
                 const payload = {
@@ -65,8 +68,12 @@ export class Register implements OnInit {
                     lastName: this.form.value.lastName,
                 };
                 this.authService.registerWithInvite(payload).subscribe({
-                    next: () => this.showSuccess('Account created! You can now log in.'),
+                    next: () => {
+                        this.isSubmitting = false;
+                        this.showSuccess('Account created! You can now log in.');
+                    },
                     error: (err: any) => {
+                        this.isSubmitting = false;
                         this.errorMessage = typeof err.error === 'string' ? err.error : 'Registration failed. Please try again.';
                     }
                 });
@@ -80,8 +87,12 @@ export class Register implements OnInit {
                     organizationName: this.form.value.organization
                 };
                 this.authService.register(payload).subscribe({
-                    next: () => this.showSuccess('You are registered successfully!'),
+                    next: () => {
+                        this.isSubmitting = false;
+                        this.showSuccess('You are registered successfully!');
+                    },
                     error: (err: any) => {
+                        this.isSubmitting = false;
                         this.errorMessage = typeof err.error === 'string' ? err.error : 'Registration failed. Please try again.';
                     }
                 });

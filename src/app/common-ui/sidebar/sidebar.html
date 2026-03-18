@@ -164,8 +164,14 @@
         }
 
         <ul class="list-unstyled d-flex flex-column gap-2 mb-0">
-            <!-- Updated to use Resource API .value() -->
-            @if (workspaces.value(); as workspacesList) {
+            @if (workspaces.isLoading()) {
+            <li>
+                <div class="d-flex align-items-center justify-content-center py-3 text-muted small gap-2">
+                    <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                    Loading workspaces...
+                </div>
+            </li>
+            } @else if (workspaces.value(); as workspacesList) {
             @for (ws of workspacesList; track ws.id) {
             <li>
                 <!-- Workspace Toggle Button -->
@@ -293,6 +299,14 @@
                                     </li>
                                     }
 
+                                    @if (isProjectsLoading(ws.id)) {
+                                    <li>
+                                        <span class="text-muted small ps-2 py-1 d-flex align-items-center gap-2">
+                                            <span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span>
+                                            Loading projects...
+                                        </span>
+                                    </li>
+                                    } @else {
                                     @for (project of getProjects(ws.id); track project.id) {
                                     <li>
                                         <a [routerLink]="['/dashboard', 'projects', project.id]"
@@ -306,6 +320,7 @@
                                     <li><span class="text-muted small ps-2 py-1 d-block" style="font-size: 0.75rem;">No
                                             projects</span></li>
                                     }
+                                    }
                                 </ul>
                             </div>
                         </li>
@@ -316,6 +331,8 @@
             } @empty {
             <li><span class="text-muted small ps-3">No workspaces found</span></li>
             }
+            } @else {
+            <li><span class="text-muted small ps-3">Unable to load workspaces</span></li>
             }
         </ul>
 
